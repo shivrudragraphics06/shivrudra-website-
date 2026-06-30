@@ -449,5 +449,6 @@ export const CONTACT = {
   email: "info@shivrudragraphics.com",
   website: "www.shivrudragraphics.com",
   whatsapp: "919075285858",
-  address: "Pune, Maharashtra (Kesnand & Kolwadi)",
+  address:
+    "Shop No. 10, Ground Floor, K.B. Plaza, Opp. Nivaan Meadows, Kesnand-Wagholi Road, Kesnand, Wagholi, Pune 412 207",
 };

@@ -6,6 +6,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 
 export function ContactPage() {
   const [sent, setSent] = useState(false);
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address)}&output=embed`;
   const [form, setForm] = useState({
     name: "",
     mobile: "",
@@ -153,7 +154,7 @@ export function ContactPage() {
           <div className="overflow-hidden rounded-2xl border border-border bg-white">
             <iframe
               title="Shivrudra location"
-              src="https://www.google.com/maps?q=Kesnand+Pune&output=embed"
+              src={mapSrc}
               className="w-full h-64 border-0"
               loading="lazy"
             />
