@@ -78,7 +78,7 @@ export function Header() {
 
       {/* Nav */}
       <nav className="hidden md:block border-t border-border bg-brand-light">
-        <div className="container-page flex items-center gap-1">
+        <div className="container-page flex items-center justify-center gap-1">
           {NAV.map((item) => (
             <div key={item.to} className="relative group">
               <Link

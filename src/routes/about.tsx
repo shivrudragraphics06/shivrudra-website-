@@ -62,14 +62,12 @@ export function AboutPage() {
           ].map((v, i) => (
             <div
               key={v.t}
-              className={`p-6 rounded-2xl ${i === 0 ? "gradient-brand text-white" : "bg-white border border-border"} shadow-soft`}
+              className="group rounded-2xl border border-border bg-white p-6 shadow-soft transition hover:border-transparent hover:gradient-brand hover:text-white"
             >
-              <div
-                className={`text-xs font-bold uppercase tracking-widest ${i === 0 ? "text-brand-yellow" : "text-brand-red"}`}
-              >
+              <div className="text-xs font-bold uppercase tracking-widest text-brand-red transition group-hover:text-brand-yellow">
                 {v.t}
               </div>
-              <p className={`mt-2 ${i === 0 ? "text-white/90" : "text-foreground"}`}>{v.d}</p>
+              <p className="mt-2 text-foreground transition group-hover:text-white/90">{v.d}</p>
             </div>
           ))}
         </div>

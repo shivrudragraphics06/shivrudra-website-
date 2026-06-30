@@ -19,7 +19,6 @@ import {
   Layers,
 } from "lucide-react";
 import {
-  SERVICES,
   CATEGORIES,
   PROCESS_STEPS,
   WHY_CHOOSE,
@@ -28,9 +27,8 @@ import {
   SITE_TAGLINE,
 } from "@/data/site";
 import { Link } from "@/components/AppLink";
-import industriesBoard from "@/assets/industries1.png";
-import industriesBoardTwo from "@/assets/industries2.png";
-import heroMotionVideo from "@/assets/moving LED_dot pattern.mp4";
+import { IndustriesGrid } from "@/components/IndustriesGrid";
+import heroMotionVideo from "@/assets/moving LEDdot pattern.mp4";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -66,29 +64,29 @@ export function HomePage() {
           </video>
 
           <div className="relative flex min-h-[620px] w-full items-center justify-center px-4 py-14 sm:px-8 md:min-h-[560px] md:px-7 md:py-16 lg:px-8 xl:min-h-[640px] xl:px-10 2xl:px-12">
-            <div className="mt-40 w-full max-w-[760px] animate-fade-up text-center md:mt-44 xl:mt-48">
-              <div className="flex flex-wrap items-center justify-center gap-2 text-lg md:text-xl font-bold">
+            <div className="w-full max-w-5xl animate-fade-up text-center">
+              <div className="flex flex-wrap items-center justify-center gap-3 text-2xl font-bold sm:text-3xl md:text-4xl">
                 <span className="text-brand-red">Designing</span>
                 <span className="text-brand-dark/40">|</span>
                 <span className="text-brand-red">Printing</span>
                 <span className="text-brand-dark/40">|</span>
                 <span className="text-brand-red">Branding</span>
               </div>
-              <p className="mx-auto mt-4 max-w-3xl text-base text-brand-dark/75 md:text-lg">
+              <p className="mx-auto mt-5 max-w-5xl text-xl font-medium leading-relaxed text-brand-dark/80 md:text-2xl">
                 {SITE_TAGLINE} in Pune.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link
                   to="/services"
-                  className="inline-flex items-center gap-2 rounded-full gradient-brand text-white px-6 py-3.5 font-semibold shadow-brand hover:scale-105 transition"
+                  className="inline-flex items-center gap-2 rounded-full gradient-brand px-7 py-4 text-lg font-semibold text-white shadow-brand transition hover:scale-105"
                 >
-                  Explore Services <ArrowRight className="h-4 w-4" />
+                  Explore Services <ArrowRight className="h-5 w-5" />
                 </Link>
                 <a
                   href={`https://wa.me/${CONTACT.whatsapp}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] text-white px-6 py-3.5 font-semibold shadow-soft hover:scale-105 transition"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-lg font-semibold text-white shadow-soft transition hover:scale-105"
                 >
-                  <WhatsAppIcon className="h-4 w-4" /> Get Quote
+                  <WhatsAppIcon className="h-5 w-5" /> Get Quote
                 </a>
               </div>
             </div>
@@ -331,60 +329,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* SERVICES PREVIEW */}
-      <section className="py-20">
-        <div className="container-page">
-          <SectionHeader
-            eyebrow="Our Services"
-            title="End-to-end printing & signage"
-            desc="Premium services across designing, printing, branding and signage."
-          />
-          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.slice(0, 9).map((s) => (
-              <Link
-                key={s.slug}
-                to="/services/$slug"
-                params={{ slug: s.slug }}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-white p-6 hover:border-brand-red transition shadow-soft"
-              >
-                <div className="absolute top-0 right-0 h-24 w-24 gradient-brand opacity-5 rounded-bl-full group-hover:opacity-20 transition" />
-                <div className="font-display font-bold text-lg group-hover:text-brand-red transition">
-                  {s.name}
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">{s.blurb}</p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {s.subs.slice(0, 3).map((sub) => (
-                    <span
-                      key={sub}
-                      className="text-[11px] font-medium bg-brand-light px-2 py-0.5 rounded-full"
-                    >
-                      {sub}
-                    </span>
-                  ))}
-                  {s.subs.length > 3 && (
-                    <span className="text-[11px] font-medium text-brand-red">
-                      +{s.subs.length - 3} more
-                    </span>
-                  )}
-                </div>
-                <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-red">
-                  View Details{" "}
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" />
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              to="/services"
-              className="inline-flex items-center gap-2 rounded-full gradient-brand text-white px-6 py-3 font-semibold shadow-brand"
-            >
-              View all services <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* INDUSTRIES */}
       <section className="relative overflow-hidden bg-white py-20">
         <div className="pointer-events-none absolute -left-16 -top-24 h-48 w-48 rounded-full border-[18px] border-dotted border-brand-yellow/70" />
@@ -394,17 +338,8 @@ export function HomePage() {
             title="Trusted by brands across industries"
             desc="A creative partner trusted across sectors."
           />
-          <div className="mx-auto mt-12 flex max-w-[1180px] flex-col items-center gap-6">
-            <img
-              src={industriesBoard}
-              alt="Industries We Serve"
-              className="block w-full object-contain"
-            />
-            <img
-              src={industriesBoardTwo}
-              alt="More industries we serve"
-              className="block w-[94.88%] max-w-[1120px] object-contain"
-            />
+          <div className="mt-12">
+            <IndustriesGrid />
           </div>
           <div className="text-center mt-8">
             <Link
