@@ -198,8 +198,8 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
             <div
               className={
                 framed
-                  ? "mt-2 text-sm font-extrabold leading-tight text-[#3f4146]"
-                  : "mt-3 font-display text-xl font-extrabold leading-tight text-[#3f4146] xl:text-2xl"
+                  ? "mt-2 text-sm font-bold leading-tight text-brand-dark"
+                  : "mt-3 text-base font-bold leading-tight text-brand-dark sm:text-lg"
               }
             >
               {industry}
