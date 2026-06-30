@@ -119,9 +119,16 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/60">
-          <div>© {new Date().getFullYear()} Shivrudra Graphics Pvt Ltd. All rights reserved.</div>
-          <div>Designed with care • {CONTACT.website}</div>
+        <div className="container-page py-5 text-center text-xs text-white/60">
+          <span>© 2026 All Rights Reserved By Shivrudra Graphics Pvt Ltd. & Developed By </span>
+          <a
+            href="https://webakoof.com"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-white hover:text-brand-yellow"
+          >
+            Webakoof
+          </a>
         </div>
       </div>
     </footer>

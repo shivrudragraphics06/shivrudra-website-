@@ -17,6 +17,7 @@ import {
   ShieldAlert,
   Monitor,
   Layers,
+  Star,
 } from "lucide-react";
 import {
   CATEGORIES,
@@ -28,6 +29,7 @@ import {
 } from "@/data/site";
 import { Link } from "@/components/AppLink";
 import { IndustriesGrid } from "@/components/IndustriesGrid";
+import { ProductGallerySection } from "@/components/ProductGallerySection";
 import heroMotionVideo from "@/assets/moving LEDdot pattern.mp4";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 
@@ -45,6 +47,24 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>
   Layers,
   Sparkles,
 };
+
+const TESTIMONIALS = [
+  {
+    name: "Rahul Jadhav",
+    role: "Retail Store Owner",
+    text: "Shivrudra Graphics delivered our store branding on time with excellent print quality. The team understood the requirement clearly and handled the installation neatly.",
+  },
+  {
+    name: "Priya Kulkarni",
+    role: "Marketing Manager",
+    text: "We regularly work with them for banners, labels and signage. Their finishing, color output and response time have been very dependable.",
+  },
+  {
+    name: "Amit Patil",
+    role: "Business Owner",
+    text: "From design to final print, the experience was smooth. The team suggested practical options and the final signage looked premium.",
+  },
+];
 
 export function HomePage() {
   return (
@@ -330,8 +350,7 @@ export function HomePage() {
       </section>
 
       {/* INDUSTRIES */}
-      <section className="relative overflow-hidden bg-white py-20">
-        <div className="pointer-events-none absolute -left-16 -top-24 h-48 w-48 rounded-full border-[18px] border-dotted border-brand-yellow/70" />
+      <section className="relative overflow-hidden bg-white pb-10 pt-20">
         <div className="container-page">
           <SectionHeader
             eyebrow="Industries We Serve"
@@ -348,6 +367,42 @@ export function HomePage() {
             >
               See full list <ArrowRight className="h-4 w-4" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <ProductGallerySection limit={8} compactTop />
+
+      {/* TESTIMONIALS */}
+      <section className="bg-brand-light py-16">
+        <div className="container-page">
+          <SectionHeader
+            eyebrow="Testimonials"
+            title="What our clients say"
+            desc="Feedback from businesses who trust us for printing, branding and signage."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {TESTIMONIALS.map((item) => (
+              <div
+                key={item.name}
+                className="rounded-2xl border border-border bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-red"
+              >
+                <div className="flex gap-1 text-brand-yellow">
+                  {[...Array(5)].map((_, index) => (
+                    <Star key={index} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+                  "{item.text}"
+                </p>
+                <div className="mt-6 border-t border-border pt-4">
+                  <div className="font-display font-bold text-brand-dark">{item.name}</div>
+                  <div className="mt-1 text-xs font-semibold uppercase tracking-wider text-brand-red">
+                    {item.role}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
