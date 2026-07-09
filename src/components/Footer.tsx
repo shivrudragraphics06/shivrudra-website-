@@ -104,10 +104,18 @@ export function Footer() {
             <WhatsAppIcon className="h-4 w-4" /> Chat on WhatsApp
           </a>
           <div className="mt-4 flex gap-3">
+            <a
+              href={`https://wa.me/${CONTACT.whatsapp}`}
+              aria-label="WhatsApp"
+              className="grid h-9 w-9 place-items-center rounded-full bg-[#25D366] text-white transition hover:bg-[#1ebe5d]"
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </a>
             {[Facebook, Instagram, Linkedin, Youtube].map((Icon, i) => (
               <a
                 key={i}
                 href="#"
+                aria-label={["Facebook", "Instagram", "LinkedIn", "YouTube"][i]}
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/10 hover:bg-brand-red transition"
               >
                 <Icon className="h-4 w-4" />
