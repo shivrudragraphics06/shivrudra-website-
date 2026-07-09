@@ -172,7 +172,6 @@ export function HomePage() {
 
       {/* SERVICES */}
       <section className="relative overflow-hidden bg-white py-14 md:py-16">
-        <div className="absolute inset-x-0 top-0 h-1.5 gradient-brand" />
         <div className="container-page relative">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
