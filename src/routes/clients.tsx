@@ -38,6 +38,7 @@ import serumLogo from "@/assets/client logos/serum logo.png";
 import fitnessLogo from "@/assets/client logos/fitness.png";
 import inigmaAirLogo from "@/assets/client logos/inigmaair.png";
 import { useEffect, useState } from "react";
+import { assetUrl } from "@/lib/api";
 import { fetchPublicClients, type PublicClient } from "@/lib/public-content";
 
 const STATIC_CLIENTS = [
@@ -215,35 +216,40 @@ export function ClientsPage() {
         <div className="container-page max-w-[1180px]">
           {STATIC_CLIENTS.length || clients.length ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {STATIC_CLIENTS.map((client) => (
-                <div
-                  key={client.name}
-                  className="mx-auto flex min-h-32 w-full max-w-[190px] items-center justify-center border border-border bg-white p-4 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
-                >
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className="max-h-24 w-full max-w-[170px] object-contain"
-                  />
-                </div>
-              ))}
-              {clients.map((client) => (
-                <a
-                  key={client.id ?? client.name}
-                  href={client.website_url || undefined}
-                  className="group flex min-h-28 items-center justify-center rounded-lg border border-border bg-white p-5 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red"
-                  target={client.website_url ? "_blank" : undefined}
-                  rel={client.website_url ? "noreferrer" : undefined}
-                >
-                  {client.logo_url ? (
-                    <img src={client.logo_url} alt={client.name} className="max-h-16 max-w-full object-contain" />
-                  ) : (
-                    <span className="font-display text-lg font-black text-brand-dark transition group-hover:text-brand-red">
-                      {client.name}
-                    </span>
-                  )}
-                </a>
-              ))}
+              {clients.length
+                ? clients.map((client) => (
+                    <a
+                      key={client.id ?? client.name}
+                      href={client.website_url || undefined}
+                      className="group flex min-h-28 items-center justify-center rounded-lg border border-border bg-white p-5 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red"
+                      target={client.website_url ? "_blank" : undefined}
+                      rel={client.website_url ? "noreferrer" : undefined}
+                    >
+                      {client.logo_url ? (
+                        <img
+                          src={assetUrl(client.logo_url)}
+                          alt={client.name}
+                          className="max-h-16 max-w-full object-contain"
+                        />
+                      ) : (
+                        <span className="font-display text-lg font-black text-brand-dark transition group-hover:text-brand-red">
+                          {client.name}
+                        </span>
+                      )}
+                    </a>
+                  ))
+                : STATIC_CLIENTS.map((client) => (
+                    <div
+                      key={client.name}
+                      className="mx-auto flex min-h-32 w-full max-w-[190px] items-center justify-center border border-border bg-white p-4 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                    >
+                      <img
+                        src={client.logo}
+                        alt={client.name}
+                        className="max-h-24 w-full max-w-[170px] object-contain"
+                      />
+                    </div>
+                  ))}
             </div>
           ) : null}
         </div>

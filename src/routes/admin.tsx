@@ -22,7 +22,7 @@ import {
 import { type ComponentType, type FormEvent, type SVGProps, useEffect, useMemo, useState } from "react";
 
 import logoUrl from "@/assets/logo.png";
-import { adminApi, loginAdmin } from "@/lib/api";
+import { adminApi, assetUrl, loginAdmin } from "@/lib/api";
 
 type AdminPath = {
   pathname: string;
@@ -688,7 +688,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
                   <tr key={row.id} className="border-b last:border-b-0">
                     {resource.columns.map((column) => (
                       <td key={column} className="max-w-[280px] truncate px-3 py-3">
-                        {renderCell(row[column])}
+                        {renderCell(row[column], column)}
                       </td>
                     ))}
                     <td className="px-3 py-3">
@@ -890,11 +890,22 @@ function cleanPayload(form: AdminRecord, resource: ResourceConfig) {
   return payload;
 }
 
-function renderCell(value: AdminRecord[string]) {
+function renderCell(value: AdminRecord[string], column?: string) {
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (value === 1) return "Yes";
   if (value === 0) return "No";
   if (!value) return "-";
+
+  if (column?.includes("image") || column?.includes("logo")) {
+    return (
+      <img
+        src={assetUrl(String(value))}
+        alt=""
+        className="h-12 w-20 rounded border bg-white object-contain p-1"
+      />
+    );
+  }
+
   return String(value);
 }
 

@@ -6,6 +6,7 @@ export type PublicService = {
   name: string;
   serviceName?: string;
   serviceSlug?: string;
+  image_url?: string;
   main_image_url?: string;
   short_description?: string;
   description?: string;

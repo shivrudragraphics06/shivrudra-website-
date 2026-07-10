@@ -9,6 +9,8 @@
     "create-admin": "node src/scripts/createAdmin.js",
     "setup-db": "node src/scripts/setupDb.js",
     "seed-static": "node src/scripts/seedStaticData.js",
+    "seed-clients": "node src/scripts/seedClientLogos.js",
+    "seed-service-images": "node src/scripts/seedServiceImages.js",
     "import-brochure": "node src/scripts/importBrochureData.js"
   },
   "dependencies": {

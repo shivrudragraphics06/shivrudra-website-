@@ -3,7 +3,13 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 export function assetUrl(path?: string | null) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
-  return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+
+  const normalizedPath = path.replace(/\\/g, "/");
+  const uploadsIndex = normalizedPath.indexOf("uploads/");
+  const publicPath =
+    uploadsIndex >= 0 ? `/${normalizedPath.slice(uploadsIndex)}` : normalizedPath.startsWith("/") ? normalizedPath : `/${normalizedPath}`;
+
+  return `${API_URL}${publicPath}`;
 }
 
 export async function publicApi<T>(path: string): Promise<T> {

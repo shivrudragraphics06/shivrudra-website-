@@ -27,7 +27,6 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "@/components/AppLink";
 import { IndustriesGrid } from "@/components/IndustriesGrid";
-import { ProductGallerySection } from "@/components/ProductGallerySection";
 import heroMotionVideo from "@/assets/moving LEDdot pattern.mp4";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import {
@@ -36,6 +35,7 @@ import {
   type PublicService,
   type PublicTestimonial,
 } from "@/lib/public-content";
+import { assetUrl } from "@/lib/api";
 
 const TESTIMONIALS = [
   {
@@ -68,6 +68,8 @@ const PROCESS_ICONS = [
   MessageCircle,
 ];
 
+const TIMELINE_ICONS = [Sparkles, Palette, Factory, Award];
+
 const PROCESS_STRIP_POINTS = [
   { left: "5%", top: "36px" },
   { left: "15%", top: "52px" },
@@ -80,6 +82,38 @@ const PROCESS_STRIP_POINTS = [
   { left: "85%", top: "33px" },
   { left: "95%", top: "18px" },
 ];
+
+const SERVICE_IMAGE_BY_SLUG: Record<string, string> = {
+  designing: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80",
+  "flex-printing": "https://images.unsplash.com/photo-1601225612051-d44d9c2c1b3a?w=900&q=80",
+  "vinyl-printing": "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=900&q=80",
+  "uv-printing": "https://images.unsplash.com/photo-1581091215367-9b6c00b3039a?w=900&q=80",
+  "screen-printing": "https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?w=900&q=80",
+  "digital-printing": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=900&q=80",
+  "offset-printing": "https://images.unsplash.com/photo-1585241936939-be4099591252?w=900&q=80",
+  "photo-frame": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=900&q=80",
+  "badge-dome-printing": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=900&q=80",
+  "bag-printing": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80",
+  stamp: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=900&q=80",
+  "engraving-marking": "https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=900&q=80",
+  keychain: "https://images.unsplash.com/photo-1511381939415-e44015466834?w=900&q=80",
+  "corporate-gift": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=900&q=80",
+  "industrial-name-plates": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=900&q=80",
+  signage: "https://images.unsplash.com/photo-1567446537708-ac4aa75c9c28?w=900&q=80",
+  "premium-signages": "https://images.unsplash.com/photo-1517524206127-48bbd363f3d7?w=900&q=80",
+  "safety-signages": "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=900&q=80",
+  "laser-cnc-cutting": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&q=80",
+  "trophies-medals": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=900&q=80",
+};
+
+function getServiceImage(service: PublicService) {
+  return assetUrl(
+    service.image_url ||
+      service.main_image_url ||
+      SERVICE_IMAGE_BY_SLUG[service.slug] ||
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80",
+  );
+}
 
 export function HomePage() {
   const [services, setServices] = useState<PublicService[]>(SERVICES);
@@ -194,37 +228,36 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-9 overflow-hidden rounded-2xl border border-border bg-brand-light/70">
-            <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
-              {[
-                services.filter((_, index) => index % 3 === 0),
-                services.filter((_, index) => index % 3 === 1),
-                services.filter((_, index) => index % 3 === 2),
-              ].map((column, columnIndex) => (
-                <div key={columnIndex} className="divide-y divide-border">
-                  {column.map((service) => {
-                    const index = services.findIndex((item) => item.slug === service.slug);
-
-                    return (
-                      <Link
-                        key={service.slug}
-                        to="/services/$slug"
-                        params={{ slug: service.slug }}
-                        className="group flex min-h-16 items-center gap-3 bg-white/70 px-4 py-3.5 transition hover:bg-white"
-                      >
-                        <span className="text-xs font-black text-brand-red/70">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="min-w-0 flex-1 font-display text-[15px] font-extrabold leading-snug text-brand-dark transition group-hover:text-brand-red">
-                          {service.name}
-                        </h3>
-                        <ArrowRight className="h-4 w-4 shrink-0 text-brand-red opacity-60 transition group-hover:translate-x-1 group-hover:opacity-100" />
-                      </Link>
-                    );
-                  })}
+          <div className="mt-9 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {services.map((service) => (
+              <Link
+                key={service.slug}
+                to="/services/$slug"
+                params={{ slug: service.slug }}
+                className="group overflow-hidden rounded-lg border border-border bg-white text-left shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden bg-brand-light">
+                  <img
+                    src={getServiceImage(service)}
+                    alt={service.name}
+                    loading="lazy"
+                    onError={(event) => {
+                      if (event.currentTarget.src.endsWith("/images/shivrudra-printing-banner.png")) return;
+                      event.currentTarget.src = "/images/shivrudra-printing-banner.png";
+                    }}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+                  <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/95 text-brand-red opacity-0 shadow-soft transition group-hover:translate-x-1 group-hover:opacity-100">
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
                 </div>
-              ))}
-            </div>
+                <div className="grid min-h-16 place-items-center px-3 py-3 text-center">
+                  <h3 className="font-display text-sm font-extrabold leading-snug text-brand-dark transition group-hover:text-brand-red">
+                    {service.name}
+                  </h3>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -331,41 +364,82 @@ export function HomePage() {
       </section>
 
       {/* TIMELINE */}
-      <section className="py-20 bg-brand-dark text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 h-96 w-96 bg-brand-red/20 blur-3xl rounded-full" />
+      <section className="relative overflow-hidden bg-brand-dark pb-14 pt-20 text-white">
+        <div className="absolute left-0 top-0 h-80 w-80 -translate-x-1/3 rounded-full bg-brand-yellow/10 blur-3xl" />
+        <div className="absolute right-0 top-0 h-96 w-96 translate-x-1/4 rounded-full bg-brand-red/20 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 h-56 w-56 -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
         <div className="container-page relative">
           <SectionHeader
             eyebrow="Our Journey"
             title="From a passion project to a Pvt Ltd company"
             light
           />
-          <div className="mt-14 grid md:grid-cols-4 gap-6 relative">
-            {TIMELINE.map((t, i) => (
-              <div key={t.year} className="relative">
-                <div className="text-brand-yellow font-display font-black text-4xl">{t.year}</div>
-                <div className="my-3 h-1 w-12 bg-brand-red rounded-full" />
-                <div className="font-display font-bold text-lg">{t.title}</div>
-                <p className="mt-2 text-sm text-white/70">{t.desc}</p>
-                {i < TIMELINE.length - 1 && (
-                  <svg
-                    className="pointer-events-none absolute left-[7.5rem] top-4 hidden h-8 w-[calc(100%+1.5rem-8.5rem)] text-white md:block"
-                    viewBox="0 0 260 32"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M2 17 C38 17 42 9 76 16 S126 17 156 13 S204 18 258 15"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray="10 16"
-                    />
-                  </svg>
-                )}
+
+          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-hidden md:block">
+            <div className="relative min-w-[1100px] px-10 pb-4 pt-6 lg:px-14">
+              <div className="relative mx-auto h-[310px] max-w-[1320px]">
+                <svg
+                  className="pointer-events-none absolute left-1/2 top-8 h-32 w-screen -translate-x-1/2 text-brand-red/55"
+                  viewBox="0 0 1000 130"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0 40 C145 74 235 82 345 55 S535 20 650 65 S830 98 1000 32"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray="8 18"
+                  />
+                </svg>
+
+                {TIMELINE.map((item, index) => {
+                  const Icon = TIMELINE_ICONS[index] ?? Sparkles;
+                  const left = ["12%", "37%", "62%", "87%"][index] ?? "50%";
+                  const cardOffset = index % 2 === 0 ? "top-[120px]" : "top-[145px]";
+
+                  return (
+                    <div
+                      key={item.year}
+                      className={`absolute w-[13rem] -translate-x-1/2 text-center ${cardOffset}`}
+                      style={{ left }}
+                    >
+                      <div className="absolute left-1/2 top-[-4.75rem] grid h-14 w-14 -translate-x-1/2 place-items-center rounded-full border-4 border-white bg-brand-red text-white shadow-brand">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="flex h-44 flex-col items-center justify-center rounded-2xl border border-white/10 bg-white px-5 py-5 text-brand-dark shadow-2xl">
+                        <div className="font-display text-3xl font-black text-brand-red">{item.year}</div>
+                        <div className="mt-2 font-display text-base font-black leading-tight">{item.title}</div>
+                        <p className="mt-3 text-xs leading-5 text-muted-foreground">{item.desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+            </div>
+          </div>
+
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 md:hidden">
+            {TIMELINE.map((item, index) => {
+              const Icon = TIMELINE_ICONS[index] ?? Sparkles;
+
+              return (
+                <div key={item.year} className="relative rounded-2xl border border-white/10 bg-white p-5 text-brand-dark shadow-soft">
+                  <div className="flex items-start gap-4">
+                    <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand-red text-white shadow-brand">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-display text-2xl font-black text-brand-red">{item.year}</div>
+                      <div className="mt-1 font-display text-base font-black">{item.title}</div>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -497,8 +571,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      <ProductGallerySection limit={8} compactTop />
 
       {/* TESTIMONIALS */}
       <section className="bg-brand-light py-16">

@@ -6,6 +6,7 @@ import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useEffect, useState } from "react";
 import { fetchPublicServices, type PublicService } from "@/lib/public-content";
+import { assetUrl } from "@/lib/api";
 
 export function ServiceNotFound() {
   return (
@@ -33,6 +34,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
   if (!svc) return <ServiceNotFound />;
 
   const others = services.filter((s) => s.slug !== svc.slug).slice(0, 6);
+  const serviceImage = svc.image_url || svc.main_image_url;
 
   return (
     <div>
@@ -44,6 +46,15 @@ export function ServiceDetail({ slug }: { slug: string }) {
 
       <section className="py-16 container-page grid lg:grid-cols-[1.5fr_1fr] gap-10">
         <div>
+          {serviceImage ? (
+            <div className="mb-8 overflow-hidden rounded-2xl border border-border bg-brand-light shadow-soft">
+              <img
+                src={assetUrl(serviceImage)}
+                alt={svc.name}
+                className="aspect-[4/3] w-full object-cover"
+              />
+            </div>
+          ) : null}
           <h2 className="font-display font-black text-2xl md:text-3xl">
             What we offer in {svc.name}
           </h2>
