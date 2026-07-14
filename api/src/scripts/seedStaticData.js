@@ -59,6 +59,15 @@ function evaluateArray(source, name) {
   return Function(`"use strict"; return (${extractConst(source, name)});`)();
 }
 
+function evaluateOptionalArray(source, name) {
+  try {
+    return evaluateArray(source, name);
+  } catch (error) {
+    if (String(error.message || "").includes(`Could not find ${name}`)) return [];
+    throw error;
+  }
+}
+
 function toSlug(value) {
   return slugify(value, { lower: true, strict: true });
 }
@@ -113,7 +122,7 @@ async function main() {
   const clients = evaluateArray(siteSource, "CLIENTS");
   const gallery = evaluateArray(gallerySource, "PRODUCT_GALLERY_ITEMS");
   const testimonials = evaluateArray(homeSource, "TESTIMONIALS");
-  const variants = evaluateArray(
+  const variants = evaluateOptionalArray(
     await fs.readFile(path.join(rootDir, "src/routes/products.$productSlug.tsx"), "utf8"),
     "VARIANTS",
   );
