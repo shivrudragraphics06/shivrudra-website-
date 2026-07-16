@@ -24,7 +24,6 @@ export function ServiceDetail({ slug }: { slug: string }) {
   if (!svc) return <ServiceNotFound />;
 
   const others = services.filter((s) => s.slug !== svc.slug).slice(0, 6);
-  const serviceImage = svc.image_url || svc.main_image_url;
   const productCards = svc.products?.length
     ? svc.products
     : (svc.subs ?? []).map((name, index) => ({
@@ -44,17 +43,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
         breadcrumb={[{ label: "Services", to: "/services" }, { label: svc.name }]}
       />
 
-      <section className="py-16 container-page grid lg:grid-cols-[1.5fr_1fr] gap-10">
+      <section className="container-page py-16">
         <div>
-          {serviceImage ? (
-            <div className="mb-8 overflow-hidden rounded-2xl border border-border bg-brand-light shadow-soft">
-              <img
-                src={assetUrl(serviceImage)}
-                alt={svc.name}
-                className="aspect-[4/3] w-full object-cover"
-              />
-            </div>
-          ) : null}
           <h2 className="font-display font-black text-2xl md:text-3xl">
             What we offer in {svc.name}
           </h2>
@@ -62,16 +52,16 @@ export function ServiceDetail({ slug }: { slug: string }) {
             Explore our full range of {svc.name.toLowerCase()} solutions. Each product is crafted
             with premium materials and delivered on time.
           </p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {productCards.map((product) => {
               const message = `Hi, I want to enquire about ${product.name} in ${svc.name}.`;
 
               return (
                 <article
                   key={`${product.id}-${product.name}`}
-                  className="group overflow-hidden rounded-xl border border-border bg-white p-3 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-brand-light">
+                  <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
                     {product.main_image_url ? (
                       <img
                         src={assetUrl(product.main_image_url)}
@@ -85,24 +75,22 @@ export function ServiceDetail({ slug }: { slug: string }) {
                       </div>
                     )}
                   </div>
-                  <div className="space-y-3 px-1 pb-1 pt-4">
-                    <div>
-                      <h3 className="font-display text-lg font-extrabold leading-snug text-brand-dark sm:text-xl">
+                  <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
+                    <div className="min-h-[3.25rem]">
+                      <h3 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
                         {product.name}
                       </h3>
-                      {product.short_description ? (
-                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                          {product.short_description}
-                        </p>
-                      ) : null}
                     </div>
                     <a
                       href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg gradient-brand px-4 py-2.5 text-sm font-bold text-white shadow-brand transition hover:scale-[1.02]"
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
                     >
-                      Enquire <WhatsAppIcon className="h-4 w-4" />
+                      Enquire Now
+                      <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
+                        <WhatsAppIcon className="h-3.5 w-3.5" />
+                      </span>
                     </a>
                   </div>
                 </article>
@@ -111,24 +99,26 @@ export function ServiceDetail({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <aside className="space-y-4">
-          <div className="p-6 rounded-2xl gradient-brand text-white shadow-brand">
-            <div className="font-display font-black text-xl">Need a quote?</div>
-            <p className="mt-2 text-sm text-white/85">
+        <aside className="mt-12 grid items-start gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-2xl gradient-brand p-6 text-white shadow-brand sm:p-8">
+            <div className="font-display text-2xl font-black sm:text-3xl">Need a quote?</div>
+            <p className="mt-3 text-base font-medium leading-7 text-white/90">
               Get a tailored quote for your {svc.name.toLowerCase()} requirement.
             </p>
-            <a
-              href={`https://wa.me/${contact.whatsapp}?text=Hi,%20I%20need%20a%20quote%20for%20${encodeURIComponent(svc.name)}`}
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-white text-brand-red px-4 py-2.5 font-bold text-sm"
-            >
-              <WhatsAppIcon className="h-4 w-4" /> WhatsApp Quote
-            </a>
-            <a
-              href={`tel:${(contact.phones[0] || "").replace(/\s/g, "")}`}
-              className="mt-2 inline-flex items-center gap-2 rounded-full bg-brand-yellow text-brand-dark px-4 py-2.5 font-bold text-sm ml-2"
-            >
-              <Phone className="h-4 w-4" /> Call Now
-            </a>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a
+                href={`https://wa.me/${contact.whatsapp}?text=Hi,%20I%20need%20a%20quote%20for%20${encodeURIComponent(svc.name)}`}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-base font-black text-brand-red"
+              >
+                <WhatsAppIcon className="h-4 w-4" /> WhatsApp Quote
+              </a>
+              <a
+                href={`tel:${(contact.phones[0] || "").replace(/\s/g, "")}`}
+                className="inline-flex items-center gap-2 rounded-full bg-brand-yellow px-5 py-3 text-base font-black text-brand-dark"
+              >
+                <Phone className="h-4 w-4" /> Call Now
+              </a>
+            </div>
           </div>
 
           <div className="p-6 rounded-2xl bg-white border border-border">

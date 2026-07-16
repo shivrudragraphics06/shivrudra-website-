@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Globe2, Mail, Phone, Menu, X, ChevronDown, BadgeCheck } from "lucide-react";
+import { Mail, Phone, Menu, X, ChevronDown, BadgeCheck } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
@@ -36,9 +36,6 @@ export function Header() {
             <a href={`mailto:${contact.email}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
               <Mail className="h-3.5 w-3.5" /> {contact.email}
             </a>
-            <a href={`https://${contact.website}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
-              <Globe2 className="h-3.5 w-3.5" /> {contact.website}
-            </a>
           </div>
         </div>
       </div>
@@ -59,14 +56,6 @@ export function Header() {
             className="hidden md:inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold hover:border-brand-red hover:text-brand-red transition"
           >
             <Phone className="h-4 w-4" /> {primaryPhone}
-          </a>
-          <a
-            href={`https://wa.me/${contact.whatsapp}`}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#25D366] text-white px-4 py-2 text-sm font-semibold hover:opacity-90 transition shadow-soft"
-          >
-            <WhatsAppIcon className="h-4 w-4" /> WhatsApp
           </a>
           <button
             className="lg:hidden grid h-10 w-10 place-items-center rounded-lg border border-border"
