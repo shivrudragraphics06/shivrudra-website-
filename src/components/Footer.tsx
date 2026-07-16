@@ -5,13 +5,30 @@ import {
   BadgeCheck,
   Facebook,
   Instagram,
-  Linkedin,
   Youtube,
 } from "lucide-react";
 import { SITE_TAGLINE } from "@/data/site";
 import logoUrl from "@/assets/logo.png";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { usePublicContact } from "@/hooks/use-public-data";
+
+const SOCIAL_LINKS = [
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/share/1cJ29VxfuT/",
+    icon: Facebook,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/_shivrudra_graphics_pvt_ltd?igsh=cHoxN3cyNzNoa3Y1",
+    icon: Instagram,
+  },
+  {
+    label: "YouTube",
+    href: "https://youtube.com/@shivrudragraphics-v1p?si=AhbSkn1alUbWg7QC",
+    icon: Youtube,
+  },
+];
 
 export function Footer() {
   const contact = usePublicContact();
@@ -67,11 +84,13 @@ export function Footer() {
             >
               <WhatsAppIcon className="h-4 w-4" />
             </a>
-            {[Facebook, Instagram, Linkedin, Youtube].map((Icon, i) => (
+            {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
               <a
-                key={i}
-                href="#"
-                aria-label={["Facebook", "Instagram", "LinkedIn", "YouTube"][i]}
+                key={label}
+                href={href}
+                aria-label={label}
+                target="_blank"
+                rel="noreferrer"
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/10 hover:bg-brand-red transition"
               >
                 <Icon className="h-4 w-4" />
