@@ -216,7 +216,7 @@ export function ClientsPage() {
       <section className="py-8 sm:py-10">
         <div className="container-page max-w-[1180px]">
           {STATIC_CLIENTS.length || clients.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
               {clients.length
                 ? clients
                     .filter((client) => !client.logo_url || !failedLogos.has(client.logo_url))
@@ -224,7 +224,7 @@ export function ClientsPage() {
                     <a
                       key={client.id ?? client.name}
                       href={client.website_url || undefined}
-                      className="group flex min-h-28 items-center justify-center rounded-lg border border-border bg-white p-5 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red"
+                      className="group flex min-h-24 items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red sm:min-h-28 sm:p-5"
                       target={client.website_url ? "_blank" : undefined}
                       rel={client.website_url ? "noreferrer" : undefined}
                     >
@@ -232,7 +232,7 @@ export function ClientsPage() {
                         <img
                           src={assetUrl(client.logo_url)}
                           alt={client.name}
-                          className="max-h-16 max-w-full object-contain"
+                          className="max-h-12 max-w-[120px] object-contain sm:max-h-16 sm:max-w-full"
                           onError={() => {
                             if (!client.logo_url) return;
                             setFailedLogos((current) => new Set(current).add(client.logo_url || ""));
@@ -248,12 +248,12 @@ export function ClientsPage() {
                 : STATIC_CLIENTS.map((client) => (
                     <div
                       key={client.name}
-                      className="mx-auto flex min-h-32 w-full max-w-[190px] items-center justify-center border border-border bg-white p-4 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                      className="flex min-h-24 w-full items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl sm:min-h-32 sm:p-4"
                     >
                       <img
                         src={client.logo}
                         alt={client.name}
-                        className="max-h-24 w-full max-w-[170px] object-contain"
+                        className="max-h-14 w-full max-w-[120px] object-contain sm:max-h-24 sm:max-w-[170px]"
                       />
                     </div>
                   ))}

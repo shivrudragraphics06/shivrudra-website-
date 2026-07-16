@@ -82,8 +82,8 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
     <div
       className={
         framed
-          ? "mx-auto grid max-w-[700px] grid-cols-1 gap-x-4 gap-y-5 bg-white px-4 py-3 min-[420px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-6 md:gap-x-6"
-          : "mx-auto grid max-w-[1280px] grid-cols-1 gap-x-6 gap-y-12 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+          ? "mx-auto grid max-w-[700px] grid-cols-2 gap-x-4 gap-y-5 bg-white px-4 py-3 sm:grid-cols-3 md:grid-cols-6 md:gap-x-6"
+          : "mx-auto grid max-w-[1280px] grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-6"
       }
     >
       {industries.map((industry) => {
