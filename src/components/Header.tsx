@@ -80,7 +80,7 @@ export function Header() {
 
       {/* Nav */}
       <nav className="hidden lg:block border-t border-border bg-brand-light">
-        <div className="container-page flex items-center justify-start gap-1 overflow-x-auto xl:justify-center">
+        <div className="container-page flex items-center justify-start gap-1 overflow-x-auto [scrollbar-width:none] xl:justify-center [&::-webkit-scrollbar]:hidden">
           {NAV.map((item) => (
             <div key={item.to} className="relative group">
               <Link

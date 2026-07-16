@@ -472,7 +472,7 @@ export function HomePage() {
             desc="From the first call to final installation, here's how we deliver."
           />
 
-          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden lg:block">
+          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden [scrollbar-width:none] lg:block [&::-webkit-scrollbar]:hidden">
             <div className="relative min-w-[1280px] px-6 pb-2 pt-4 lg:px-10">
               <div className="absolute left-0 top-6 h-36 w-36 rounded-full bg-brand-yellow/15 blur-3xl" />
               <div className="absolute bottom-4 right-0 h-40 w-40 rounded-full bg-brand-red/10 blur-3xl" />
