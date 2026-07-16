@@ -14,11 +14,13 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const apiUploadsDir = path.join(__dirname, "../uploads");
+const nestedUploadsDir = path.join(__dirname, "uploads");
 const legacyUploadsDir = path.resolve(__dirname, "../../uploads");
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json({ limit: "2mb" }));
 app.use("/uploads", express.static(apiUploadsDir));
+app.use("/uploads", express.static(nestedUploadsDir));
 app.use("/uploads", express.static(legacyUploadsDir));
 
 app.get("/", (_req, res) =>

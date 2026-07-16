@@ -27,6 +27,7 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
   const [variants, setVariants] = useState<PublicProductVariant[]>([]);
   const [detailImages, setDetailImages] = useState<{ image_url?: string; alt_text?: string; id?: number }[]>([]);
   const [failedDetailImages, setFailedDetailImages] = useState<Set<string>>(new Set());
+  const [failedVariantImages, setFailedVariantImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fallbackProduct = findProductBySlug(productSlug);
@@ -36,6 +37,7 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
     setVariants([]);
     setDetailImages([]);
     setFailedDetailImages(new Set());
+    setFailedVariantImages(new Set());
     fetchPublicProduct(productSlug)
       .then((item) => {
         setProduct({
@@ -127,11 +129,15 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
                 <div
                   className={`relative aspect-[1.08] overflow-hidden rounded-lg border border-border bg-gradient-to-br ${variant.colors} shadow-soft`}
                 >
-                  {variant.image_url ? (
+                  {variant.image_url && !failedVariantImages.has(variant.image_url) ? (
                     <img
                       src={assetUrl(variant.image_url)}
                       alt={variant.label}
                       className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      onError={() => {
+                        if (!variant.image_url) return;
+                        setFailedVariantImages((current) => new Set(current).add(variant.image_url || ""));
+                      }}
                     />
                   ) : (
                     <>
