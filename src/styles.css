@@ -73,14 +73,35 @@
   * {
     border-color: var(--color-border);
   }
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    width: 100%;
+  }
   html {
+    overflow-x: hidden;
     scroll-behavior: smooth;
   }
   body {
+    overflow-x: hidden;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
+  }
+  img,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+  main,
+  section,
+  article,
+  aside,
+  header,
+  footer {
+    min-width: 0;
   }
   h1,
   h2,
@@ -88,7 +109,7 @@
   h4,
   h5 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 }
 

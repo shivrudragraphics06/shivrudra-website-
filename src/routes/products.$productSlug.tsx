@@ -69,7 +69,7 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
       <section className="container-page py-14 md:py-18">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div className="max-w-4xl">
-            <h2 className="font-display text-4xl font-black leading-tight text-brand-dark md:text-6xl">
+            <h2 className="font-display text-3xl font-black leading-tight text-brand-dark sm:text-4xl md:text-5xl lg:text-6xl">
               {product.name}
             </h2>
             {productDescription ? (

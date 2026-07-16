@@ -157,13 +157,13 @@ export function HomePage() {
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Link
                   to="/services"
-                  className="inline-flex items-center gap-2 rounded-full gradient-brand px-7 py-4 text-lg font-semibold text-white shadow-brand transition hover:scale-105"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full gradient-brand px-5 py-3 text-base font-semibold text-white shadow-brand transition hover:scale-105 sm:w-auto sm:px-7 sm:py-4 sm:text-lg"
                 >
                   Explore Services <ArrowRight className="h-5 w-5" />
                 </Link>
                 <a
                   href={`https://wa.me/${contact.whatsapp}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-lg font-semibold text-white shadow-soft transition hover:scale-105"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-base font-semibold text-white shadow-soft transition hover:scale-105 sm:w-auto sm:px-7 sm:py-4 sm:text-lg"
                 >
                   <WhatsAppIcon className="h-5 w-5" /> Get Quote
                 </a>
@@ -221,7 +221,7 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-9 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="mt-9 grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {services.map((service) => (
               <Link
                 key={service.slug}
@@ -279,7 +279,7 @@ export function HomePage() {
               <BadgeCheck className="h-4 w-4 text-brand-red" /> ISO 9001:2015 Certified Company
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
               {[
                 { n: "Aadesh C. Nimbalkar", r: "Director" },
                 { n: "Akshay N. Kalbhor", r: "Director" },
@@ -298,7 +298,7 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
             {[
               { i: Users, t: "Skilled Team", d: "Experienced professionals" },
               { i: Award, t: "Premium Quality", d: "Best in class output" },
@@ -368,7 +368,7 @@ export function HomePage() {
             light
           />
 
-          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-hidden md:block">
+          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-hidden lg:block">
             <div className="relative min-w-[1100px] px-10 pb-4 pt-6 lg:px-14">
               <div className="relative mx-auto h-[310px] max-w-[1320px]">
                 <svg
@@ -414,7 +414,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 md:hidden">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:hidden">
             {TIMELINE.map((item, index) => {
               const Icon = TIMELINE_ICONS[index] ?? Sparkles;
 
@@ -472,7 +472,7 @@ export function HomePage() {
             desc="From the first call to final installation, here's how we deliver."
           />
 
-          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden md:block">
+          <div className="relative left-1/2 mt-14 hidden w-screen -translate-x-1/2 overflow-x-auto overflow-y-hidden lg:block">
             <div className="relative min-w-[1280px] px-6 pb-2 pt-4 lg:px-10">
               <div className="absolute left-0 top-6 h-36 w-36 rounded-full bg-brand-yellow/15 blur-3xl" />
               <div className="absolute bottom-4 right-0 h-40 w-40 rounded-full bg-brand-red/10 blur-3xl" />
@@ -519,7 +519,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 md:hidden">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:hidden">
             {PROCESS_STEPS.map((s, i) => (
               <div
                 key={s}

@@ -32,7 +32,7 @@ export function Header() {
             <BadgeCheck className="h-4 w-4 text-brand-yellow" />
             <span className="font-medium tracking-wide">ISO 9001:2015 Certified Company</span>
           </div>
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <a href={`mailto:${contact.email}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
               <Mail className="h-3.5 w-3.5" /> {contact.email}
             </a>
@@ -49,7 +49,7 @@ export function Header() {
           <img
             src={logoUrl}
             alt="Shivrudra Graphics Pvt Ltd logo"
-            className="h-16 w-auto shrink-0 object-contain sm:h-18"
+            className="h-14 w-auto shrink-0 object-contain sm:h-16 lg:h-[72px]"
           />
         </Link>
 
@@ -69,7 +69,7 @@ export function Header() {
             <WhatsAppIcon className="h-4 w-4" /> WhatsApp
           </a>
           <button
-            className="md:hidden grid h-10 w-10 place-items-center rounded-lg border border-border"
+            className="lg:hidden grid h-10 w-10 place-items-center rounded-lg border border-border"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -79,15 +79,15 @@ export function Header() {
       </div>
 
       {/* Nav */}
-      <nav className="hidden md:block border-t border-border bg-brand-light">
-        <div className="container-page flex items-center justify-center gap-1">
+      <nav className="hidden lg:block border-t border-border bg-brand-light">
+        <div className="container-page flex items-center justify-start gap-1 overflow-x-auto xl:justify-center">
           {NAV.map((item) => (
             <div key={item.to} className="relative group">
               <Link
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
                 activeProps={{ className: "text-brand-red" }}
-                className="inline-flex items-center gap-1 px-4 py-3 text-sm font-semibold text-brand-dark hover:text-brand-red transition relative"
+                className="relative inline-flex whitespace-nowrap items-center gap-1 px-3 py-3 text-sm font-semibold text-brand-dark transition hover:text-brand-red xl:px-4"
                 onMouseEnter={() => item.mega && setServicesOpen(true)}
               >
                 {item.label}
@@ -121,7 +121,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-border bg-white">
+        <div className="lg:hidden border-t border-border bg-white">
           <div className="container-page py-4 space-y-1">
             {NAV.map((item) => (
               <div key={item.to}>
@@ -133,7 +133,7 @@ export function Header() {
                   {item.label}
                 </Link>
                 {item.mega && (
-                  <div className="pl-4 grid grid-cols-2 gap-x-2">
+                  <div className="grid grid-cols-1 gap-x-2 pl-4 min-[420px]:grid-cols-2">
                     {services.slice(0, 10).map((s) => (
                       <Link
                         key={s.slug}
