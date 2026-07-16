@@ -224,7 +224,7 @@ export function ClientsPage() {
                     <a
                       key={client.id ?? client.name}
                       href={client.website_url || undefined}
-                      className="group flex min-h-24 items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red sm:min-h-28 sm:p-5"
+                      className="group flex min-h-24 items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red active:-translate-y-1 active:border-brand-red active:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red/40 sm:min-h-28 sm:p-5"
                       target={client.website_url ? "_blank" : undefined}
                       rel={client.website_url ? "noreferrer" : undefined}
                     >
@@ -232,14 +232,14 @@ export function ClientsPage() {
                         <img
                           src={assetUrl(client.logo_url)}
                           alt={client.name}
-                          className="max-h-12 max-w-[120px] object-contain sm:max-h-16 sm:max-w-full"
+                          className="max-h-12 max-w-[120px] object-contain transition group-hover:scale-105 group-active:scale-105 sm:max-h-16 sm:max-w-full"
                           onError={() => {
                             if (!client.logo_url) return;
                             setFailedLogos((current) => new Set(current).add(client.logo_url || ""));
                           }}
                         />
                       ) : (
-                        <span className="font-display text-lg font-black text-brand-dark transition group-hover:text-brand-red">
+                        <span className="font-display text-lg font-black text-brand-dark transition group-hover:text-brand-red group-active:text-brand-red">
                           {client.name}
                         </span>
                       )}
@@ -248,12 +248,12 @@ export function ClientsPage() {
                 : STATIC_CLIENTS.map((client) => (
                     <div
                       key={client.name}
-                      className="flex min-h-24 w-full items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl sm:min-h-32 sm:p-4"
+                      className="group flex min-h-24 w-full items-center justify-center rounded-lg border border-border bg-white p-3 text-center shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl active:-translate-y-1 active:border-brand-red active:shadow-xl sm:min-h-32 sm:p-4"
                     >
                       <img
                         src={client.logo}
                         alt={client.name}
-                        className="max-h-14 w-full max-w-[120px] object-contain sm:max-h-24 sm:max-w-[170px]"
+                        className="max-h-14 w-full max-w-[120px] object-contain transition group-hover:scale-105 group-active:scale-105 sm:max-h-24 sm:max-w-[170px]"
                       />
                     </div>
                   ))}

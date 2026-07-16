@@ -91,12 +91,12 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
         const image = industry.image_url ? assetUrl(industry.image_url) : fallback?.image;
 
         return (
-        <div key={industry.name} className="group text-center">
+        <div key={industry.name} className="group text-center transition active:-translate-y-1">
           <div
             className={
               framed
-                ? "relative mx-auto grid h-[76px] w-[76px] place-items-center overflow-hidden rounded-full bg-white transition after:pointer-events-none after:absolute after:inset-0 after:rounded-full after:border-2 after:border-[#d8d8d8] after:transition after:content-[''] group-hover:after:border-brand-red"
-                : "relative mx-auto grid h-24 w-24 place-items-center overflow-hidden rounded-full bg-white transition after:pointer-events-none after:absolute after:inset-0 after:rounded-full after:border-[3px] after:border-[#d9d9d9] after:transition after:content-[''] group-hover:after:border-brand-red sm:h-28 sm:w-28 xl:h-32 xl:w-32"
+                ? "relative mx-auto grid h-[76px] w-[76px] place-items-center overflow-hidden rounded-full bg-white transition after:pointer-events-none after:absolute after:inset-0 after:rounded-full after:border-2 after:border-[#d8d8d8] after:transition after:content-[''] group-hover:shadow-brand group-hover:after:border-brand-red group-active:shadow-brand group-active:after:border-brand-red"
+                : "relative mx-auto grid h-24 w-24 place-items-center overflow-hidden rounded-full bg-white transition after:pointer-events-none after:absolute after:inset-0 after:rounded-full after:border-[3px] after:border-[#d9d9d9] after:transition after:content-[''] group-hover:shadow-brand group-hover:after:border-brand-red group-active:shadow-brand group-active:after:border-brand-red sm:h-28 sm:w-28 xl:h-32 xl:w-32"
             }
           >
             <img
@@ -104,16 +104,16 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
               alt=""
               className={
                 framed
-                  ? "h-12 w-12 object-contain mix-blend-multiply"
-                  : `${fallback?.className ?? "h-14 w-14 sm:h-16 sm:w-16 xl:h-20 xl:w-20"} object-contain mix-blend-multiply`
+                  ? "h-12 w-12 object-contain mix-blend-multiply transition group-hover:scale-105 group-active:scale-105"
+                  : `${fallback?.className ?? "h-14 w-14 sm:h-16 sm:w-16 xl:h-20 xl:w-20"} object-contain mix-blend-multiply transition group-hover:scale-105 group-active:scale-105`
               }
             />
           </div>
           <div
             className={
               framed
-                ? "mt-2 text-sm font-bold leading-tight text-brand-dark"
-                : "mt-3 text-base font-bold leading-tight text-brand-dark sm:text-lg"
+                ? "mt-2 text-sm font-bold leading-tight text-brand-dark transition group-hover:text-brand-red group-active:text-brand-red"
+                : "mt-3 text-base font-bold leading-tight text-brand-dark transition group-hover:text-brand-red group-active:text-brand-red sm:text-lg"
             }
           >
             {industry.name}

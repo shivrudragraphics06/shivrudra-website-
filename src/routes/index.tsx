@@ -519,11 +519,11 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:hidden">
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:hidden">
             {PROCESS_STEPS.map((s, i) => (
               <div
                 key={s}
-                className="relative flex items-center gap-4 rounded-xl border border-border bg-white p-4 shadow-soft"
+                className="relative flex min-h-32 flex-col items-center justify-center rounded-xl border border-border bg-white p-4 text-center shadow-soft"
               >
                 <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full gradient-accent text-brand-dark">
                   {(() => {
@@ -531,11 +531,11 @@ export function HomePage() {
                     return <Icon className="h-5 w-5" />;
                   })()}
                 </div>
-                <div>
-                  <div className="font-display text-lg font-black text-brand-red">
+                <div className="mt-3">
+                  <div className="font-display text-xl font-black text-brand-red">
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="font-semibold text-sm">{s}</div>
+                  <div className="mt-1 text-sm font-semibold leading-tight">{s}</div>
                 </div>
               </div>
             ))}
