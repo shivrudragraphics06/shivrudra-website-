@@ -10,18 +10,16 @@ import {
 } from "lucide-react";
 import { SITE_TAGLINE } from "@/data/site";
 import logoUrl from "@/assets/logo.png";
-import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
-import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
+import { usePublicContact } from "@/hooks/use-public-data";
 
 export function Footer() {
   const contact = usePublicContact();
-  const services = usePublicServices();
 
   return (
     <footer className="mt-20 bg-brand-dark text-white">
-      <div className="container-page py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        <div>
+      <div className="container-page grid gap-10 py-12 md:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] md:items-start lg:gap-16">
+        <div className="max-w-xl">
           <div className="flex items-center gap-3 mb-4">
             <img
               src={logoUrl}
@@ -39,47 +37,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div>
-          <h4 className="font-display font-bold mb-4 text-brand-yellow">Quick Links</h4>
-          <ul className="space-y-2 text-sm">
-            {[
-              "/about",
-              "/services",
-              "/industries",
-              "/gallery",
-              "/clients",
-              "/contact",
-            ].map((p) => (
-              <li key={p}>
-                <Link to={p} className="text-white/75 hover:text-brand-yellow">
-                  {p
-                    .replace("/", "")
-                    .replace(/-/g, " ")
-                    .replace(/^\w/, (c) => c.toUpperCase()) || "Home"}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-display font-bold mb-4 text-brand-yellow">Top Services</h4>
-          <ul className="space-y-2 text-sm">
-            {services.slice(0, 8).map((s) => (
-              <li key={s.slug}>
-                <Link
-                  to="/services/$slug"
-                  params={{ slug: s.slug }}
-                  className="text-white/75 hover:text-brand-yellow"
-                >
-                  {s.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
+        <div className="max-w-lg md:justify-self-end">
           <h4 className="font-display font-bold mb-4 text-brand-yellow">Contact</h4>
           <ul className="space-y-3 text-sm text-white/80">
             <li className="flex items-start gap-2">
