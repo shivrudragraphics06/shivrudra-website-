@@ -26,6 +26,8 @@ import { type ComponentType, type FormEvent, type SVGProps, useEffect, useMemo, 
 import logoUrl from "@/assets/logo.png";
 import { adminApi, assetUrl, loginAdmin } from "@/lib/api";
 
+export const ADMIN_BASE_PATH = "/shivrudra_graphics-myadmin";
+
 type AdminPath = {
   pathname: string;
   navigate: (path: string) => void;
@@ -249,9 +251,9 @@ const resources: ResourceConfig[] = [
 ];
 
 const navItems = [
-  { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { path: `${ADMIN_BASE_PATH}/dashboard`, label: "Dashboard", icon: LayoutDashboard },
   ...resources.map((resource) => ({
-    path: `/admin/${resource.key}`,
+    path: `${ADMIN_BASE_PATH}/${resource.key}`,
     label: resource.label,
     icon: resource.icon,
   })),
@@ -285,7 +287,7 @@ function AdminLoginPage({ navigate }: AdminPath) {
       const data = await loginAdmin(email, password);
       localStorage.setItem("admin_token", data.token);
       localStorage.setItem("admin_name", data.admin.name);
-      navigate("/admin/dashboard");
+      navigate(`${ADMIN_BASE_PATH}/dashboard`);
     } catch {
       setError("Invalid email or password");
     } finally {
@@ -350,7 +352,7 @@ function AdminShell({ pathname, navigate, children }: AdminPath & { children: Re
   function logout() {
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_name");
-    navigate("/admin/login");
+    navigate(`${ADMIN_BASE_PATH}/login`);
   }
 
   return (
@@ -470,7 +472,7 @@ function AdminDashboard({ navigate }: AdminPath) {
               </p>
             </div>
             <button
-              onClick={() => navigate("/admin/services")}
+              onClick={() => navigate(`${ADMIN_BASE_PATH}/services`)}
               className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-brand-red px-5 text-sm font-black text-white shadow-brand transition hover:bg-brand-maroon"
             >
               <Plus className="size-4" />
@@ -506,7 +508,7 @@ function AdminDashboard({ navigate }: AdminPath) {
           return (
             <button
               key={resource.key}
-              onClick={() => navigate(`/admin/${resource.key}`)}
+              onClick={() => navigate(`${ADMIN_BASE_PATH}/${resource.key}`)}
               className="group relative overflow-hidden rounded-lg border bg-white p-5 text-left shadow-soft transition hover:-translate-y-0.5 hover:border-brand-red hover:shadow-lg"
             >
               <span className="absolute inset-x-0 top-0 h-1 bg-brand-red opacity-0 transition group-hover:opacity-100" />
@@ -944,17 +946,17 @@ export function AdminPage({ pathname, navigate }: AdminPath) {
     document.title = "Admin Panel - Shivrudra Graphics";
   }, []);
 
-  if (pathname === "/admin/login") {
-    if (getToken()) navigate("/admin/dashboard");
+  if (pathname === `${ADMIN_BASE_PATH}/login`) {
+    if (getToken()) navigate(`${ADMIN_BASE_PATH}/dashboard`);
     return <AdminLoginPage pathname={pathname} navigate={navigate} />;
   }
 
   if (!getToken()) {
-    navigate("/admin/login");
+    navigate(`${ADMIN_BASE_PATH}/login`);
     return null;
   }
 
-  const resourceKey = pathname.split("/")[2] || "dashboard";
+  const resourceKey = pathname.slice(ADMIN_BASE_PATH.length).split("/").filter(Boolean)[0] || "dashboard";
   const resource = resources.find((item) => item.key === resourceKey);
 
   return (

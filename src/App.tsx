@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { Link } from "@/components/AppLink";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SITE_TAGLINE } from "@/data/site";
-import { AdminPage } from "@/routes/admin";
+import { ADMIN_BASE_PATH, AdminPage } from "@/routes/admin";
 import { AboutPage } from "@/routes/about";
 import { ClientsPage } from "@/routes/clients";
 import { ContactPage } from "@/routes/contact";
@@ -53,7 +53,7 @@ function setMeta(nameOrProperty: "name" | "property", key: string, content: stri
 
 function usePageMeta(pathname: string) {
   useEffect(() => {
-    if (pathname.startsWith("/admin")) return;
+    if (pathname.startsWith(ADMIN_BASE_PATH)) return;
 
     const title = STATIC_TITLES[pathname] ?? "Shivrudra Graphics Pvt Ltd";
     const description =
@@ -113,7 +113,7 @@ export function App() {
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith(ADMIN_BASE_PATH)) {
     return <AdminPage pathname={pathname} navigate={navigate} />;
   }
 
