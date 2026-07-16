@@ -1,12 +1,12 @@
 import { ArrowRight, PackageCheck } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
-import { CONTACT } from "@/data/site";
 import { assetUrl } from "@/lib/api";
 import { findProductBySlug } from "@/lib/products";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useEffect, useState } from "react";
 import { fetchPublicProduct, type PublicProductVariant } from "@/lib/public-content";
+import { usePublicContact } from "@/hooks/use-public-data";
 
 export function ProductNotFound() {
   return (
@@ -20,6 +20,7 @@ export function ProductNotFound() {
 }
 
 export function ProductDetailPage({ productSlug }: { productSlug: string }) {
+  const contact = usePublicContact();
   const [product, setProduct] = useState(() => findProductBySlug(productSlug));
   const [productDescription, setProductDescription] = useState("");
   const [mainImageUrl, setMainImageUrl] = useState("");
@@ -156,7 +157,7 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
                     {title}
                   </h3>
                   <a
-                    href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`}
+                    href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
                     className="mt-1 inline-flex items-center gap-1.5 font-bold text-brand-red transition hover:text-brand-maroon"
                   >
                     Enquire <WhatsAppIcon className="h-4 w-4" />

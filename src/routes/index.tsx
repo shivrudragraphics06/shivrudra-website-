@@ -18,10 +18,8 @@ import {
 } from "lucide-react";
 import {
   PROCESS_STEPS,
-  SERVICES,
   WHY_CHOOSE,
   TIMELINE,
-  CONTACT,
   SITE_TAGLINE,
 } from "@/data/site";
 import { useEffect, useState } from "react";
@@ -30,12 +28,12 @@ import { IndustriesGrid } from "@/components/IndustriesGrid";
 import heroMotionVideo from "@/assets/moving LEDdot pattern.mp4";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import {
-  fetchPublicServices,
   fetchPublicTestimonials,
   type PublicService,
   type PublicTestimonial,
 } from "@/lib/public-content";
 import { assetUrl } from "@/lib/api";
+import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 
 const TESTIMONIALS = [
   {
@@ -116,16 +114,11 @@ function getServiceImage(service: PublicService) {
 }
 
 export function HomePage() {
-  const [services, setServices] = useState<PublicService[]>(SERVICES);
+  const services = usePublicServices();
+  const contact = usePublicContact();
   const [testimonials, setTestimonials] = useState<PublicTestimonial[]>(TESTIMONIALS);
 
   useEffect(() => {
-    fetchPublicServices()
-      .then((items) => {
-        if (items.length) setServices(items);
-      })
-      .catch(() => {});
-
     fetchPublicTestimonials()
       .then((items) => {
         if (items.length) setTestimonials(items);
@@ -169,7 +162,7 @@ export function HomePage() {
                   Explore Services <ArrowRight className="h-5 w-5" />
                 </Link>
                 <a
-                  href={`https://wa.me/${CONTACT.whatsapp}`}
+                  href={`https://wa.me/${contact.whatsapp}`}
                   className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-4 text-lg font-semibold text-white shadow-soft transition hover:scale-105"
                 >
                   <WhatsAppIcon className="h-5 w-5" /> Get Quote
@@ -638,7 +631,7 @@ export function HomePage() {
                   Get a Quote <ArrowRight className="h-4 w-4" />
                 </Link>
                 <a
-                  href={`https://wa.me/${CONTACT.whatsapp}`}
+                  href={`https://wa.me/${contact.whatsapp}`}
                   className="inline-flex items-center gap-2 rounded-full bg-brand-yellow text-brand-dark px-6 py-3.5 font-bold shadow-soft hover:scale-105 transition"
                 >
                   <WhatsAppIcon className="h-4 w-4" /> Chat on WhatsApp

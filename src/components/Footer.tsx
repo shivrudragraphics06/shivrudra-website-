@@ -8,12 +8,16 @@ import {
   Linkedin,
   Youtube,
 } from "lucide-react";
-import { CONTACT, SERVICES, SITE_TAGLINE } from "@/data/site";
+import { SITE_TAGLINE } from "@/data/site";
 import logoUrl from "@/assets/logo.png";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 
 export function Footer() {
+  const contact = usePublicContact();
+  const services = usePublicServices();
+
   return (
     <footer className="mt-20 bg-brand-dark text-white">
       <div className="container-page py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
@@ -61,7 +65,7 @@ export function Footer() {
         <div>
           <h4 className="font-display font-bold mb-4 text-brand-yellow">Top Services</h4>
           <ul className="space-y-2 text-sm">
-            {SERVICES.slice(0, 8).map((s) => (
+            {services.slice(0, 8).map((s) => (
               <li key={s.slug}>
                 <Link
                   to="/services/$slug"
@@ -80,9 +84,9 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-white/80">
             <li className="flex items-start gap-2">
               <MapPin className="h-4 w-4 mt-0.5 text-brand-red shrink-0" />
-              {CONTACT.address}
+              {contact.address}
             </li>
-            {CONTACT.phones.map((p) => (
+            {contact.phones.map((p) => (
               <li key={p} className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-brand-red shrink-0" />
                 <a href={`tel:${p.replace(/\s/g, "")}`} className="hover:text-brand-yellow">
@@ -92,14 +96,14 @@ export function Footer() {
             ))}
             <li className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-brand-red shrink-0" />
-              <a href={`mailto:${CONTACT.email}`} className="hover:text-brand-yellow">
-                {CONTACT.email}
+              <a href={`mailto:${contact.email}`} className="hover:text-brand-yellow">
+                {contact.email}
               </a>
             </li>
           </ul>
           <div className="mt-4 flex gap-3">
             <a
-              href={`https://wa.me/${CONTACT.whatsapp}`}
+              href={`https://wa.me/${contact.whatsapp}`}
               aria-label="WhatsApp"
               className="grid h-9 w-9 place-items-center rounded-full bg-white/10 transition hover:bg-[#25D366]"
             >

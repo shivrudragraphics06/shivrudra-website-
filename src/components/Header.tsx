@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Globe2, Mail, Phone, Menu, X, ChevronDown, BadgeCheck } from "lucide-react";
-import { SERVICES, CONTACT } from "@/data/site";
 import logoUrl from "@/assets/logo.png";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 
 type NavItem = { to: string; label: string; mega?: boolean };
 const NAV: NavItem[] = [
@@ -19,6 +19,9 @@ const NAV: NavItem[] = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const services = usePublicServices();
+  const contact = usePublicContact();
+  const primaryPhone = contact.phones[0] || "";
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-border">
@@ -30,11 +33,11 @@ export function Header() {
             <span className="font-medium tracking-wide">ISO 9001:2015 Certified Company</span>
           </div>
           <div className="hidden sm:flex items-center gap-4">
-            <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
-              <Mail className="h-3.5 w-3.5" /> {CONTACT.email}
+            <a href={`mailto:${contact.email}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
+              <Mail className="h-3.5 w-3.5" /> {contact.email}
             </a>
-            <a href={`https://${CONTACT.website}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
-              <Globe2 className="h-3.5 w-3.5" /> {CONTACT.website}
+            <a href={`https://${contact.website}`} className="flex items-center gap-1.5 hover:text-brand-yellow">
+              <Globe2 className="h-3.5 w-3.5" /> {contact.website}
             </a>
           </div>
         </div>
@@ -52,13 +55,13 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <a
-            href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`}
+            href={`tel:${primaryPhone.replace(/\s/g, "")}`}
             className="hidden md:inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold hover:border-brand-red hover:text-brand-red transition"
           >
-            <Phone className="h-4 w-4" /> {CONTACT.phones[0]}
+            <Phone className="h-4 w-4" /> {primaryPhone}
           </a>
           <a
-            href={`https://wa.me/${CONTACT.whatsapp}`}
+            href={`https://wa.me/${contact.whatsapp}`}
             target="_blank"
             rel="noreferrer"
             className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#25D366] text-white px-4 py-2 text-sm font-semibold hover:opacity-90 transition shadow-soft"
@@ -98,7 +101,7 @@ export function Header() {
                   onMouseLeave={() => setServicesOpen(false)}
                 >
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
-                    {SERVICES.map((s) => (
+                    {services.map((s) => (
                       <Link
                         key={s.slug}
                         to="/services/$slug"
@@ -131,7 +134,7 @@ export function Header() {
                 </Link>
                 {item.mega && (
                   <div className="pl-4 grid grid-cols-2 gap-x-2">
-                    {SERVICES.slice(0, 10).map((s) => (
+                    {services.slice(0, 10).map((s) => (
                       <Link
                         key={s.slug}
                         to="/services/$slug"
@@ -147,7 +150,7 @@ export function Header() {
               </div>
             ))}
             <a
-              href={`https://wa.me/${CONTACT.whatsapp}`}
+              href={`https://wa.me/${contact.whatsapp}`}
               className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] text-white px-4 py-3 font-semibold"
             >
               <WhatsAppIcon className="h-4 w-4" /> Chat on WhatsApp

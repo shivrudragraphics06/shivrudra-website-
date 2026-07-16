@@ -1,8 +1,8 @@
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
-import { CONTACT } from "@/data/site";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { usePublicContact } from "@/hooks/use-public-data";
 
 const LOGO_TYPES = [
   {
@@ -48,6 +48,8 @@ const LOGO_TYPES = [
 ];
 
 export function LogoDesignPage() {
+  const contact = usePublicContact();
+
   return (
     <div>
       <PageHero
@@ -99,7 +101,7 @@ export function LogoDesignPage() {
                     {item.name}
                   </h3>
                   <a
-                    href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`}
+                    href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
                     className="mt-1 inline-flex items-center gap-1.5 font-bold text-brand-red transition hover:text-brand-maroon"
                   >
                     Enquire <WhatsAppIcon className="h-4 w-4" />

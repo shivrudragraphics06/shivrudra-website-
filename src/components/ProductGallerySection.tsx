@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Maximize2, X } from "lucide-react";
-import { GALLERY_CATEGORIES } from "@/data/site";
 import { assetUrl } from "@/lib/api";
 import { fetchPublicGallery } from "@/lib/public-content";
 
@@ -81,6 +80,10 @@ export function ProductGallerySection({
   const [active, setActive] = useState("All");
   const [selected, setSelected] = useState<GalleryItem | null>(null);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(PRODUCT_GALLERY_ITEMS);
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(galleryItems.map((item) => item.cat).filter(Boolean)))],
+    [galleryItems],
+  );
 
   useEffect(() => {
     fetchPublicGallery()
@@ -118,7 +121,7 @@ export function ProductGallerySection({
 
         {showFilters && (
           <div className="mt-8 flex flex-wrap justify-center gap-2">
-            {GALLERY_CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category}
                 type="button"

@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { PageHero } from "@/components/PageHero";
-import { CONTACT, SERVICES } from "@/data/site";
 import { Phone, Mail, MapPin, Send, Upload, CheckCircle2 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
+import { submitPublicInquiry } from "@/lib/public-content";
 
 export function ContactPage() {
   const [sent, setSent] = useState(false);
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(CONTACT.address)}&output=embed`;
+  const [error, setError] = useState("");
+  const services = usePublicServices();
+  const contact = usePublicContact();
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.address)}&output=embed`;
   const [form, setForm] = useState({
     name: "",
     mobile: "",
@@ -16,10 +20,21 @@ export function ContactPage() {
     message: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const text = `Name: ${form.name}%0AMobile: ${form.mobile}%0AEmail: ${form.email}%0ABusiness: ${form.business}%0AService: ${form.service}%0AMessage: ${form.message}`;
-    window.open(`https://wa.me/${CONTACT.whatsapp}?text=${text}`, "_blank");
+    setError("");
+
+    try {
+      await submitPublicInquiry(form);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save your inquiry. Please try again.");
+      return;
+    }
+
+    const text = encodeURIComponent(
+      `Name: ${form.name}\nMobile: ${form.mobile}\nEmail: ${form.email}\nBusiness: ${form.business}\nService: ${form.service}\nMessage: ${form.message}`,
+    );
+    window.open(`https://wa.me/${contact.whatsapp}?text=${text}`, "_blank");
     setSent(true);
   }
 
@@ -49,6 +64,11 @@ export function ContactPage() {
             </div>
           ) : (
             <form className="mt-6 grid sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+              {error && (
+                <div className="sm:col-span-2 rounded-xl border border-brand-red/30 bg-brand-red/5 px-4 py-3 text-sm font-semibold text-brand-red">
+                  {error}
+                </div>
+              )}
               <Field
                 label="Name"
                 value={form.name}
@@ -83,7 +103,7 @@ export function ContactPage() {
                   className="mt-1.5 w-full px-4 py-3 rounded-xl border border-border bg-white focus:border-brand-red outline-none transition"
                 >
                   <option value="">Select a service…</option>
-                  {SERVICES.map((s) => (
+                  {services.map((s) => (
                     <option key={s.slug} value={s.name}>
                       {s.name}
                     </option>
@@ -123,28 +143,28 @@ export function ContactPage() {
             <div className="font-display font-black text-xl">Contact Info</div>
             <div className="mt-4 space-y-3 text-sm">
               <a
-                href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`}
+                href={`tel:${(contact.phones[0] || "").replace(/\s/g, "")}`}
                 className="flex items-start gap-3 hover:text-brand-yellow"
               >
                 <Phone className="h-4 w-4 mt-0.5 text-brand-red" />
                 <div>
-                  {CONTACT.phones.map((p) => (
+                  {contact.phones.map((p) => (
                     <div key={p}>{p}</div>
                   ))}
                 </div>
               </a>
               <a
-                href={`mailto:${CONTACT.email}`}
+                href={`mailto:${contact.email}`}
                 className="flex items-center gap-3 hover:text-brand-yellow"
               >
-                <Mail className="h-4 w-4 text-brand-red" /> {CONTACT.email}
+                <Mail className="h-4 w-4 text-brand-red" /> {contact.email}
               </a>
               <div className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 mt-0.5 text-brand-red" /> {CONTACT.address}
+                <MapPin className="h-4 w-4 mt-0.5 text-brand-red" /> {contact.address}
               </div>
             </div>
             <a
-              href={`https://wa.me/${CONTACT.whatsapp}`}
+              href={`https://wa.me/${contact.whatsapp}`}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 font-semibold"
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp Us
@@ -160,7 +180,7 @@ export function ContactPage() {
             />
             <div className="p-4 text-sm">
               <div className="font-display font-bold">Visit us</div>
-              <div className="text-muted-foreground text-xs mt-1">{CONTACT.address}</div>
+              <div className="text-muted-foreground text-xs mt-1">{contact.address}</div>
             </div>
           </div>
         </div>

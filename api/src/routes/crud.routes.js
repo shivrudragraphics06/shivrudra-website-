@@ -83,6 +83,16 @@ const resources = {
     orderBy: "sort_order ASC, id DESC",
     fields: ["client_name", "client_role", "company", "message", "rating", "image_url", "sort_order", "is_active"],
   },
+  inquiries: {
+    table: "contact_inquiries",
+    orderBy: "created_at DESC, id DESC",
+    fields: ["name", "mobile", "email", "business", "service", "message", "source", "status"],
+  },
+  settings: {
+    table: "site_settings",
+    orderBy: "setting_key ASC",
+    fields: ["setting_key", "setting_value"],
+  },
 };
 
 function getResource(req, res) {

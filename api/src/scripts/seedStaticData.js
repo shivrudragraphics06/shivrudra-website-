@@ -68,6 +68,53 @@ function evaluateOptionalArray(source, name) {
   }
 }
 
+function extractObject(source, name) {
+  const exportMarker = `export const ${name}`;
+  const start = source.indexOf(exportMarker);
+  if (start < 0) throw new Error(`Could not find ${name}`);
+
+  const equals = source.indexOf("=", start);
+  let index = source.indexOf("{", equals);
+  if (index < 0) throw new Error(`Could not find ${name} object`);
+
+  let depth = 0;
+  let inString = false;
+  let quote = "";
+  let escaped = false;
+
+  for (; index < source.length; index += 1) {
+    const char = source[index];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === quote) {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'" || char === "`") {
+      inString = true;
+      quote = char;
+      continue;
+    }
+
+    if (char === "{") depth += 1;
+    if (char === "}") depth -= 1;
+
+    if (depth === 0) return source.slice(source.indexOf("{", equals), index + 1);
+  }
+
+  throw new Error(`Could not parse ${name}`);
+}
+
+function evaluateObject(source, name) {
+  return Function(`"use strict"; return (${extractObject(source, name)});`)();
+}
+
 function toSlug(value) {
   return slugify(value, { lower: true, strict: true });
 }
@@ -120,6 +167,7 @@ async function main() {
   const categories = evaluateArray(siteSource, "CATEGORIES");
   const industries = evaluateArray(siteSource, "INDUSTRIES");
   const clients = evaluateArray(siteSource, "CLIENTS");
+  const contact = evaluateObject(siteSource, "CONTACT");
   const gallery = evaluateArray(gallerySource, "PRODUCT_GALLERY_ITEMS");
   const testimonials = evaluateArray(homeSource, "TESTIMONIALS");
   const variants = evaluateOptionalArray(
@@ -211,6 +259,20 @@ async function main() {
       );
     }
   }
+
+  await pool.execute(
+    `INSERT INTO site_settings (setting_key, setting_value)
+     VALUES (?, ?)
+     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+    ["contact", JSON.stringify(contact)],
+  );
+
+  await pool.execute(
+    `INSERT INTO site_settings (setting_key, setting_value)
+     VALUES (?, ?)
+     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+    ["site_tagline", "Commercial, Industrial, Corporate Printing and LED Sign Board Manufacturers"],
+  );
 
   console.log("Static website data seeded into MySQL.");
   process.exit(0);

@@ -27,6 +27,9 @@ import telecomImage from "@/assets/industries we serve/Telecom.png";
 import tourismImage from "@/assets/industries we serve/Tourism.png";
 import wasteManagementImage from "@/assets/industries we serve/Waste Management.png";
 import wholesaleTradeImage from "@/assets/industries we serve/Wholesale Trade.png";
+import { useEffect, useState } from "react";
+import { assetUrl } from "@/lib/api";
+import { fetchPublicIndustries, type PublicIndustry } from "@/lib/public-content";
 
 const INDUSTRY_ITEMS = [
   { name: "Advertising & Media", image: advertisingMediaImage },
@@ -60,7 +63,21 @@ const INDUSTRY_ITEMS = [
   { name: "Wholesale Trade", image: wholesaleTradeImage },
 ];
 
+const FALLBACK_IMAGES = new Map(INDUSTRY_ITEMS.map((item) => [item.name, item]));
+
 export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
+  const [industries, setIndustries] = useState<PublicIndustry[]>(
+    INDUSTRY_ITEMS.map((item) => ({ name: item.name, image_url: item.image })),
+  );
+
+  useEffect(() => {
+    fetchPublicIndustries()
+      .then((items) => {
+        if (items.length) setIndustries(items);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div
       className={
@@ -69,7 +86,11 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
           : "mx-auto grid max-w-[1280px] grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-6"
       }
     >
-      {INDUSTRY_ITEMS.map((industry) => (
+      {industries.map((industry) => {
+        const fallback = FALLBACK_IMAGES.get(industry.name);
+        const image = industry.image_url ? assetUrl(industry.image_url) : fallback?.image;
+
+        return (
         <div key={industry.name} className="group text-center">
           <div
             className={
@@ -79,12 +100,12 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
             }
           >
             <img
-              src={industry.image}
+              src={image}
               alt=""
               className={
                 framed
                   ? "h-12 w-12 object-contain mix-blend-multiply"
-                  : `${industry.className ?? "h-14 w-14 sm:h-16 sm:w-16 xl:h-20 xl:w-20"} object-contain mix-blend-multiply`
+                  : `${fallback?.className ?? "h-14 w-14 sm:h-16 sm:w-16 xl:h-20 xl:w-20"} object-contain mix-blend-multiply`
               }
             />
           </div>
@@ -98,7 +119,8 @@ export function IndustriesGrid({ framed = false }: { framed?: boolean }) {
             {industry.name}
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

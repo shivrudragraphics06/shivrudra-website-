@@ -1,20 +1,10 @@
 import { PageHero } from "@/components/PageHero";
-import { SERVICES } from "@/data/site";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/components/AppLink";
-import { useEffect, useState } from "react";
-import { fetchPublicServices, type PublicService } from "@/lib/public-content";
+import { usePublicServices } from "@/hooks/use-public-data";
 
 export function ServicesPage() {
-  const [services, setServices] = useState<PublicService[]>(SERVICES);
-
-  useEffect(() => {
-    fetchPublicServices()
-      .then((items) => {
-        if (items.length) setServices(items);
-      })
-      .catch(() => {});
-  }, []);
+  const services = usePublicServices();
 
   return (
     <div>

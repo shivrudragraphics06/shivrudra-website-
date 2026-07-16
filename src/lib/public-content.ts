@@ -71,11 +71,45 @@ export type PublicTestimonial = {
   rating?: number;
 };
 
+export type PublicContact = {
+  phones: string[];
+  email: string;
+  website: string;
+  whatsapp: string;
+  address: string;
+};
+
+export type PublicInquiry = {
+  name: string;
+  mobile: string;
+  email?: string;
+  business?: string;
+  service?: string;
+  message?: string;
+  source?: string;
+};
+
 export const fetchPublicServices = () => publicApi<PublicService[]>("/services");
 export const fetchPublicCategories = () => publicApi<PublicCategory[]>("/categories");
 export const fetchPublicGallery = () => publicApi<PublicGalleryItem[]>("/gallery");
 export const fetchPublicIndustries = () => publicApi<PublicIndustry[]>("/industries");
 export const fetchPublicClients = () => publicApi<PublicClient[]>("/clients");
 export const fetchPublicTestimonials = () => publicApi<PublicTestimonial[]>("/testimonials");
+export const fetchPublicContact = () => publicApi<Partial<PublicContact>>("/contact");
 export const fetchPublicProduct = (slug: string) =>
   publicApi<PublicService & { images?: PublicGalleryItem[]; variants?: PublicProductVariant[] }>(`/products/${slug}`);
+
+export async function submitPublicInquiry(inquiry: PublicInquiry) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/public/inquiries`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...inquiry, source: inquiry.source || "website" }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || "Inquiry could not be saved");
+  }
+
+  return response.json() as Promise<{ id: number; message: string }>;
+}

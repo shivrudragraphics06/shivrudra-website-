@@ -1,12 +1,10 @@
 import { PageHero } from "@/components/PageHero";
-import { SERVICES, CONTACT } from "@/data/site";
 import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
 import { toProductSlug } from "@/lib/products";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
-import { useEffect, useState } from "react";
-import { fetchPublicServices, type PublicService } from "@/lib/public-content";
 import { assetUrl } from "@/lib/api";
+import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 
 export function ServiceNotFound() {
   return (
@@ -20,15 +18,8 @@ export function ServiceNotFound() {
 }
 
 export function ServiceDetail({ slug }: { slug: string }) {
-  const [services, setServices] = useState<PublicService[]>(SERVICES);
-
-  useEffect(() => {
-    fetchPublicServices()
-      .then((items) => {
-        if (items.length) setServices(items);
-      })
-      .catch(() => {});
-  }, []);
+  const services = usePublicServices();
+  const contact = usePublicContact();
 
   const svc = services.find((s) => s.slug === slug);
   if (!svc) return <ServiceNotFound />;
@@ -104,13 +95,13 @@ export function ServiceDetail({ slug }: { slug: string }) {
               Get a tailored quote for your {svc.name.toLowerCase()} requirement.
             </p>
             <a
-              href={`https://wa.me/${CONTACT.whatsapp}?text=Hi,%20I%20need%20a%20quote%20for%20${encodeURIComponent(svc.name)}`}
+              href={`https://wa.me/${contact.whatsapp}?text=Hi,%20I%20need%20a%20quote%20for%20${encodeURIComponent(svc.name)}`}
               className="mt-4 inline-flex items-center gap-2 rounded-full bg-white text-brand-red px-4 py-2.5 font-bold text-sm"
             >
               <WhatsAppIcon className="h-4 w-4" /> WhatsApp Quote
             </a>
             <a
-              href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`}
+              href={`tel:${(contact.phones[0] || "").replace(/\s/g, "")}`}
               className="mt-2 inline-flex items-center gap-2 rounded-full bg-brand-yellow text-brand-dark px-4 py-2.5 font-bold text-sm ml-2"
             >
               <Phone className="h-4 w-4" /> Call Now

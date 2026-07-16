@@ -1,10 +1,12 @@
-import { CONTACT } from "@/data/site";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { usePublicContact } from "@/hooks/use-public-data";
 
 export function WhatsAppButton() {
+  const contact = usePublicContact();
+
   return (
     <a
-      href={`https://wa.me/${CONTACT.whatsapp}?text=Hi%20Shivrudra%20Graphics,%20I%20need%20a%20quote.`}
+      href={`https://wa.me/${contact.whatsapp}?text=Hi%20Shivrudra%20Graphics,%20I%20need%20a%20quote.`}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat on WhatsApp"
