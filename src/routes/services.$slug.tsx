@@ -62,7 +62,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
             Explore our full range of {svc.name.toLowerCase()} solutions. Each product is crafted
             with premium materials and delivered on time.
           </p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {productCards.map((product) => {
               const message = `Hi, I want to enquire about ${product.name} in ${svc.name}.`;
 
