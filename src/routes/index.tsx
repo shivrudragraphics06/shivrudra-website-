@@ -307,9 +307,9 @@ export function HomePage() {
             ].map((b) => (
               <div
                 key={b.t}
-                className="p-6 rounded-2xl bg-white border border-border shadow-soft hover:border-brand-red transition"
+                className="rounded-2xl border border-border bg-white p-6 text-center shadow-soft transition hover:border-brand-red sm:text-left"
               >
-                <div className="grid h-12 w-12 place-items-center rounded-xl gradient-accent">
+                <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl gradient-accent sm:mx-0">
                   <b.i className="h-5 w-5 text-brand-dark" />
                 </div>
                 <div className="mt-4 font-display font-bold">{b.t}</div>
