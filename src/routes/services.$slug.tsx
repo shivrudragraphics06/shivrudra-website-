@@ -1,6 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
-import { toProductSlug } from "@/lib/products";
+import { ArrowRight, PackageCheck, Phone } from "lucide-react";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { assetUrl } from "@/lib/api";
@@ -26,6 +25,16 @@ export function ServiceDetail({ slug }: { slug: string }) {
 
   const others = services.filter((s) => s.slug !== svc.slug).slice(0, 6);
   const serviceImage = svc.image_url || svc.main_image_url;
+  const productCards = svc.products?.length
+    ? svc.products
+    : (svc.subs ?? []).map((name, index) => ({
+        id: index,
+        name,
+        slug: "",
+        service_id: svc.id ?? 0,
+        short_description: "",
+        main_image_url: "",
+      }));
 
   return (
     <div>
@@ -53,36 +62,50 @@ export function ServiceDetail({ slug }: { slug: string }) {
             Explore our full range of {svc.name.toLowerCase()} solutions. Each product is crafted
             with premium materials and delivered on time.
           </p>
-          <div className="mt-8 grid sm:grid-cols-2 gap-3">
-            {(svc.subs ?? []).map((sub: string) => {
-              const content = (
-                <>
-                  <CheckCircle2 className="h-5 w-5 text-brand-red mt-0.5 shrink-0" />
-                  <div className="font-medium text-sm">{sub}</div>
-                  <ArrowRight className="ml-auto h-4 w-4 text-brand-red" />
-                </>
-              );
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+            {productCards.map((product) => {
+              const message = `Hi, I want to enquire about ${product.name} in ${svc.name}.`;
 
-              return sub === "Logo Design" ? (
-                <Link
-                  key={sub}
-                  to="/logo-design"
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white border border-border hover:border-brand-red transition"
+              return (
+                <article
+                  key={`${product.id}-${product.name}`}
+                  className="group overflow-hidden rounded-xl border border-border bg-white p-3 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
                 >
-                  {content}
-                </Link>
-              ) : (
-                <Link
-                  key={sub}
-                  to="/products/$productSlug"
-                  params={{
-                    productSlug:
-                      svc.products?.find((product) => product.name === sub)?.slug ?? toProductSlug(sub),
-                  }}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white border border-border hover:border-brand-red transition"
-                >
-                  {content}
-                </Link>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-brand-light">
+                    {product.main_image_url ? (
+                      <img
+                        src={assetUrl(product.main_image_url)}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
+                        <PackageCheck className="h-12 w-12" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-3 px-1 pb-1 pt-4">
+                    <div>
+                      <h3 className="font-display text-lg font-extrabold leading-snug text-brand-dark sm:text-xl">
+                        {product.name}
+                      </h3>
+                      {product.short_description ? (
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                          {product.short_description}
+                        </p>
+                      ) : null}
+                    </div>
+                    <a
+                      href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg gradient-brand px-4 py-2.5 text-sm font-bold text-white shadow-brand transition hover:scale-[1.02]"
+                    >
+                      Enquire <WhatsAppIcon className="h-4 w-4" />
+                    </a>
+                  </div>
+                </article>
               );
             })}
           </div>

@@ -12,7 +12,14 @@ export type PublicService = {
   description?: string;
   blurb?: string;
   subs?: string[];
-  products?: { id: number; name: string; slug: string; service_id: number }[];
+  products?: {
+    id: number;
+    name: string;
+    slug: string;
+    service_id: number;
+    short_description?: string;
+    main_image_url?: string;
+  }[];
 };
 
 export type PublicCategory = {

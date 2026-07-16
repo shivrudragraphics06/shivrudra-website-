@@ -106,19 +106,6 @@ const resources: ResourceConfig[] = [
     ],
   },
   {
-    key: "product-images",
-    label: "Product Images",
-    singular: "Product Image",
-    icon: Image,
-    columns: ["product_id", "image_url", "alt_text", "sort_order"],
-    fields: [
-      { name: "product_id", label: "Product", type: "select", optionsKey: "products", required: true },
-      { name: "image_url", label: "Detail Image", type: "image", required: true },
-      { name: "alt_text", label: "Alt Text" },
-      { name: "sort_order", label: "Sort Order", type: "number" },
-    ],
-  },
-  {
     key: "gallery",
     label: "Gallery",
     singular: "Gallery Image",
