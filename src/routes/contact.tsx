@@ -8,6 +8,7 @@ import { submitPublicInquiry } from "@/lib/public-content";
 export function ContactPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const [mobileError, setMobileError] = useState("");
   const services = usePublicServices();
   const contact = usePublicContact();
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.address)}&output=embed`;
@@ -23,6 +24,12 @@ export function ContactPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setMobileError("");
+
+    if (!/^[6-9]\d{9}$/.test(form.mobile)) {
+      setMobileError("Enter a valid 10-digit mobile number.");
+      return;
+    }
 
     try {
       await submitPublicInquiry(form);
@@ -79,7 +86,14 @@ export function ContactPage() {
                 label="Mobile Number"
                 type="tel"
                 value={form.mobile}
-                onChange={(v) => setForm({ ...form, mobile: v })}
+                onChange={(v) => {
+                  setMobileError("");
+                  setForm({ ...form, mobile: v.replace(/\D/g, "").slice(0, 10) });
+                }}
+                inputMode="numeric"
+                maxLength={10}
+                pattern="[6-9][0-9]{9}"
+                error={mobileError}
                 required
               />
               <Field
@@ -195,12 +209,20 @@ function Field({
   onChange,
   type = "text",
   required,
+  inputMode,
+  maxLength,
+  pattern,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   required?: boolean;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  maxLength?: number;
+  pattern?: string;
+  error?: string;
 }) {
   return (
     <div>
@@ -213,8 +235,15 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="mt-1.5 w-full px-4 py-3 rounded-xl border border-border bg-white focus:border-brand-red outline-none transition"
+        inputMode={inputMode}
+        maxLength={maxLength}
+        pattern={pattern}
+        aria-invalid={Boolean(error)}
+        className={`mt-1.5 w-full rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-brand-red ${
+          error ? "border-brand-red" : "border-border"
+        }`}
       />
+      {error ? <p className="mt-1.5 text-xs font-semibold text-brand-red">{error}</p> : null}
     </div>
   );
 }
