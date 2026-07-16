@@ -89,7 +89,7 @@ const resources: ResourceConfig[] = [
     label: "Products",
     singular: "Product",
     icon: Star,
-    columns: ["name", "slug", "short_description", "is_active"],
+    columns: ["name", "service_name", "category_name", "main_image_url", "is_active"],
     fields: [
       { name: "category_id", label: "Category", type: "select", optionsKey: "categories" },
       { name: "service_id", label: "Service / Subcategory", type: "select", optionsKey: "services" },
@@ -236,6 +236,14 @@ function formatLabel(value: string) {
 function toInputValue(value: AdminRecord[string]) {
   if (value === null || value === undefined) return "";
   return String(value);
+}
+
+function optionLabel(option: AdminRecord) {
+  const name = String(option.name ?? option.title ?? option.id);
+  const serviceName = option.service_name ? String(option.service_name) : "";
+  const categoryName = option.category_name ? String(option.category_name) : "";
+  const context = [serviceName, categoryName].filter(Boolean).join(" / ");
+  return context ? `${name} (${context})` : name;
 }
 
 function AdminLoginPage({ navigate }: AdminPath) {
@@ -816,7 +824,7 @@ function AdminField({
           <option value="">Select {field.label}</option>
           {(options ?? []).map((option) => (
             <option key={option.id} value={String(option.id)}>
-              {String(option.name ?? option.title ?? option.id)}
+              {optionLabel(option)}
             </option>
           ))}
         </select>

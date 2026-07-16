@@ -121,6 +121,20 @@ crudRoutes.get(
     const config = getResource(req, res);
     if (!config) return;
 
+    if (req.params.resource === "products") {
+      const [rows] = await pool.query(
+        `SELECT products.*,
+          services.name AS service_name,
+          product_categories.name AS category_name
+         FROM products
+         LEFT JOIN services ON services.id = products.service_id
+         LEFT JOIN product_categories ON product_categories.id = products.category_id
+         ORDER BY ${config.orderBy}`,
+      );
+      res.json(rows);
+      return;
+    }
+
     const [rows] = await pool.query(`SELECT * FROM ${config.table} ORDER BY ${config.orderBy}`);
     res.json(rows);
   }),
