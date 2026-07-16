@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "../../..");
 const sourceDir = path.join(rootDir, "src/assets/services");
-const uploadDir = path.join(rootDir, "api/uploads/services");
+const publicImageDir = path.join(rootDir, "public/images/services");
 
 const serviceImages = [
   ["Badge & Dome Printing.png", "badge-dome-printing"],
@@ -42,13 +42,13 @@ function destinationName(fileName) {
 }
 
 async function main() {
-  await fs.mkdir(uploadDir, { recursive: true });
+  await fs.mkdir(publicImageDir, { recursive: true });
 
   for (const [fileName, slug] of serviceImages) {
     const targetName = destinationName(fileName);
     const sourcePath = path.join(sourceDir, fileName);
-    const targetPath = path.join(uploadDir, targetName);
-    const imageUrl = `/uploads/services/${targetName}`;
+    const targetPath = path.join(publicImageDir, targetName);
+    const imageUrl = `/images/services/${targetName}`;
 
     await fs.copyFile(sourcePath, targetPath);
     await pool.execute("UPDATE services SET image_url = ? WHERE slug = ?", [imageUrl, slug]);

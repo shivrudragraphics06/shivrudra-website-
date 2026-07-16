@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "../../..");
 const clientsPagePath = path.join(rootDir, "src/routes/clients.tsx");
 const clientAssetsDir = path.join(rootDir, "src/assets/client logos");
-const uploadsDir = path.join(rootDir, "api/uploads/clients");
+const publicImageDir = path.join(rootDir, "public/images/clients");
 
 function toSafeFileName(value) {
   return value
@@ -55,7 +55,7 @@ function parseFrontendClients(source) {
 }
 
 async function main() {
-  await fs.mkdir(uploadsDir, { recursive: true });
+  await fs.mkdir(publicImageDir, { recursive: true });
 
   const source = await fs.readFile(clientsPagePath, "utf8");
   const clients = parseFrontendClients(source);
@@ -72,8 +72,8 @@ async function main() {
     const sourcePath = path.join(clientAssetsDir, client.fileName);
     const extension = path.extname(client.fileName);
     const destinationName = `${String(index + 1).padStart(2, "0")}-${toSafeFileName(client.name)}${extension}`;
-    const destinationPath = path.join(uploadsDir, destinationName);
-    const logoUrl = `/uploads/clients/${destinationName}`;
+    const destinationPath = path.join(publicImageDir, destinationName);
+    const logoUrl = `/images/clients/${destinationName}`;
 
     await fs.copyFile(sourcePath, destinationPath);
     await pool.execute(

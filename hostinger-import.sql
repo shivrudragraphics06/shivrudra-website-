@@ -182,8 +182,8 @@ CREATE TABLE IF NOT EXISTS contact_inquiries (
 -- Re-importing this file keeps existing edited records and fills missing defaults.
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Designing', 'designing', 'Creative design solutions from logos to packaging artwork.', 'Creative design solutions from logos to packaging artwork.', '/uploads/services/designing.jpg', 0, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Designing', 'designing', 'Creative design solutions from logos to packaging artwork.', 'Creative design solutions from logos to packaging artwork.', '/images/services/designing.jpg', 0, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Logo Design', 'logo-design', 'Logo Design by Shivrudra Graphics', 'Logo Design service by Shivrudra Graphics.', 0, 1
@@ -256,8 +256,8 @@ FROM services WHERE slug = 'designing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Flex Printing', 'flex-printing', 'Vibrant large-format flex prints for outdoor & indoor branding.', 'Vibrant large-format flex prints for outdoor & indoor branding.', '/uploads/services/flex-printing.png', 1, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Flex Printing', 'flex-printing', 'Vibrant large-format flex prints for outdoor & indoor branding.', 'Vibrant large-format flex prints for outdoor & indoor branding.', '/images/services/flex-printing.png', 1, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Normal Flex Printing', 'normal-flex-printing', 'Normal Flex Printing by Shivrudra Graphics', 'Normal Flex Printing service by Shivrudra Graphics.', 0, 1
@@ -300,8 +300,8 @@ FROM services WHERE slug = 'flex-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Vinyl Printing', 'vinyl-printing', 'Premium vinyl prints for vehicles, walls, floors and more.', 'Premium vinyl prints for vehicles, walls, floors and more.', '/uploads/services/vinyl-printing.png', 2, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Vinyl Printing', 'vinyl-printing', 'Premium vinyl prints for vehicles, walls, floors and more.', 'Premium vinyl prints for vehicles, walls, floors and more.', '/images/services/vinyl-printing.png', 2, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Vinyl Printing', 'vinyl-printing', 'Vinyl Printing by Shivrudra Graphics', 'Vinyl Printing service by Shivrudra Graphics.', 0, 1
@@ -374,8 +374,8 @@ FROM services WHERE slug = 'vinyl-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('UV Printing', 'uv-printing', 'High-resolution UV printing on rigid and flexible substrates.', 'High-resolution UV printing on rigid and flexible substrates.', '/uploads/services/uv-printing.png', 3, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('UV Printing', 'uv-printing', 'High-resolution UV printing on rigid and flexible substrates.', 'High-resolution UV printing on rigid and flexible substrates.', '/images/services/uv-printing.png', 3, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'UV Vinyl Printing', 'uv-vinyl-printing', 'UV Vinyl Printing by Shivrudra Graphics', 'UV Vinyl Printing service by Shivrudra Graphics.', 0, 1
@@ -413,8 +413,8 @@ FROM services WHERE slug = 'uv-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Screen Printing', 'screen-printing', 'Industrial screen printing on plastic, metal, glass and textiles.', 'Industrial screen printing on plastic, metal, glass and textiles.', '/uploads/services/screen-printing.png', 4, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Screen Printing', 'screen-printing', 'Industrial screen printing on plastic, metal, glass and textiles.', 'Industrial screen printing on plastic, metal, glass and textiles.', '/images/services/screen-printing.png', 4, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Polycarbonate Sticker Printing', 'polycarbonate-sticker-printing', 'Polycarbonate Sticker Printing by Shivrudra Graphics', 'Polycarbonate Sticker Printing service by Shivrudra Graphics.', 0, 1
@@ -517,8 +517,8 @@ FROM services WHERE slug = 'screen-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Digital Printing', 'digital-printing', 'Crisp digital prints for labels, tags, cards and packaging.', 'Crisp digital prints for labels, tags, cards and packaging.', '/uploads/services/digital-printing.png', 5, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Digital Printing', 'digital-printing', 'Crisp digital prints for labels, tags, cards and packaging.', 'Crisp digital prints for labels, tags, cards and packaging.', '/images/services/digital-printing.png', 5, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Texture Paper Printing', 'texture-paper-printing', 'Texture Paper Printing by Shivrudra Graphics', 'Texture Paper Printing service by Shivrudra Graphics.', 0, 1
@@ -641,8 +641,8 @@ FROM services WHERE slug = 'digital-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Offset Printing', 'offset-printing', 'Bulk offset printing for stationery, books and packaging.', 'Bulk offset printing for stationery, books and packaging.', '/uploads/services/offset-printing.png', 6, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Offset Printing', 'offset-printing', 'Bulk offset printing for stationery, books and packaging.', 'Bulk offset printing for stationery, books and packaging.', '/images/services/offset-printing.png', 6, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Pawati Book Printing', 'pawati-book-printing', 'Pawati Book Printing by Shivrudra Graphics', 'Pawati Book Printing service by Shivrudra Graphics.', 0, 1
@@ -845,8 +845,8 @@ FROM services WHERE slug = 'offset-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Photo Frame', 'photo-frame', 'Custom photo frames in premium finishes.', 'Custom photo frames in premium finishes.', '/uploads/services/photo-frame.jpg', 7, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Photo Frame', 'photo-frame', 'Custom photo frames in premium finishes.', 'Custom photo frames in premium finishes.', '/images/services/photo-frame.jpg', 7, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Wooden Frames', 'wooden-frames', 'Wooden Frames by Shivrudra Graphics', 'Wooden Frames service by Shivrudra Graphics.', 0, 1
@@ -869,8 +869,8 @@ FROM services WHERE slug = 'photo-frame'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Badge & Dome Printing', 'badge-dome-printing', 'Glossy dome stickers and brand badges.', 'Glossy dome stickers and brand badges.', '/uploads/services/badge-and-dome-printing.png', 8, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Badge & Dome Printing', 'badge-dome-printing', 'Glossy dome stickers and brand badges.', 'Glossy dome stickers and brand badges.', '/images/services/badge-and-dome-printing.png', 8, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Dome Stickers', 'dome-stickers', 'Dome Stickers by Shivrudra Graphics', 'Dome Stickers service by Shivrudra Graphics.', 0, 1
@@ -893,8 +893,8 @@ FROM services WHERE slug = 'badge-dome-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Bag Printing', 'bag-printing', 'Custom printed bags for promotion and retail.', 'Custom printed bags for promotion and retail.', '/uploads/services/bag-printing.png', 9, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Bag Printing', 'bag-printing', 'Custom printed bags for promotion and retail.', 'Custom printed bags for promotion and retail.', '/images/services/bag-printing.png', 9, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Cloth Bags', 'cloth-bags', 'Cloth Bags by Shivrudra Graphics', 'Cloth Bags service by Shivrudra Graphics.', 0, 1
@@ -917,8 +917,8 @@ FROM services WHERE slug = 'bag-printing'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Stamp', 'stamp', 'Custom stamps for office, billing, numbering and date marking needs.', 'Custom stamps for office, billing, numbering and date marking needs.', '/uploads/services/rubber-stamps.png', 10, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Stamp', 'stamp', 'Custom stamps for office, billing, numbering and date marking needs.', 'Custom stamps for office, billing, numbering and date marking needs.', '/images/services/rubber-stamps.png', 10, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Stamp', 'stamp', 'Stamp by Shivrudra Graphics', 'Stamp service by Shivrudra Graphics.', 0, 1
@@ -976,8 +976,8 @@ FROM services WHERE slug = 'stamp'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Engraving & Marking', 'engraving-marking', 'Laser engraving and industrial marking solutions.', 'Laser engraving and industrial marking solutions.', '/uploads/services/engraving-and-marking.png', 11, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Engraving & Marking', 'engraving-marking', 'Laser engraving and industrial marking solutions.', 'Laser engraving and industrial marking solutions.', '/images/services/engraving-and-marking.png', 11, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Laser Engraving', 'laser-engraving', 'Laser Engraving by Shivrudra Graphics', 'Laser Engraving service by Shivrudra Graphics.', 0, 1
@@ -1000,8 +1000,8 @@ FROM services WHERE slug = 'engraving-marking'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Keychains', 'keychain', 'Custom keychains for promotions and gifting.', 'Custom keychains for promotions and gifting.', '/uploads/services/keychains.png', 12, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Keychains', 'keychain', 'Custom keychains for promotions and gifting.', 'Custom keychains for promotions and gifting.', '/images/services/keychains.png', 12, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Metal Keychains', 'metal-keychains', 'Metal Keychains by Shivrudra Graphics', 'Metal Keychains service by Shivrudra Graphics.', 0, 1
@@ -1024,8 +1024,8 @@ FROM services WHERE slug = 'keychain'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Corporate Gifts', 'corporate-gift', 'Premium curated gifts for clients & employees.', 'Premium curated gifts for clients & employees.', '/uploads/services/corporate-gift.jpg', 13, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Corporate Gifts', 'corporate-gift', 'Premium curated gifts for clients & employees.', 'Premium curated gifts for clients & employees.', '/images/services/corporate-gift.jpg', 13, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Diaries', 'diaries', 'Diaries by Shivrudra Graphics', 'Diaries service by Shivrudra Graphics.', 0, 1
@@ -1048,8 +1048,8 @@ FROM services WHERE slug = 'corporate-gift'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Industrial Name Plates', 'industrial-name-plates', 'Durable name plates for industrial use.', 'Durable name plates for industrial use.', '/uploads/services/industrial-name-plates.png', 14, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Industrial Name Plates', 'industrial-name-plates', 'Durable name plates for industrial use.', 'Durable name plates for industrial use.', '/images/services/industrial-name-plates.png', 14, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'SS Name Plates', 'ss-name-plates', 'SS Name Plates by Shivrudra Graphics', 'SS Name Plates service by Shivrudra Graphics.', 0, 1
@@ -1072,8 +1072,8 @@ FROM services WHERE slug = 'industrial-name-plates'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Premium Signages', 'signage', 'Premium wayfinding, name plate, award and acrylic signage solutions.', 'Premium wayfinding, name plate, award and acrylic signage solutions.', '/uploads/services/signage.png', 15, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Premium Signages', 'signage', 'Premium wayfinding, name plate, award and acrylic signage solutions.', 'Premium wayfinding, name plate, award and acrylic signage solutions.', '/images/services/signage.png', 15, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Way Finding Signage', 'way-finding-signage', 'Way Finding Signage by Shivrudra Graphics', 'Way Finding Signage service by Shivrudra Graphics.', 0, 1
@@ -1131,8 +1131,8 @@ FROM services WHERE slug = 'signage'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Trophies & Medals', 'trophies-medals', 'Custom trophies, medals and certificates for events and recognition.', 'Custom trophies, medals and certificates for events and recognition.', '/uploads/services/trophies-and-medals.png', 16, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Trophies & Medals', 'trophies-medals', 'Custom trophies, medals and certificates for events and recognition.', 'Custom trophies, medals and certificates for events and recognition.', '/images/services/trophies-and-medals.png', 16, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Acrylic Trophies', 'acrylic-trophies', 'Acrylic Trophies by Shivrudra Graphics', 'Acrylic Trophies service by Shivrudra Graphics.', 0, 1
@@ -1195,8 +1195,8 @@ FROM services WHERE slug = 'trophies-medals'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Safety Signages', 'safety-signages', 'Compliant safety signage for every workplace.', 'Compliant safety signage for every workplace.', '/uploads/services/safety-signages.png', 17, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Safety Signages', 'safety-signages', 'Compliant safety signage for every workplace.', 'Compliant safety signage for every workplace.', '/images/services/safety-signages.png', 17, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Vinyl Safety Signage', 'vinyl-safety-signage', 'Vinyl Safety Signage by Shivrudra Graphics', 'Vinyl Safety Signage service by Shivrudra Graphics.', 0, 1
@@ -1259,8 +1259,8 @@ FROM services WHERE slug = 'safety-signages'
 ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
-VALUES ('Laser & CNC Cutting', 'laser-cnc-cutting', 'Precision laser and CNC cutting services.', 'Precision laser and CNC cutting services.', '/uploads/services/laser-and-cnc-cutting.png', 18, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;
+VALUES ('Laser & CNC Cutting', 'laser-cnc-cutting', 'Precision laser and CNC cutting services.', 'Precision laser and CNC cutting services.', '/images/services/laser-and-cnc-cutting.png', 18, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
 SELECT id, 'Acrylic Cutting', 'acrylic-cutting', 'Acrylic Cutting by Shivrudra Graphics', 'Acrylic Cutting service by Shivrudra Graphics.', 0, 1
@@ -1330,277 +1330,277 @@ INSERT INTO product_categories (name, slug, icon, sort_order, is_active)
 VALUES ('Custom Branding', 'custom-branding', 'Sparkles', 11, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), icon = VALUES(icon), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Agriculture', 'agriculture', 0, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Agriculture', 'agriculture', '/images/industries/agriculture.png', '/images/industries/agriculture.png', 0, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Education', 'education', 1, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Education', 'education', '/images/industries/education.png', '/images/industries/education.png', 1, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Wholesale Trade', 'wholesale-trade', 2, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Wholesale Trade', 'wholesale-trade', '/images/industries/wholesale-trade.png', '/images/industries/wholesale-trade.png', 2, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Mining', 'mining', 3, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Mining', 'mining', '/images/industries/mining.png', '/images/industries/mining.png', 3, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Home Builders', 'home-builders', 4, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Home Builders', 'home-builders', '/images/industries/home-builders.png', '/images/industries/home-builders.png', 4, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Automotive', 'automotive', 5, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Automotive', 'automotive', '/images/industries/automotive.png', '/images/industries/automotive.png', 5, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Retail', 'retail', 6, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Retail', 'retail', '/images/industries/retail.png', '/images/industries/retail.png', 6, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Manufacturing', 'manufacturing', 7, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Manufacturing', 'manufacturing', '/images/industries/manufacturing.png', '/images/industries/manufacturing.png', 7, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Construction', 'construction', 8, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Construction', 'construction', '/images/industries/construction.png', '/images/industries/construction.png', 8, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Food & Beverage', 'food-and-beverage', 9, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Food & Beverage', 'food-and-beverage', '/images/industries/food-and-beverage.png', '/images/industries/food-and-beverage.png', 9, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Cosmetics', 'cosmetics', 10, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Cosmetics', 'cosmetics', '/images/industries/cosmetics.png', '/images/industries/cosmetics.png', 10, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Health Care', 'health-care', 11, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Health Care', 'health-care', '/images/industries/health-care.png', '/images/industries/health-care.png', 11, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Government', 'government', 12, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Government', 'government', '/images/industries/government.png', '/images/industries/government.png', 12, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Event', 'event', 13, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Event', 'event', '/images/industries/event.png', '/images/industries/event.png', 13, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Waste Management', 'waste-management', 14, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Waste Management', 'waste-management', '/images/industries/waste-management.png', '/images/industries/waste-management.png', 14, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Bank', 'bank', 15, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Bank', 'bank', '/images/industries/bank.png', '/images/industries/bank.png', 15, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Infrastructure', 'infrastructure', 16, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Infrastructure', 'infrastructure', '/images/industries/infrastructure.png', '/images/industries/infrastructure.png', 16, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('IT', 'it', 17, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('IT', 'it', '/images/industries/it.png', '/images/industries/it.png', 17, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Hotel', 'hotel', 18, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Hotel', 'hotel', '/images/industries/hotel.png', '/images/industries/hotel.png', 18, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Engineering', 'engineering', 19, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Engineering', 'engineering', '/images/industries/engineering.png', '/images/industries/engineering.png', 19, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Pharmaceuticals', 'pharmaceuticals', 20, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Pharmaceuticals', 'pharmaceuticals', '/images/industries/pharmaceuticals.png', '/images/industries/pharmaceuticals.png', 20, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Telecom', 'telecom', 21, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Telecom', 'telecom', '/images/industries/telecom.png', '/images/industries/telecom.png', 21, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Shipping', 'shipping', 22, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Shipping', 'shipping', '/images/industries/shipping.png', '/images/industries/shipping.png', 22, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Insurance', 'insurance', 23, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Insurance', 'insurance', '/images/industries/insurance.png', '/images/industries/insurance.png', 23, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Tourism', 'tourism', 24, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Tourism', 'tourism', '/images/industries/tourism.png', '/images/industries/tourism.png', 24, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Advertising & Media', 'advertising-and-media', 25, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Advertising & Media', 'advertising-and-media', '/images/industries/advertising-and-media.png', '/images/industries/advertising-and-media.png', 25, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Bakery', 'bakery', 26, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Bakery', 'bakery', '/images/industries/bakery.png', '/images/industries/bakery.png', 26, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Land Developers', 'land-developers', 27, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Land Developers', 'land-developers', '/images/industries/land-developers.png', '/images/industries/land-developers.png', 27, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES ('Decorator', 'decorator', 28, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;
-
-INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Bank of India', '/uploads/clients/01-bank-of-india.png', 0, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Bank of India' LIMIT 1);
+INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES ('Decorator', 'decorator', '/images/industries/decorator.png', '/images/industries/decorator.png', 28, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Indian Oil', '/uploads/clients/02-indian-oil.png', 1, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Indian Oil' LIMIT 1);
+VALUES ('Bank of India', '/images/clients/01-bank-of-india.png', 0, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'HP Petrol', '/uploads/clients/03-hp-petrol.png', 2, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'HP Petrol' LIMIT 1);
+VALUES ('Indian Oil', '/images/clients/02-indian-oil.png', 1, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Dexgreen', '/uploads/clients/04-dexgreen.png', 3, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Dexgreen' LIMIT 1);
+VALUES ('HP Petrol', '/images/clients/03-hp-petrol.png', 2, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sunteck', '/uploads/clients/05-sunteck.png', 4, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sunteck' LIMIT 1);
+VALUES ('Dexgreen', '/images/clients/04-dexgreen.png', 3, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Pirajees', '/uploads/clients/06-pirajees.png', 5, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Pirajees' LIMIT 1);
+VALUES ('Sunteck', '/images/clients/05-sunteck.png', 4, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sahuwala', '/uploads/clients/07-sahuwala.png', 6, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sahuwala' LIMIT 1);
+VALUES ('Pirajees', '/images/clients/06-pirajees.png', 5, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Agrovan', '/uploads/clients/08-agrovan.png', 7, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Agrovan' LIMIT 1);
+VALUES ('Sahuwala', '/images/clients/07-sahuwala.png', 6, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Cherise', '/uploads/clients/09-cherise.png', 8, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Cherise' LIMIT 1);
+VALUES ('Agrovan', '/images/clients/08-agrovan.png', 7, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sarvadnya', '/uploads/clients/10-sarvadnya.png', 9, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sarvadnya' LIMIT 1);
+VALUES ('Cherise', '/images/clients/09-cherise.png', 8, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sadhu Vaswani Gurukul', '/uploads/clients/11-sadhu-vaswani-gurukul.png', 10, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sadhu Vaswani Gurukul' LIMIT 1);
+VALUES ('Sarvadnya', '/images/clients/10-sarvadnya.png', 9, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Bharat School', '/uploads/clients/12-bharat-school.png', 11, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Bharat School' LIMIT 1);
+VALUES ('Sadhu Vaswani Gurukul', '/images/clients/11-sadhu-vaswani-gurukul.png', 10, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Angel School', '/uploads/clients/13-angel-school.png', 12, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Angel School' LIMIT 1);
+VALUES ('Bharat School', '/images/clients/12-bharat-school.png', 11, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Acute', '/uploads/clients/14-acute.png', 13, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Acute' LIMIT 1);
+VALUES ('Angel School', '/images/clients/13-angel-school.png', 12, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Caramellas', '/uploads/clients/15-caramellas.png', 14, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Caramellas' LIMIT 1);
+VALUES ('Acute', '/images/clients/14-acute.png', 13, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Circuit House', '/uploads/clients/16-circuit-house.png', 15, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Circuit House' LIMIT 1);
+VALUES ('Caramellas', '/images/clients/15-caramellas.png', 14, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'GBRU', '/uploads/clients/17-gbru.png', 16, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'GBRU' LIMIT 1);
+VALUES ('Circuit House', '/images/clients/16-circuit-house.png', 15, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Redragon', '/uploads/clients/18-redragon.png', 17, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Redragon' LIMIT 1);
+VALUES ('GBRU', '/images/clients/17-gbru.png', 16, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Mahalaxmi Groups', '/uploads/clients/19-mahalaxmi-groups.png', 18, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Mahalaxmi Groups' LIMIT 1);
+VALUES ('Redragon', '/images/clients/18-redragon.png', 17, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Shreyash', '/uploads/clients/20-shreyash.png', 19, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Shreyash' LIMIT 1);
+VALUES ('Mahalaxmi Groups', '/images/clients/19-mahalaxmi-groups.png', 18, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Lexicon', '/uploads/clients/21-lexicon.png', 20, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Lexicon' LIMIT 1);
+VALUES ('Shreyash', '/images/clients/20-shreyash.png', 19, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'JSPM', '/uploads/clients/22-jspm.png', 21, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'JSPM' LIMIT 1);
+VALUES ('Lexicon', '/images/clients/21-lexicon.png', 20, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Edumont', '/uploads/clients/23-edumont.png', 22, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Edumont' LIMIT 1);
+VALUES ('JSPM', '/images/clients/22-jspm.png', 21, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Autopeepal', '/uploads/clients/24-autopeepal.png', 23, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Autopeepal' LIMIT 1);
+VALUES ('Edumont', '/images/clients/23-edumont.png', 22, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Gravotech', '/uploads/clients/25-gravotech.png', 24, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Gravotech' LIMIT 1);
+VALUES ('Autopeepal', '/images/clients/24-autopeepal.png', 23, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Bettinelli', '/uploads/clients/26-bettinelli.png', 25, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Bettinelli' LIMIT 1);
+VALUES ('Gravotech', '/images/clients/25-gravotech.png', 24, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Mobiliti', '/uploads/clients/27-mobiliti.png', 26, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Mobiliti' LIMIT 1);
+VALUES ('Bettinelli', '/images/clients/26-bettinelli.png', 25, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Dan', '/uploads/clients/28-dan.png', 27, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Dan' LIMIT 1);
+VALUES ('Mobiliti', '/images/clients/27-mobiliti.png', 26, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Rainbow', '/uploads/clients/29-rainbow.png', 28, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Rainbow' LIMIT 1);
+VALUES ('Dan', '/images/clients/28-dan.png', 27, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Apollo', '/uploads/clients/30-apollo.png', 29, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Apollo' LIMIT 1);
+VALUES ('Rainbow', '/images/clients/29-rainbow.png', 28, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Shree Lifecare', '/uploads/clients/31-shree-lifecare.png', 30, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Shree Lifecare' LIMIT 1);
+VALUES ('Apollo', '/images/clients/30-apollo.png', 29, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Shree Hospital', '/uploads/clients/32-shree-hospital.png', 31, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Shree Hospital' LIMIT 1);
+VALUES ('Shree Lifecare', '/images/clients/31-shree-lifecare.png', 30, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sardar', '/uploads/clients/33-sardar.png', 32, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sardar' LIMIT 1);
+VALUES ('Shree Hospital', '/images/clients/32-shree-hospital.png', 31, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Shomeshwar Bhel', '/uploads/clients/34-shomeshwar-bhel.png', 33, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Shomeshwar Bhel' LIMIT 1);
+VALUES ('Sardar', '/images/clients/33-sardar.png', 32, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Gurudatta Wadapav', '/uploads/clients/35-gurudatta-wadapav.png', 34, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Gurudatta Wadapav' LIMIT 1);
+VALUES ('Shomeshwar Bhel', '/images/clients/34-shomeshwar-bhel.png', 33, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Serum', '/uploads/clients/36-serum.png', 35, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Serum' LIMIT 1);
+VALUES ('Gurudatta Wadapav', '/images/clients/35-gurudatta-wadapav.png', 34, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Axiss Health Club', '/uploads/clients/37-axiss-health-club.png', 36, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Axiss Health Club' LIMIT 1);
+VALUES ('Serum', '/images/clients/36-serum.png', 35, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Inigma Air', '/uploads/clients/38-inigma-air.png', 37, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Inigma Air' LIMIT 1);
+VALUES ('Axiss Health Club', '/images/clients/37-axiss-health-club.png', 36, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO clients (name, logo_url, sort_order, is_active)
-SELECT 'Sharpedge', '/uploads/clients/39-sharpedge.png', 38, 1
-WHERE NOT EXISTS (SELECT 1 FROM clients WHERE name = 'Sharpedge' LIMIT 1);
+VALUES ('Inigma Air', '/images/clients/38-inigma-air.png', 37, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO clients (name, logo_url, sort_order, is_active)
+VALUES ('Sharpedge', '/images/clients/39-sharpedge.png', 38, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO gallery_images (title, category, image_url, alt_text, sort_order, is_active)
 SELECT 'Offset Printing Press', 'Printing', 'https://images.unsplash.com/photo-1599507593499-a3f7d7d97667?w=1000&q=80', 'Offset Printing Press', 0, 1

@@ -136,6 +136,13 @@ function destinationServiceImage(fileName) {
     .replace(/^-+|-+(?=\.)/g, "");
 }
 
+function normalizeTitle(value) {
+  return value
+    .replace(/\s+\(\d+\)$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function parseClients(source, assetFiles) {
   const imports = new Map();
   const importPattern = /import\s+(\w+)\s+from\s+"@\/assets\/client logos\/([^"]+)";/g;
@@ -176,6 +183,7 @@ async function main() {
   const logoSource = await fs.readFile(path.join(rootDir, "src/routes/logo-design.tsx"), "utf8");
   const clientsSource = await fs.readFile(path.join(rootDir, "src/routes/clients.tsx"), "utf8");
   const clientAssetFiles = await fs.readdir(path.join(rootDir, "src/assets/client logos"));
+  const industryAssetFiles = await fs.readdir(path.join(rootDir, "src/assets/industries we serve"));
 
   const services = evaluateArray(siteSource, "SERVICES");
   const categories = evaluateArray(siteSource, "CATEGORIES");
@@ -212,6 +220,12 @@ async function main() {
     ["uv-printing", "UV Printing.png"],
     ["vinyl-printing", "Vinyl Printing.png"],
   ]);
+  const industryImages = new Map(
+    industryAssetFiles.map((fileName) => {
+      const name = normalizeTitle(titleFromFile(fileName));
+      return [name, `/images/industries/${safeFileName(name)}${path.extname(fileName)}`];
+    }),
+  );
 
   const schemaPath = path.join(rootDir, "hostinger-import.sql");
   const currentImport = await fs.readFile(schemaPath, "utf8");
@@ -225,11 +239,11 @@ async function main() {
 
   for (const [index, service] of services.entries()) {
     const serviceImage = serviceImages.get(service.slug);
-    const imageUrl = serviceImage ? `/uploads/services/${destinationServiceImage(serviceImage)}` : null;
+    const imageUrl = serviceImage ? `/images/services/${destinationServiceImage(serviceImage)}` : null;
     lines.push(
       `INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES (${sql(service.name)}, ${sql(service.slug)}, ${sql(service.blurb)}, ${sql(service.blurb)}, ${sql(imageUrl)}, ${index}, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = COALESCE(NULLIF(services.image_url, ''), VALUES(image_url)), sort_order = VALUES(sort_order), is_active = 1;`,
+ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
 
     for (const [productIndex, productName] of service.subs.entries()) {
@@ -252,24 +266,21 @@ ON DUPLICATE KEY UPDATE name = VALUES(name), icon = VALUES(icon), sort_order = V
   }
 
   for (const [index, industry] of Array.from(new Set(industries)).entries()) {
+    const imageUrl = industryImages.get(industry) || null;
     lines.push(
-      `INSERT INTO industries (name, slug, sort_order, is_active)
-VALUES (${sql(industry)}, ${sql(slugify(industry))}, ${index}, 1)
-ON DUPLICATE KEY UPDATE name = VALUES(name), sort_order = VALUES(sort_order), is_active = 1;`,
+      `INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
+VALUES (${sql(industry)}, ${sql(slugify(industry))}, ${sql(imageUrl)}, ${sql(imageUrl)}, ${index}, 1)
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
   }
 
   for (const [index, client] of clients.entries()) {
     const extension = path.extname(client.fileName);
-    const logoUrl = `/uploads/clients/${String(index + 1).padStart(2, "0")}-${safeFileName(client.name)}${extension}`;
+    const logoUrl = `/images/clients/${String(index + 1).padStart(2, "0")}-${safeFileName(client.name)}${extension}`;
     lines.push(
-      insertIfMissing(
-        "clients",
-        ["name", "logo_url", "sort_order", "is_active"],
-        [sql(client.name), sql(logoUrl), String(index), "1"],
-        "name",
-        sql(client.name),
-      ),
+      `INSERT INTO clients (name, logo_url, sort_order, is_active)
+VALUES (${sql(client.name)}, ${sql(logoUrl)}, ${index}, 1)
+ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
   }
 
