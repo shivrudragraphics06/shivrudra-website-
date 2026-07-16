@@ -158,13 +158,18 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
                   )}
                 </div>
 
-                <div className="mt-4 flex items-start justify-between gap-4">
-                  <h3 className="font-display text-2xl font-black leading-tight text-brand-dark">
-                    {title}
-                  </h3>
+                <div className="mt-4 space-y-3">
+                  <div className="min-w-0">
+                    <h3 className="break-words font-display text-xl font-extrabold leading-snug text-brand-dark sm:text-2xl">
+                      {variant.label}
+                    </h3>
+                    <p className="mt-1 text-sm font-semibold leading-snug text-muted-foreground">
+                      {product.name}
+                    </p>
+                  </div>
                   <a
                     href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
-                    className="mt-1 inline-flex items-center gap-1.5 font-bold text-brand-red transition hover:text-brand-maroon"
+                    className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-red/10 px-3 py-1.5 text-sm font-bold text-brand-red transition hover:bg-brand-red hover:text-white"
                   >
                     Enquire <WhatsAppIcon className="h-4 w-4" />
                   </a>
