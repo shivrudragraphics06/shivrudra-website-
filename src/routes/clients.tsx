@@ -198,6 +198,7 @@ const STATIC_CLIENTS = [
 
 export function ClientsPage() {
   const [clients, setClients] = useState<PublicClient[]>([]);
+  const [failedLogos, setFailedLogos] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchPublicClients()
@@ -217,7 +218,9 @@ export function ClientsPage() {
           {STATIC_CLIENTS.length || clients.length ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {clients.length
-                ? clients.map((client) => (
+                ? clients
+                    .filter((client) => !client.logo_url || !failedLogos.has(client.logo_url))
+                    .map((client) => (
                     <a
                       key={client.id ?? client.name}
                       href={client.website_url || undefined}
@@ -230,6 +233,10 @@ export function ClientsPage() {
                           src={assetUrl(client.logo_url)}
                           alt={client.name}
                           className="max-h-16 max-w-full object-contain"
+                          onError={() => {
+                            if (!client.logo_url) return;
+                            setFailedLogos((current) => new Set(current).add(client.logo_url || ""));
+                          }}
                         />
                       ) : (
                         <span className="font-display text-lg font-black text-brand-dark transition group-hover:text-brand-red">

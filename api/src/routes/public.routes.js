@@ -5,6 +5,49 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const publicRoutes = Router();
 
+function normalizeClientKey(name = "", logoUrl = "") {
+  const value = `${name} ${logoUrl}`
+    .toLowerCase()
+    .replace(/bank\s*of\s*india|\bboi\b/g, "bankofindia")
+    .replace(/indian\s*oil/g, "indianoil")
+    .replace(/hp\s*petrol/g, "hppetrol")
+    .replace(/dexgreen\s*india/g, "dexgreen")
+    .replace(/sunteck\s*high[-\s]*tech/g, "sunteck")
+    .replace(/sahuwala\s*cereals/g, "sahuwala")
+    .replace(/mahalaxmi\s*group\b/g, "mahalaxmigroups")
+    .replace(/shreyash\s*banquets/g, "shreyash")
+    .replace(/lexicon\s*ihm/g, "lexicon")
+    .replace(/rainbow\s*child.*center/g, "rainbow")
+    .replace(/apollo\s*gauging.*ltd/g, "apollo")
+    .replace(/serum\s*institute.*india/g, "serum")
+    .replace(/alyss|axiss/g, "axiss");
+
+  return value.replace(/[^a-z0-9]/g, "");
+}
+
+function clientPriority(client) {
+  const logoUrl = client.logo_url || "";
+  if (logoUrl.startsWith("/images/clients/")) return 4;
+  if (logoUrl && !logoUrl.includes("/uploads/")) return 3;
+  if (logoUrl) return 2;
+  return 1;
+}
+
+function dedupeClients(rows) {
+  const clients = new Map();
+
+  for (const client of rows) {
+    const key = normalizeClientKey(client.name, client.logo_url);
+    const existing = clients.get(key);
+
+    if (!existing || clientPriority(client) > clientPriority(existing)) {
+      clients.set(key, client);
+    }
+  }
+
+  return Array.from(clients.values()).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || (a.id ?? 0) - (b.id ?? 0));
+}
+
 publicRoutes.get(
   "/services",
   asyncHandler(async (_req, res) => {
@@ -54,7 +97,7 @@ publicRoutes.get(
   "/clients",
   asyncHandler(async (_req, res) => {
     const [rows] = await pool.query("SELECT * FROM clients WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
-    res.json(rows);
+    res.json(dedupeClients(rows));
   }),
 );
 
@@ -153,7 +196,7 @@ publicRoutes.get(
     const [gallery] = await pool.query(
       "SELECT * FROM gallery_images WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 12",
     );
-    const [clients] = await pool.query("SELECT * FROM clients WHERE is_active = 1 ORDER BY sort_order ASC");
+    const [clients] = await pool.query("SELECT * FROM clients WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
     const [testimonials] = await pool.query(
       "SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 10",
     );
@@ -163,7 +206,7 @@ publicRoutes.get(
       services,
       categories,
       gallery,
-      clients,
+      clients: dedupeClients(clients),
       testimonials,
       settings: settings.reduce((siteSettings, row) => {
         try {

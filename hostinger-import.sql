@@ -1446,6 +1446,8 @@ INSERT INTO industries (name, slug, icon_url, image_url, sort_order, is_active)
 VALUES ('Decorator', 'decorator', '/images/industries/decorator.png', '/images/industries/decorator.png', 28, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
+UPDATE clients SET is_active = 0;
+
 INSERT INTO clients (name, logo_url, sort_order, is_active)
 VALUES ('Bank of India', '/images/clients/01-bank-of-india.png', 0, 1)
 ON DUPLICATE KEY UPDATE logo_url = VALUES(logo_url), sort_order = VALUES(sort_order), is_active = 1;

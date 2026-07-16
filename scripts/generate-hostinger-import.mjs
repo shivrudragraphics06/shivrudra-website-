@@ -274,6 +274,8 @@ ON DUPLICATE KEY UPDATE name = VALUES(name), icon_url = VALUES(icon_url), image_
     );
   }
 
+  lines.push("UPDATE clients SET is_active = 0;");
+
   for (const [index, client] of clients.entries()) {
     const extension = path.extname(client.fileName);
     const logoUrl = `/images/clients/${String(index + 1).padStart(2, "0")}-${safeFileName(client.name)}${extension}`;
