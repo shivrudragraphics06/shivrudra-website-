@@ -168,8 +168,13 @@ async function main() {
   const industries = evaluateArray(siteSource, "INDUSTRIES");
   const clients = evaluateArray(siteSource, "CLIENTS");
   const contact = evaluateObject(siteSource, "CONTACT");
+  const processSteps = evaluateArray(siteSource, "PROCESS_STEPS");
+  const whyChoose = evaluateArray(siteSource, "WHY_CHOOSE");
+  const timeline = evaluateArray(siteSource, "TIMELINE");
+  const galleryCategories = evaluateArray(siteSource, "GALLERY_CATEGORIES");
   const gallery = evaluateArray(gallerySource, "PRODUCT_GALLERY_ITEMS");
   const testimonials = evaluateArray(homeSource, "TESTIMONIALS");
+  const logoTypes = evaluateArray(await fs.readFile(path.join(rootDir, "src/routes/logo-design.tsx"), "utf8"), "LOGO_TYPES");
   const variants = evaluateOptionalArray(
     await fs.readFile(path.join(rootDir, "src/routes/products.$productSlug.tsx"), "utf8"),
     "VARIANTS",
@@ -260,19 +265,43 @@ async function main() {
     }
   }
 
-  await pool.execute(
-    `INSERT INTO site_settings (setting_key, setting_value)
-     VALUES (?, ?)
-     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
-    ["contact", JSON.stringify(contact)],
-  );
+  const settings = {
+    contact,
+    site_tagline: "Commercial, Industrial, Corporate Printing and LED Sign Board Manufacturers",
+    process_steps: processSteps,
+    why_choose: whyChoose,
+    timeline,
+    gallery_categories: galleryCategories,
+    logo_types: logoTypes,
+    directors: [
+      { name: "Aadesh C. Nimbalkar", role: "Director" },
+      { name: "Akshay N. Kalbhor", role: "Director" },
+    ],
+    about_principles: [
+      {
+        title: "Vision",
+        description:
+          "To provide all types of graphics solutions to increase the growth of clients and build inclusive partnerships based on trust and mutual respect.",
+      },
+      {
+        title: "Mission",
+        description: "To become the most valued business partner for clients and help them grow their business.",
+      },
+      {
+        title: "Values",
+        description: "Integrity, Innovation, Teamwork, Environment-Friendly Approach, Respect for People.",
+      },
+    ],
+  };
 
-  await pool.execute(
-    `INSERT INTO site_settings (setting_key, setting_value)
-     VALUES (?, ?)
-     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
-    ["site_tagline", "Commercial, Industrial, Corporate Printing and LED Sign Board Manufacturers"],
-  );
+  for (const [key, value] of Object.entries(settings)) {
+    await pool.execute(
+      `INSERT INTO site_settings (setting_key, setting_value)
+       VALUES (?, ?)
+       ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+      [key, typeof value === "string" ? value : JSON.stringify(value)],
+    );
+  }
 
   console.log("Static website data seeded into MySQL.");
   process.exit(0);

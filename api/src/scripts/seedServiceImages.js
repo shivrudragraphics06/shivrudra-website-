@@ -28,7 +28,7 @@ const serviceImages = [
   ["Safety Signages.png", "safety-signages"],
   ["Screen Printing.png", "screen-printing"],
   ["Signage.png", "signage"],
-  ["Trophies & Medals.png", "trophies-and-medals"],
+  ["Trophies & Medals.png", "trophies-medals"],
   ["UV Printing.png", "uv-printing"],
   ["Vinyl Printing.png", "vinyl-printing"],
 ];

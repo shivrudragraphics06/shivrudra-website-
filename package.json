@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "start": "node api/src/server.js",
     "postinstall": "npm --prefix api install",
+    "generate:hostinger-import": "node scripts/generate-hostinger-import.mjs",
     "seed:hostinger": "npm --prefix api run seed-static && npm --prefix api run seed-clients && npm --prefix api run seed-service-images && npm --prefix api run import-brochure",
     "preview": "vite preview",
     "lint": "eslint .",
