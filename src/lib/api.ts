@@ -6,6 +6,10 @@ export function assetUrl(path?: string | null) {
 
   const normalizedPath = path.replace(/\\/g, "/");
   const uploadsIndex = normalizedPath.indexOf("uploads/");
+  if (uploadsIndex < 0 && (normalizedPath.startsWith("/assets/") || normalizedPath.startsWith("/images/"))) {
+    return normalizedPath;
+  }
+
   const publicPath =
     uploadsIndex >= 0 ? `/${normalizedPath.slice(uploadsIndex)}` : normalizedPath.startsWith("/") ? normalizedPath : `/${normalizedPath}`;
 
