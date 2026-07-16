@@ -175,10 +175,6 @@ async function main() {
   const gallery = evaluateArray(gallerySource, "PRODUCT_GALLERY_ITEMS");
   const testimonials = evaluateArray(homeSource, "TESTIMONIALS");
   const logoTypes = evaluateArray(await fs.readFile(path.join(rootDir, "src/routes/logo-design.tsx"), "utf8"), "LOGO_TYPES");
-  const variants = evaluateOptionalArray(
-    await fs.readFile(path.join(rootDir, "src/routes/products.$productSlug.tsx"), "utf8"),
-    "VARIANTS",
-  );
 
   for (const [index, service] of services.entries()) await upsertService(service, index);
 
@@ -242,25 +238,6 @@ async function main() {
       await pool.execute(
         "INSERT INTO testimonials (client_name, client_role, message, rating, sort_order, is_active) VALUES (?, ?, ?, 5, ?, 1)",
         [item.name, item.role, item.text, index],
-      );
-    }
-  }
-
-  for (const [index, variant] of variants.entries()) {
-    const [existing] = await pool.execute(
-      "SELECT id FROM product_variants WHERE product_id IS NULL AND label = ? LIMIT 1",
-      [variant.label],
-    );
-
-    if (existing[0]) {
-      await pool.execute(
-        "UPDATE product_variants SET detail = ?, colors = ?, sort_order = ?, is_active = 1 WHERE id = ?",
-        [variant.detail, variant.colors, index, existing[0].id],
-      );
-    } else {
-      await pool.execute(
-        "INSERT INTO product_variants (product_id, label, detail, colors, sort_order, is_active) VALUES (NULL, ?, ?, ?, ?, 1)",
-        [variant.label, variant.detail, variant.colors, index],
       );
     }
   }

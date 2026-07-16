@@ -177,10 +177,24 @@ publicRoutes.get(
     const [images] = await pool.execute("SELECT * FROM product_images WHERE product_id = ? ORDER BY sort_order ASC", [
       product.id,
     ]);
-    const [variants] = await pool.execute(
+    const [variantRows] = await pool.execute(
       "SELECT * FROM product_variants WHERE product_id = ? AND is_active = 1 ORDER BY sort_order ASC, id DESC",
       [product.id],
     );
+    const variants = variantRows.length
+      ? variantRows
+      : [
+          {
+            id: `product-${product.id}`,
+            product_id: product.id,
+            label: product.name,
+            detail: product.short_description || product.description || "",
+            image_url: product.main_image_url || images[0]?.image_url || "",
+            colors: "from-white via-[#f7f7f7] to-[#ffe9e9]",
+            sort_order: 0,
+            is_active: 1,
+          },
+        ];
 
     res.json({ ...product, images, variants });
   }),
