@@ -57,7 +57,6 @@ publicRoutes.get(
        FROM products
        LEFT JOIN services ON services.id = products.service_id
        WHERE products.is_active = 1
-         AND NOT (services.slug = 'corporate-gift' AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers'))
        ORDER BY products.sort_order ASC, products.id DESC`,
     );
     const [subproducts] = await pool.query(

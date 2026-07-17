@@ -93,7 +93,7 @@ const resources: ResourceConfig[] = [
     columns: ["name", "service_name", "category_name", "item_count", "main_image_url", "is_active"],
     fields: [
       { name: "category_id", label: "Category", type: "select", optionsKey: "categories" },
-      { name: "service_id", label: "Service / Subcategory", type: "select", optionsKey: "services" },
+      { name: "service_id", label: "Main Service", type: "select", optionsKey: "services" },
       { name: "name", label: "Name", required: true },
       { name: "slug", label: "Slug", placeholder: "auto-created if blank" },
       { name: "short_description", label: "Short Description", type: "textarea" },
@@ -540,6 +540,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   const [query, setQuery] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [productFilter, setProductFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -563,6 +564,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
     setQuery("");
     setServiceFilter("");
     setCategoryFilter("");
+    setProductFilter("");
     loadRows();
   }, [resource.key]);
 
@@ -590,9 +592,13 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   const filteredRows = useMemo(() => {
     const term = query.trim().toLowerCase();
     const byRelation = rows.filter((row) => {
-      if (resource.key !== "products") return true;
-      if (serviceFilter && String(row.service_id ?? "") !== serviceFilter) return false;
-      if (categoryFilter && String(row.category_id ?? "") !== categoryFilter) return false;
+      if (resource.key === "products") {
+        if (serviceFilter && String(row.service_id ?? "") !== serviceFilter) return false;
+        if (categoryFilter && String(row.category_id ?? "") !== categoryFilter) return false;
+      }
+      if (resource.key === "sub-products" && productFilter && String(row.product_id ?? "") !== productFilter) {
+        return false;
+      }
       return true;
     });
 
@@ -601,7 +607,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
     return byRelation.filter((row) =>
       Object.values(row).some((value) => String(value ?? "").toLowerCase().includes(term)),
     );
-  }, [categoryFilter, query, resource.key, rows, serviceFilter]);
+  }, [categoryFilter, productFilter, query, resource.key, rows, serviceFilter]);
 
   function openCreate() {
     setEditing({});
@@ -705,7 +711,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
         {resource.key === "products" ? (
           <div className="mt-3 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
             <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
-              Service / Subcategory
+              Main Service
               <select
                 className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
                 value={serviceFilter}
@@ -742,6 +748,37 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
                 setQuery("");
                 setServiceFilter("");
                 setCategoryFilter("");
+              }}
+              className="h-10 self-end rounded-md border px-4 text-sm font-black transition hover:bg-muted"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : null}
+
+        {resource.key === "sub-products" ? (
+          <div className="mt-3 grid gap-3 md:grid-cols-[1fr_auto]">
+            <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
+              Parent Product
+              <select
+                className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
+                value={productFilter}
+                onChange={(event) => setProductFilter(event.target.value)}
+              >
+                <option value="">All products</option>
+                {(relationOptions.products ?? []).map((product) => (
+                  <option key={product.id} value={String(product.id)}>
+                    {optionLabel(product)}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setProductFilter("");
               }}
               className="h-10 self-end rounded-md border px-4 text-sm font-black transition hover:bg-muted"
             >

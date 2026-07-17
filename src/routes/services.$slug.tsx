@@ -1,5 +1,6 @@
 import { PageHero } from "@/components/PageHero";
 import { ArrowRight, PackageCheck, Phone } from "lucide-react";
+import { useState } from "react";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { assetUrl } from "@/lib/api";
@@ -38,6 +39,7 @@ function corporateGiftSectionId(productName: string) {
 export function ServiceDetail({ slug }: { slug: string }) {
   const services = usePublicServices();
   const contact = usePublicContact();
+  const [selectedCorporateGift, setSelectedCorporateGift] = useState("");
 
   const svc = services.find((s) => s.slug === slug);
   if (!svc) return <ServiceNotFound />;
@@ -78,6 +80,11 @@ export function ServiceDetail({ slug }: { slug: string }) {
         })
     : loadedProductCards;
 
+  const selectedCorporateGiftProduct =
+    isCorporateGift
+      ? productCards.find((product) => product.name === selectedCorporateGift) || productCards[0]
+      : productCards[0];
+
   return (
     <div>
       <PageHero
@@ -109,7 +116,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
                   return (
                     <a
                       key={`${product.id}-${product.name}`}
-                      href={`#${corporateGiftSectionId(product.name)}`}
+                      href="#corporate-gift-sub-products"
+                      onClick={() => setSelectedCorporateGift(product.name)}
                       className="group text-center outline-none"
                     >
                       <div className="mx-auto aspect-square w-full max-w-[250px] overflow-hidden rounded-xl bg-brand-light shadow-soft">
@@ -126,7 +134,11 @@ export function ServiceDetail({ slug }: { slug: string }) {
                           </div>
                         )}
                       </div>
-                      <h3 className="mx-auto mt-4 max-w-[220px] font-display text-base font-black leading-snug text-brand-dark sm:text-lg">
+                      <h3
+                        className={`mx-auto mt-4 max-w-[220px] font-display text-base font-black leading-snug sm:text-lg ${
+                          selectedCorporateGiftProduct?.name === product.name ? "text-brand-red" : "text-brand-dark"
+                        }`}
+                      >
                         {product.name}
                       </h3>
                     </a>
@@ -134,22 +146,20 @@ export function ServiceDetail({ slug }: { slug: string }) {
                 })}
               </div>
 
-              <div className="mt-16 space-y-14">
-                {productCards.map((product) => {
-                  const imageSrc =
-                    ("main_image_url" in product ? product.main_image_url : "") ||
-                    ("image_url" in product ? product.image_url : "") ||
-                    svc.image_url ||
-                    svc.main_image_url ||
-                    "";
-                  const sectionItems = product.sub_products?.length ? product.sub_products : [product];
+              {selectedCorporateGiftProduct ? (
+                <div id="corporate-gift-sub-products" className="mt-16 scroll-mt-28">
+                  {(() => {
+                    const product = selectedCorporateGiftProduct;
+                    const imageSrc =
+                      ("main_image_url" in product ? product.main_image_url : "") ||
+                      ("image_url" in product ? product.image_url : "") ||
+                      svc.image_url ||
+                      svc.main_image_url ||
+                      "";
+                    const sectionItems = product.sub_products ?? [];
 
-                  return (
-                    <section
-                      id={corporateGiftSectionId(product.name)}
-                      key={`section-${product.id}-${product.name}`}
-                      className="scroll-mt-28"
-                    >
+                    return (
+                      <section id={corporateGiftSectionId(product.name)} key={`section-${product.id}-${product.name}`}>
                       <div className="flex items-center gap-4">
                         <div className="h-px flex-1 bg-border" />
                         <h3 className="shrink-0 text-center font-display text-2xl font-black text-brand-dark md:text-3xl">
@@ -158,12 +168,13 @@ export function ServiceDetail({ slug }: { slug: string }) {
                         <div className="h-px flex-1 bg-border" />
                       </div>
 
-                      <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                        {sectionItems.map((item) => {
-                          const itemImage = ("image_url" in item ? item.image_url : "") || imageSrc;
-                          const bullets = corporateGiftBullets(item.name, item.item_count);
+                      {sectionItems.length ? (
+                        <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                          {sectionItems.map((item) => {
+                            const itemImage = ("image_url" in item ? item.image_url : "") || imageSrc;
+                            const bullets = corporateGiftBullets(item.name, item.item_count);
 
-                          return (
+                            return (
                         <article
                           key={`${product.id}-${item.id}-${item.name}`}
                           className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
@@ -208,13 +219,22 @@ export function ServiceDetail({ slug }: { slug: string }) {
                             </a>
                           </div>
                         </article>
-                          );
-                        })}
-                      </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="mt-7 rounded-xl border border-dashed border-border bg-brand-light p-6 text-center">
+                          <p className="font-display text-xl font-black text-brand-dark">No sub products added yet</p>
+                          <p className="mt-2 text-sm font-semibold text-muted-foreground">
+                            Products for {product.name} will be updated soon.
+                          </p>
+                        </div>
+                      )}
                     </section>
-                  );
-                })}
-              </div>
+                    );
+                  })()}
+                </div>
+              ) : null}
             </>
           ) : (
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">

@@ -145,7 +145,6 @@ crudRoutes.get(
          FROM products
          LEFT JOIN services ON services.id = products.service_id
          LEFT JOIN product_categories ON product_categories.id = products.category_id
-         WHERE NOT (services.slug = 'corporate-gift' AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers'))
          ORDER BY ${config.orderBy}`,
       );
       res.json(rows);
