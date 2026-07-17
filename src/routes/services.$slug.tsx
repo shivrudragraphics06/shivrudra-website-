@@ -57,16 +57,18 @@ export function ServiceDetail({ slug }: { slug: string }) {
         sub_products: [],
       }));
   const defaultCorporateGiftCards = isCorporateGift
-    ? (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
-        id: `corporate-gift-${index}`,
-        name: serviceSubName(sub),
-        slug: "",
-        service_id: svc.id ?? 0,
-        item_count: serviceSubItemCount(sub) ?? null,
-        short_description: "",
-        main_image_url: "",
-        sub_products: [],
-      }))
+    ? loadedProductCards.flatMap((product) => product.sub_products ?? []).length
+      ? loadedProductCards.flatMap((product) => product.sub_products ?? [])
+      : (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
+          id: `corporate-gift-${index}`,
+          name: serviceSubName(sub),
+          slug: "",
+          service_id: svc.id ?? 0,
+          item_count: serviceSubItemCount(sub) ?? null,
+          short_description: "",
+          main_image_url: "",
+          sub_products: [],
+        }))
     : [];
   const productCards = isCorporateGift
     ? defaultCorporateGiftCards.map((defaultProduct) => {
@@ -99,7 +101,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
             <>
               <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {productCards.map((product) => {
-                  const imageSrc = product.main_image_url || svc.image_url || svc.main_image_url || "";
+                  const imageSrc =
+                    ("main_image_url" in product ? product.main_image_url : "") ||
+                    ("image_url" in product ? product.image_url : "") ||
+                    svc.image_url ||
+                    svc.main_image_url ||
+                    "";
 
                   return (
                     <a
@@ -131,7 +138,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
 
               <div className="mt-16 space-y-14">
                 {productCards.map((product) => {
-                  const imageSrc = product.main_image_url || svc.image_url || svc.main_image_url || "";
+                  const imageSrc =
+                    ("main_image_url" in product ? product.main_image_url : "") ||
+                    ("image_url" in product ? product.image_url : "") ||
+                    svc.image_url ||
+                    svc.main_image_url ||
+                    "";
                   const sectionItems = product.sub_products?.length ? product.sub_products : [product];
 
                   return (

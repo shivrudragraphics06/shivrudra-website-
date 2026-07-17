@@ -869,7 +869,7 @@ function AdminField({
 }) {
   if (field.type === "checkbox") {
     return (
-      <label className="flex h-11 items-center gap-3 rounded-md border px-3 text-sm font-bold">
+      <label className="flex h-11 min-w-0 items-center gap-3 rounded-md border px-3 text-sm font-bold">
         <input checked={Boolean(value)} onChange={(event) => onChange(event.target.checked)} type="checkbox" />
         {field.label}
       </label>
@@ -878,10 +878,10 @@ function AdminField({
 
   if (field.type === "textarea") {
     return (
-      <label className="grid gap-2 text-sm font-bold md:col-span-2">
+      <label className="grid min-w-0 gap-2 text-sm font-bold md:col-span-2">
         {field.label}
         <textarea
-          className="min-h-28 rounded-md border px-3 py-2 font-normal outline-none focus:ring-2 focus:ring-brand-red"
+          className="min-h-28 w-full min-w-0 rounded-md border px-3 py-2 font-normal outline-none focus:ring-2 focus:ring-brand-red"
           value={toInputValue(value)}
           onChange={(event) => onChange(event.target.value)}
           required={field.required}
@@ -893,10 +893,10 @@ function AdminField({
 
   if (field.type === "select") {
     return (
-      <label className="grid gap-2 text-sm font-bold">
+      <label className="grid min-w-0 gap-2 text-sm font-bold">
         {field.label}
         <select
-          className="h-10 rounded-md border bg-white px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
+          className="h-10 w-full min-w-0 rounded-md border bg-white px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
           value={toInputValue(value)}
           onChange={(event) => onChange(event.target.value)}
           required={field.required}
@@ -914,11 +914,11 @@ function AdminField({
 
   if (field.type === "image") {
     return (
-      <label className="grid gap-2 text-sm font-bold">
+      <label className="grid min-w-0 gap-2 text-sm font-bold">
         {field.label}
-        <div className="grid gap-2">
+        <div className="grid min-w-0 gap-2">
           <input
-            className="h-10 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
+            className="h-10 w-full min-w-0 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
             value={toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
             required={field.required}
@@ -935,10 +935,10 @@ function AdminField({
   }
 
   return (
-    <label className="grid gap-2 text-sm font-bold">
+      <label className="grid min-w-0 gap-2 text-sm font-bold">
       {field.label}
       <input
-        className="h-10 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
+        className="h-10 w-full min-w-0 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
         value={toInputValue(value)}
         onChange={(event) => onChange(event.target.value)}
         required={field.required}
