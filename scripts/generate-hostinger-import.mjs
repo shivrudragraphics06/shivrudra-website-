@@ -110,14 +110,6 @@ function slugify(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-function serviceProductSlug(service) {
-  return `${service.slug}-products`;
-}
-
-function serviceSubproductSlug(service, productName) {
-  return `${service.slug}-${slugify(productName)}`;
-}
-
 function safeFileName(value) {
   return value
     .trim()
@@ -254,38 +246,22 @@ VALUES (${sql(service.name)}, ${sql(service.slug)}, ${sql(service.blurb)}, ${sql
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
 
-    const frontendProductSlugs = service.subs.map((subProduct) =>
-      slugify(typeof subProduct === "string" ? subProduct : subProduct.name),
-    );
-
-    if (frontendProductSlugs.length) {
-      lines.push(
-        `DELETE products FROM products
+    lines.push(
+      `DELETE products FROM products
 INNER JOIN services ON services.id = products.service_id
 WHERE services.slug = ${sql(service.slug)}
-  AND products.slug IN (${frontendProductSlugs.map(sql).join(", ")});`,
-      );
-    }
-
-    const parentProductSlug = serviceProductSlug(service);
-    lines.push(
-      `INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, ${sql(service.name)}, ${sql(parentProductSlug)}, ${sql(`${service.name} products`)}, ${sql(service.blurb)}, 0, 1
-FROM services WHERE slug = ${sql(service.slug)}
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;`,
+  AND products.slug = ${sql(`${service.slug}-products`)};`,
     );
 
     for (const [productIndex, subProduct] of service.subs.entries()) {
       const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
       const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;
-      const subproductSlug = serviceSubproductSlug(service, productName);
+      const productSlug = slugify(productName);
       lines.push(
-        `INSERT INTO product_subproducts (product_id, name, slug, item_count, short_description, description, sort_order, is_active)
-SELECT products.id, ${sql(productName)}, ${sql(subproductSlug)}, ${sql(itemCount)}, ${sql(itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : `${productName} by Shivrudra Graphics`)}, ${sql(`${productName} service by Shivrudra Graphics.`)}, ${productIndex}, 1
-FROM products
-INNER JOIN services ON services.id = products.service_id
-WHERE services.slug = ${sql(service.slug)} AND products.slug = ${sql(parentProductSlug)}
-ON DUPLICATE KEY UPDATE product_id = VALUES(product_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;`,
+        `INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, ${sql(productName)}, ${sql(productSlug)}, ${sql(itemCount)}, ${sql(itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : `${productName} by Shivrudra Graphics`)}, ${sql(`${productName} service by Shivrudra Graphics.`)}, ${productIndex}, 1
+FROM services WHERE slug = ${sql(service.slug)}
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;`,
       );
     }
   }

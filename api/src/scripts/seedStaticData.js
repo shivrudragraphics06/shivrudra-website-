@@ -119,14 +119,6 @@ function toSlug(value) {
   return slugify(value, { lower: true, strict: true });
 }
 
-function serviceProductSlug(service) {
-  return `${service.slug}-products`;
-}
-
-function serviceSubproductSlug(service, productName) {
-  return `${service.slug}-${toSlug(productName.replace(/&/g, "and"))}`;
-}
-
 async function upsertService(service, index) {
   await pool.execute(
     `INSERT INTO services (name, slug, short_description, description, sort_order, is_active)
@@ -143,42 +135,18 @@ async function upsertService(service, index) {
   const [rows] = await pool.execute("SELECT id FROM services WHERE slug = ?", [service.slug]);
   const serviceId = rows[0].id;
 
-  const frontendProductSlugs = service.subs.map((subProduct) => {
-    const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
-    return toSlug(productName.replace(/&/g, "and"));
-  });
-
-  if (frontendProductSlugs.length) {
-    await pool.query("DELETE FROM products WHERE service_id = ? AND slug IN (?)", [serviceId, frontendProductSlugs]);
-  }
-
-  const parentProductName = service.name;
-  const parentProductSlug = serviceProductSlug(service);
-  await pool.execute(
-    `INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-     VALUES (?, ?, ?, ?, ?, 0, 1)
-     ON DUPLICATE KEY UPDATE
-       service_id = VALUES(service_id),
-       name = VALUES(name),
-       short_description = VALUES(short_description),
-       description = VALUES(description),
-       sort_order = VALUES(sort_order),
-       is_active = 1`,
-    [serviceId, parentProductName, parentProductSlug, `${service.name} products`, service.blurb],
-  );
-
-  const [parentRows] = await pool.execute("SELECT id FROM products WHERE slug = ?", [parentProductSlug]);
-  const parentProductId = parentRows[0].id;
+  await pool.execute("DELETE FROM products WHERE service_id = ? AND slug = ?", [serviceId, `${service.slug}-products`]);
 
   for (const [productIndex, subProduct] of service.subs.entries()) {
     const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
     const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;
+    const productSlug = toSlug(productName.replace(/&/g, "and"));
 
     await pool.execute(
-      `INSERT INTO product_subproducts (product_id, name, slug, item_count, short_description, description, sort_order, is_active)
+      `INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
        ON DUPLICATE KEY UPDATE
-         product_id = VALUES(product_id),
+         service_id = VALUES(service_id),
          name = VALUES(name),
          item_count = VALUES(item_count),
          short_description = VALUES(short_description),
@@ -186,9 +154,9 @@ async function upsertService(service, index) {
          sort_order = VALUES(sort_order),
          is_active = 1`,
       [
-        parentProductId,
+        serviceId,
         productName,
-        serviceSubproductSlug(service, productName),
+        productSlug,
         itemCount,
         itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : `${productName} by Shivrudra Graphics`,
         `${productName} service by Shivrudra Graphics.`,

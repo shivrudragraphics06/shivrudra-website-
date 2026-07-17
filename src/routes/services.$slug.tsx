@@ -57,9 +57,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         sub_products: [],
       }));
   const defaultCorporateGiftCards = isCorporateGift
-    ? loadedProductCards.flatMap((product) => product.sub_products ?? []).length
-      ? loadedProductCards.flatMap((product) => product.sub_products ?? [])
-      : (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
+    ? (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
           id: `corporate-gift-${index}`,
           name: serviceSubName(sub),
           slug: "",
