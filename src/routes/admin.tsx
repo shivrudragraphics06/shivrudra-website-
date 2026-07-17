@@ -519,6 +519,8 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   const [editing, setEditing] = useState<AdminRecord | null>(null);
   const [form, setForm] = useState<AdminRecord>({});
   const [query, setQuery] = useState("");
+  const [serviceFilter, setServiceFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -539,6 +541,9 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   useEffect(() => {
     setEditing(null);
     setForm(defaultForm(resource));
+    setQuery("");
+    setServiceFilter("");
+    setCategoryFilter("");
     loadRows();
   }, [resource.key]);
 
@@ -565,12 +570,19 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
 
   const filteredRows = useMemo(() => {
     const term = query.trim().toLowerCase();
-    if (!term) return rows;
+    const byRelation = rows.filter((row) => {
+      if (resource.key !== "products") return true;
+      if (serviceFilter && String(row.service_id ?? "") !== serviceFilter) return false;
+      if (categoryFilter && String(row.category_id ?? "") !== categoryFilter) return false;
+      return true;
+    });
 
-    return rows.filter((row) =>
+    if (!term) return byRelation;
+
+    return byRelation.filter((row) =>
       Object.values(row).some((value) => String(value ?? "").toLowerCase().includes(term)),
     );
-  }, [query, rows]);
+  }, [categoryFilter, query, resource.key, rows, serviceFilter]);
 
   function openCreate() {
     setEditing({});
@@ -670,6 +682,54 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
+
+        {resource.key === "products" ? (
+          <div className="mt-3 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+            <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
+              Service / Subcategory
+              <select
+                className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
+                value={serviceFilter}
+                onChange={(event) => setServiceFilter(event.target.value)}
+              >
+                <option value="">All services</option>
+                {(relationOptions.services ?? []).map((service) => (
+                  <option key={service.id} value={String(service.id)}>
+                    {optionLabel(service)}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
+              Category
+              <select
+                className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+              >
+                <option value="">All categories</option>
+                {(relationOptions.categories ?? []).map((category) => (
+                  <option key={category.id} value={String(category.id)}>
+                    {optionLabel(category)}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setServiceFilter("");
+                setCategoryFilter("");
+              }}
+              className="h-10 self-end rounded-md border px-4 text-sm font-black transition hover:bg-muted"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : null}
 
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[760px] border-collapse text-left text-sm">

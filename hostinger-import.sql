@@ -1030,6 +1030,11 @@ INSERT INTO services (name, slug, short_description, description, image_url, sor
 VALUES ('Corporate Gifts', 'corporate-gift', 'Premium curated gifts for clients & employees.', 'Premium curated gifts for clients & employees.', '/images/services/corporate-gift.jpg', 13, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
+DELETE products FROM products
+INNER JOIN services ON services.id = products.service_id
+WHERE services.slug = 'corporate-gift'
+  AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers');
+
 INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
 SELECT id, 'Pen + Keychain', 'pen-keychain', 15, '15 Items', 'Pen + Keychain service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'corporate-gift'

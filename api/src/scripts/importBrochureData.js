@@ -492,6 +492,12 @@ async function main() {
 
   for (const [serviceIndex, service] of brochureServices.entries()) {
     const serviceId = await upsertService(service, serviceIndex);
+    if (service.name === "Corporate Gifts") {
+      await pool.execute(
+        "DELETE FROM products WHERE service_id = ? AND slug IN ('diaries', 'pens', 'bottles', 'hampers')",
+        [serviceId],
+      );
+    }
     for (const [productIndex, productName] of service.products.entries()) {
       const imageUrl = images[imageIndex % images.length];
       await upsertProduct(serviceId, productName, productIndex, imageUrl);

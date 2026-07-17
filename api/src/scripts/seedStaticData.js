@@ -135,6 +135,13 @@ async function upsertService(service, index) {
   const [rows] = await pool.execute("SELECT id FROM services WHERE slug = ?", [service.slug]);
   const serviceId = rows[0].id;
 
+  if (service.slug === "corporate-gift") {
+    await pool.execute(
+      "DELETE FROM products WHERE service_id = ? AND slug IN ('diaries', 'pens', 'bottles', 'hampers')",
+      [serviceId],
+    );
+  }
+
   for (const [productIndex, subProduct] of service.subs.entries()) {
     const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
     const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;

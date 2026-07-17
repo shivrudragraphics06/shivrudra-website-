@@ -246,6 +246,15 @@ VALUES (${sql(service.name)}, ${sql(service.slug)}, ${sql(service.blurb)}, ${sql
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
 
+    if (service.slug === "corporate-gift") {
+      lines.push(
+        `DELETE products FROM products
+INNER JOIN services ON services.id = products.service_id
+WHERE services.slug = 'corporate-gift'
+  AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers');`,
+      );
+    }
+
     for (const [productIndex, subProduct] of service.subs.entries()) {
       const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
       const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;

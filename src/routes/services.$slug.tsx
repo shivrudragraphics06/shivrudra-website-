@@ -67,21 +67,13 @@ export function ServiceDetail({ slug }: { slug: string }) {
       }))
     : [];
   const productCards = isCorporateGift
-    ? [
-        ...defaultCorporateGiftCards.map((defaultProduct) => {
+    ? defaultCorporateGiftCards.map((defaultProduct) => {
           const loadedProduct = loadedProductCards.find(
             (product) => product.name.trim().toLowerCase() === defaultProduct.name.trim().toLowerCase(),
           );
 
           return loadedProduct ? { ...defaultProduct, ...loadedProduct } : defaultProduct;
-        }),
-        ...loadedProductCards.filter(
-          (product) =>
-            !defaultCorporateGiftCards.some(
-              (defaultProduct) => defaultProduct.name.trim().toLowerCase() === product.name.trim().toLowerCase(),
-            ),
-        ),
-      ]
+        })
     : loadedProductCards;
 
   return (
