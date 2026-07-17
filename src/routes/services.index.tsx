@@ -2,6 +2,7 @@ import { PageHero } from "@/components/PageHero";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/components/AppLink";
 import { usePublicServices } from "@/hooks/use-public-data";
+import { serviceSubName } from "@/data/site";
 
 export function ServicesPage() {
   const services = usePublicServices();
@@ -30,10 +31,10 @@ export function ServicesPage() {
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {(s.subs ?? []).slice(0, 4).map((sub) => (
                   <span
-                    key={sub}
+                    key={serviceSubName(sub)}
                     className="text-[11px] font-medium bg-brand-light px-2 py-0.5 rounded-full"
                   >
-                    {sub}
+                    {serviceSubName(sub)}
                   </span>
                 ))}
                 {(s.subs ?? []).length > 4 && (

@@ -1,4 +1,4 @@
-import { SERVICES } from "@/data/site";
+import { SERVICES, serviceSubName } from "@/data/site";
 
 export type ProductInfo = {
   slug: string;
@@ -18,8 +18,8 @@ export function toProductSlug(name: string) {
 export function getAllProducts(): ProductInfo[] {
   return SERVICES.flatMap((service) =>
     service.subs.map((sub) => ({
-      slug: toProductSlug(sub),
-      name: sub,
+      slug: toProductSlug(serviceSubName(sub)),
+      name: serviceSubName(sub),
       serviceSlug: service.slug,
       serviceName: service.name,
     })),

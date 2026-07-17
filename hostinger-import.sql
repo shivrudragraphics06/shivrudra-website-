@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS products (
   short_description VARCHAR(255),
   description LONGTEXT,
   main_image_url VARCHAR(500),
+  item_count INT UNSIGNED NULL,
   meta_title VARCHAR(255),
   meta_description VARCHAR(500),
   sort_order INT DEFAULT 0,
@@ -63,6 +64,8 @@ CREATE TABLE IF NOT EXISTS products (
   CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES product_categories(id) ON DELETE SET NULL,
   CONSTRAINT fk_products_service FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE products ADD COLUMN IF NOT EXISTS item_count INT UNSIGNED NULL AFTER main_image_url;
 
 CREATE TABLE IF NOT EXISTS product_images (
   id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -185,1102 +188,1182 @@ INSERT INTO services (name, slug, short_description, description, image_url, sor
 VALUES ('Designing', 'designing', 'Creative design solutions from logos to packaging artwork.', 'Creative design solutions from logos to packaging artwork.', '/images/services/designing.jpg', 0, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Logo Design', 'logo-design', 'Logo Design by Shivrudra Graphics', 'Logo Design service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Logo Design', 'logo-design', NULL, 'Logo Design by Shivrudra Graphics', 'Logo Design service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Social Media Creatives', 'social-media-creatives', 'Social Media Creatives by Shivrudra Graphics', 'Social Media Creatives service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Social Media Creatives', 'social-media-creatives', NULL, 'Social Media Creatives by Shivrudra Graphics', 'Social Media Creatives service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Brochure Design', 'brochure-design', 'Brochure Design by Shivrudra Graphics', 'Brochure Design service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Brochure Design', 'brochure-design', NULL, 'Brochure Design by Shivrudra Graphics', 'Brochure Design service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Certificate Design', 'certificate-design', 'Certificate Design by Shivrudra Graphics', 'Certificate Design service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Certificate Design', 'certificate-design', NULL, 'Certificate Design by Shivrudra Graphics', 'Certificate Design service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Calligraphy & Vector Art', 'calligraphy-and-vector-art', 'Calligraphy & Vector Art by Shivrudra Graphics', 'Calligraphy & Vector Art service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Calligraphy & Vector Art', 'calligraphy-and-vector-art', NULL, 'Calligraphy & Vector Art by Shivrudra Graphics', 'Calligraphy & Vector Art service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Flyer Design', 'flyer-design', 'Flyer Design by Shivrudra Graphics', 'Flyer Design service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Flyer Design', 'flyer-design', NULL, 'Flyer Design by Shivrudra Graphics', 'Flyer Design service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Invitation Card Design', 'invitation-card-design', 'Invitation Card Design by Shivrudra Graphics', 'Invitation Card Design service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Invitation Card Design', 'invitation-card-design', NULL, 'Invitation Card Design by Shivrudra Graphics', 'Invitation Card Design service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Car Wrap Design', 'car-wrap-design', 'Car Wrap Design by Shivrudra Graphics', 'Car Wrap Design service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Car Wrap Design', 'car-wrap-design', NULL, 'Car Wrap Design by Shivrudra Graphics', 'Car Wrap Design service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Letterhead Design', 'letterhead-design', 'Letterhead Design by Shivrudra Graphics', 'Letterhead Design service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Letterhead Design', 'letterhead-design', NULL, 'Letterhead Design by Shivrudra Graphics', 'Letterhead Design service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Banner Design', 'banner-design', 'Banner Design by Shivrudra Graphics', 'Banner Design service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Banner Design', 'banner-design', NULL, 'Banner Design by Shivrudra Graphics', 'Banner Design service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Business Card Design', 'business-card-design', 'Business Card Design by Shivrudra Graphics', 'Business Card Design service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Business Card Design', 'business-card-design', NULL, 'Business Card Design by Shivrudra Graphics', 'Business Card Design service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Poster Design', 'poster-design', 'Poster Design by Shivrudra Graphics', 'Poster Design service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Poster Design', 'poster-design', NULL, 'Poster Design by Shivrudra Graphics', 'Poster Design service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'LED Signage Design', 'led-signage-design', 'LED Signage Design by Shivrudra Graphics', 'LED Signage Design service by Shivrudra Graphics.', 12, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'LED Signage Design', 'led-signage-design', NULL, 'LED Signage Design by Shivrudra Graphics', 'LED Signage Design service by Shivrudra Graphics.', 12, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Product Packaging Labels & Stickers Design', 'product-packaging-labels-and-stickers-design', 'Product Packaging Labels & Stickers Design by Shivrudra Graphics', 'Product Packaging Labels & Stickers Design service by Shivrudra Graphics.', 13, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Product Packaging Labels & Stickers Design', 'product-packaging-labels-and-stickers-design', NULL, 'Product Packaging Labels & Stickers Design by Shivrudra Graphics', 'Product Packaging Labels & Stickers Design service by Shivrudra Graphics.', 13, 1
 FROM services WHERE slug = 'designing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Flex Printing', 'flex-printing', 'Vibrant large-format flex prints for outdoor & indoor branding.', 'Vibrant large-format flex prints for outdoor & indoor branding.', '/images/services/flex-printing.png', 1, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Normal Flex Printing', 'normal-flex-printing', 'Normal Flex Printing by Shivrudra Graphics', 'Normal Flex Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Normal Flex Printing', 'normal-flex-printing', NULL, 'Normal Flex Printing by Shivrudra Graphics', 'Normal Flex Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Black Back Flex Printing', 'black-back-flex-printing', 'Black Back Flex Printing by Shivrudra Graphics', 'Black Back Flex Printing service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Black Back Flex Printing', 'black-back-flex-printing', NULL, 'Black Back Flex Printing by Shivrudra Graphics', 'Black Back Flex Printing service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Star Flex Printing', 'star-flex-printing', 'Star Flex Printing by Shivrudra Graphics', 'Star Flex Printing service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Star Flex Printing', 'star-flex-printing', NULL, 'Star Flex Printing by Shivrudra Graphics', 'Star Flex Printing service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Backlit Flex Printing', 'backlit-flex-printing', 'Backlit Flex Printing by Shivrudra Graphics', 'Backlit Flex Printing service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Backlit Flex Printing', 'backlit-flex-printing', NULL, 'Backlit Flex Printing by Shivrudra Graphics', 'Backlit Flex Printing service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'One Way Vision Printing', 'one-way-vision-printing', 'One Way Vision Printing by Shivrudra Graphics', 'One Way Vision Printing service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'One Way Vision Printing', 'one-way-vision-printing', NULL, 'One Way Vision Printing by Shivrudra Graphics', 'One Way Vision Printing service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Roll Up Standee', 'roll-up-standee', 'Roll Up Standee by Shivrudra Graphics', 'Roll Up Standee service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Roll Up Standee', 'roll-up-standee', NULL, 'Roll Up Standee by Shivrudra Graphics', 'Roll Up Standee service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Canopy Standee', 'canopy-standee', 'Canopy Standee by Shivrudra Graphics', 'Canopy Standee service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Canopy Standee', 'canopy-standee', NULL, 'Canopy Standee by Shivrudra Graphics', 'Canopy Standee service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Graffiti Wall Printing', 'graffiti-wall-printing', 'Graffiti Wall Printing by Shivrudra Graphics', 'Graffiti Wall Printing service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Graffiti Wall Printing', 'graffiti-wall-printing', NULL, 'Graffiti Wall Printing by Shivrudra Graphics', 'Graffiti Wall Printing service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'flex-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Vinyl Printing', 'vinyl-printing', 'Premium vinyl prints for vehicles, walls, floors and more.', 'Premium vinyl prints for vehicles, walls, floors and more.', '/images/services/vinyl-printing.png', 2, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Vinyl Printing', 'vinyl-printing', 'Vinyl Printing by Shivrudra Graphics', 'Vinyl Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Vinyl Printing', 'vinyl-printing', NULL, 'Vinyl Printing by Shivrudra Graphics', 'Vinyl Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Frosted Filming', 'frosted-filming', 'Frosted Filming by Shivrudra Graphics', 'Frosted Filming service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Frosted Filming', 'frosted-filming', NULL, 'Frosted Filming by Shivrudra Graphics', 'Frosted Filming service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Retro Vinyl Printing', 'retro-vinyl-printing', 'Retro Vinyl Printing by Shivrudra Graphics', 'Retro Vinyl Printing service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Retro Vinyl Printing', 'retro-vinyl-printing', NULL, 'Retro Vinyl Printing by Shivrudra Graphics', 'Retro Vinyl Printing service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, '3M Vinyl Printing', '3m-vinyl-printing', '3M Vinyl Printing by Shivrudra Graphics', '3M Vinyl Printing service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, '3M Vinyl Printing', '3m-vinyl-printing', NULL, '3M Vinyl Printing by Shivrudra Graphics', '3M Vinyl Printing service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Transparent Vinyl Printing', 'transparent-vinyl-printing', 'Transparent Vinyl Printing by Shivrudra Graphics', 'Transparent Vinyl Printing service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Transparent Vinyl Printing', 'transparent-vinyl-printing', NULL, 'Transparent Vinyl Printing by Shivrudra Graphics', 'Transparent Vinyl Printing service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Night Glow Vinyl', 'night-glow-vinyl', 'Night Glow Vinyl by Shivrudra Graphics', 'Night Glow Vinyl service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Night Glow Vinyl', 'night-glow-vinyl', NULL, 'Night Glow Vinyl by Shivrudra Graphics', 'Night Glow Vinyl service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Vinyl Foam Board', 'vinyl-foam-board', 'Vinyl Foam Board by Shivrudra Graphics', 'Vinyl Foam Board service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Vinyl Foam Board', 'vinyl-foam-board', NULL, 'Vinyl Foam Board by Shivrudra Graphics', 'Vinyl Foam Board service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Floor Graphics Printing', 'floor-graphics-printing', 'Floor Graphics Printing by Shivrudra Graphics', 'Floor Graphics Printing service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Floor Graphics Printing', 'floor-graphics-printing', NULL, 'Floor Graphics Printing by Shivrudra Graphics', 'Floor Graphics Printing service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Table Top Printing', 'table-top-printing', 'Table Top Printing by Shivrudra Graphics', 'Table Top Printing service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Table Top Printing', 'table-top-printing', NULL, 'Table Top Printing by Shivrudra Graphics', 'Table Top Printing service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Cutout Standees', 'cutout-standees', 'Cutout Standees by Shivrudra Graphics', 'Cutout Standees service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cutout Standees', 'cutout-standees', NULL, 'Cutout Standees by Shivrudra Graphics', 'Cutout Standees service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Sun Board Standee', 'sun-board-standee', 'Sun Board Standee by Shivrudra Graphics', 'Sun Board Standee service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Sun Board Standee', 'sun-board-standee', NULL, 'Sun Board Standee by Shivrudra Graphics', 'Sun Board Standee service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Car Branding', 'car-branding', 'Car Branding by Shivrudra Graphics', 'Car Branding service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Car Branding', 'car-branding', NULL, 'Car Branding by Shivrudra Graphics', 'Car Branding service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wallpaper Printing', 'wallpaper-printing', 'Wallpaper Printing by Shivrudra Graphics', 'Wallpaper Printing service by Shivrudra Graphics.', 12, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wallpaper Printing', 'wallpaper-printing', NULL, 'Wallpaper Printing by Shivrudra Graphics', 'Wallpaper Printing service by Shivrudra Graphics.', 12, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bus Branding', 'bus-branding', 'Bus Branding by Shivrudra Graphics', 'Bus Branding service by Shivrudra Graphics.', 13, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bus Branding', 'bus-branding', NULL, 'Bus Branding by Shivrudra Graphics', 'Bus Branding service by Shivrudra Graphics.', 13, 1
 FROM services WHERE slug = 'vinyl-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('UV Printing', 'uv-printing', 'High-resolution UV printing on rigid and flexible substrates.', 'High-resolution UV printing on rigid and flexible substrates.', '/images/services/uv-printing.png', 3, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Vinyl Printing', 'uv-vinyl-printing', 'UV Vinyl Printing by Shivrudra Graphics', 'UV Vinyl Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Vinyl Printing', 'uv-vinyl-printing', NULL, 'UV Vinyl Printing by Shivrudra Graphics', 'UV Vinyl Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Fabric Printing', 'uv-fabric-printing', 'UV Fabric Printing by Shivrudra Graphics', 'UV Fabric Printing service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Fabric Printing', 'uv-fabric-printing', NULL, 'UV Fabric Printing by Shivrudra Graphics', 'UV Fabric Printing service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Canvas Printing', 'uv-canvas-printing', 'UV Canvas Printing by Shivrudra Graphics', 'UV Canvas Printing service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Canvas Printing', 'uv-canvas-printing', NULL, 'UV Canvas Printing by Shivrudra Graphics', 'UV Canvas Printing service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Translite Printing', 'uv-translite-printing', 'UV Translite Printing by Shivrudra Graphics', 'UV Translite Printing service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Translite Printing', 'uv-translite-printing', NULL, 'UV Translite Printing by Shivrudra Graphics', 'UV Translite Printing service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Acrylic Printing', 'uv-acrylic-printing', 'UV Acrylic Printing by Shivrudra Graphics', 'UV Acrylic Printing service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Acrylic Printing', 'uv-acrylic-printing', NULL, 'UV Acrylic Printing by Shivrudra Graphics', 'UV Acrylic Printing service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV Foam Printing', 'uv-foam-printing', 'UV Foam Printing by Shivrudra Graphics', 'UV Foam Printing service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV Foam Printing', 'uv-foam-printing', NULL, 'UV Foam Printing by Shivrudra Graphics', 'UV Foam Printing service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'UV ACP Printing', 'uv-acp-printing', 'UV ACP Printing by Shivrudra Graphics', 'UV ACP Printing service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'UV ACP Printing', 'uv-acp-printing', NULL, 'UV ACP Printing by Shivrudra Graphics', 'UV ACP Printing service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'uv-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Screen Printing', 'screen-printing', 'Industrial screen printing on plastic, metal, glass and textiles.', 'Industrial screen printing on plastic, metal, glass and textiles.', '/images/services/screen-printing.png', 4, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Polycarbonate Sticker Printing', 'polycarbonate-sticker-printing', 'Polycarbonate Sticker Printing by Shivrudra Graphics', 'Polycarbonate Sticker Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Polycarbonate Sticker Printing', 'polycarbonate-sticker-printing', NULL, 'Polycarbonate Sticker Printing by Shivrudra Graphics', 'Polycarbonate Sticker Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Polycarbonate Labels Printing', 'polycarbonate-labels-printing', 'Polycarbonate Labels Printing by Shivrudra Graphics', 'Polycarbonate Labels Printing service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Polycarbonate Labels Printing', 'polycarbonate-labels-printing', NULL, 'Polycarbonate Labels Printing by Shivrudra Graphics', 'Polycarbonate Labels Printing service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Sun Pack Printing', 'sun-pack-printing', 'Sun Pack Printing by Shivrudra Graphics', 'Sun Pack Printing service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Sun Pack Printing', 'sun-pack-printing', NULL, 'Sun Pack Printing by Shivrudra Graphics', 'Sun Pack Printing service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bottle Printing', 'bottle-printing', 'Bottle Printing by Shivrudra Graphics', 'Bottle Printing service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bottle Printing', 'bottle-printing', NULL, 'Bottle Printing by Shivrudra Graphics', 'Bottle Printing service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Plastic Crate Printing', 'plastic-crate-printing', 'Plastic Crate Printing by Shivrudra Graphics', 'Plastic Crate Printing service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Plastic Crate Printing', 'plastic-crate-printing', NULL, 'Plastic Crate Printing by Shivrudra Graphics', 'Plastic Crate Printing service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Vinyl Tag Printing', 'vinyl-tag-printing', 'Vinyl Tag Printing by Shivrudra Graphics', 'Vinyl Tag Printing service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Vinyl Tag Printing', 'vinyl-tag-printing', NULL, 'Vinyl Tag Printing by Shivrudra Graphics', 'Vinyl Tag Printing service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Polyester Printing', 'polyester-printing', 'Polyester Printing by Shivrudra Graphics', 'Polyester Printing service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Polyester Printing', 'polyester-printing', NULL, 'Polyester Printing by Shivrudra Graphics', 'Polyester Printing service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'School Bag Printing', 'school-bag-printing', 'School Bag Printing by Shivrudra Graphics', 'School Bag Printing service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'School Bag Printing', 'school-bag-printing', NULL, 'School Bag Printing by Shivrudra Graphics', 'School Bag Printing service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Umbrella Printing', 'umbrella-printing', 'Umbrella Printing by Shivrudra Graphics', 'Umbrella Printing service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Umbrella Printing', 'umbrella-printing', NULL, 'Umbrella Printing by Shivrudra Graphics', 'Umbrella Printing service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Membrane Keypads', 'membrane-keypads', 'Membrane Keypads by Shivrudra Graphics', 'Membrane Keypads service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Membrane Keypads', 'membrane-keypads', NULL, 'Membrane Keypads by Shivrudra Graphics', 'Membrane Keypads service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Control Panel Sticker', 'control-panel-sticker', 'Control Panel Sticker by Shivrudra Graphics', 'Control Panel Sticker service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Control Panel Sticker', 'control-panel-sticker', NULL, 'Control Panel Sticker by Shivrudra Graphics', 'Control Panel Sticker service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'PP Box Printing', 'pp-box-printing', 'PP Box Printing by Shivrudra Graphics', 'PP Box Printing service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'PP Box Printing', 'pp-box-printing', NULL, 'PP Box Printing by Shivrudra Graphics', 'PP Box Printing service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Corrugate Box Printing', 'corrugate-box-printing', 'Corrugate Box Printing by Shivrudra Graphics', 'Corrugate Box Printing service by Shivrudra Graphics.', 12, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Corrugate Box Printing', 'corrugate-box-printing', NULL, 'Corrugate Box Printing by Shivrudra Graphics', 'Corrugate Box Printing service by Shivrudra Graphics.', 12, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal QR Code Printing', 'metal-qr-code-printing', 'Metal QR Code Printing by Shivrudra Graphics', 'Metal QR Code Printing service by Shivrudra Graphics.', 13, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal QR Code Printing', 'metal-qr-code-printing', NULL, 'Metal QR Code Printing by Shivrudra Graphics', 'Metal QR Code Printing service by Shivrudra Graphics.', 13, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Textile Printing', 'textile-printing', 'Textile Printing by Shivrudra Graphics', 'Textile Printing service by Shivrudra Graphics.', 14, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Textile Printing', 'textile-printing', NULL, 'Textile Printing by Shivrudra Graphics', 'Textile Printing service by Shivrudra Graphics.', 14, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Glass Printing', 'glass-printing', 'Glass Printing by Shivrudra Graphics', 'Glass Printing service by Shivrudra Graphics.', 15, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Glass Printing', 'glass-printing', NULL, 'Glass Printing by Shivrudra Graphics', 'Glass Printing service by Shivrudra Graphics.', 15, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wooden Printing', 'wooden-printing', 'Wooden Printing by Shivrudra Graphics', 'Wooden Printing service by Shivrudra Graphics.', 16, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wooden Printing', 'wooden-printing', NULL, 'Wooden Printing by Shivrudra Graphics', 'Wooden Printing service by Shivrudra Graphics.', 16, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'SS Plate Printing', 'ss-plate-printing', 'SS Plate Printing by Shivrudra Graphics', 'SS Plate Printing service by Shivrudra Graphics.', 17, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'SS Plate Printing', 'ss-plate-printing', NULL, 'SS Plate Printing by Shivrudra Graphics', 'SS Plate Printing service by Shivrudra Graphics.', 17, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'MS Plate Printing', 'ms-plate-printing', 'MS Plate Printing by Shivrudra Graphics', 'MS Plate Printing service by Shivrudra Graphics.', 18, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'MS Plate Printing', 'ms-plate-printing', NULL, 'MS Plate Printing by Shivrudra Graphics', 'MS Plate Printing service by Shivrudra Graphics.', 18, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Aluminum Plate Printing', 'aluminum-plate-printing', 'Aluminum Plate Printing by Shivrudra Graphics', 'Aluminum Plate Printing service by Shivrudra Graphics.', 19, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Aluminum Plate Printing', 'aluminum-plate-printing', NULL, 'Aluminum Plate Printing by Shivrudra Graphics', 'Aluminum Plate Printing service by Shivrudra Graphics.', 19, 1
 FROM services WHERE slug = 'screen-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Digital Printing', 'digital-printing', 'Crisp digital prints for labels, tags, cards and packaging.', 'Crisp digital prints for labels, tags, cards and packaging.', '/images/services/digital-printing.png', 5, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Texture Paper Printing', 'texture-paper-printing', 'Texture Paper Printing by Shivrudra Graphics', 'Texture Paper Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Texture Paper Printing', 'texture-paper-printing', NULL, 'Texture Paper Printing by Shivrudra Graphics', 'Texture Paper Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Sticker Paper Printing', 'sticker-paper-printing', 'Sticker Paper Printing by Shivrudra Graphics', 'Sticker Paper Printing service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Sticker Paper Printing', 'sticker-paper-printing', NULL, 'Sticker Paper Printing by Shivrudra Graphics', 'Sticker Paper Printing service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'NT Paper Printing', 'nt-paper-printing', 'NT Paper Printing by Shivrudra Graphics', 'NT Paper Printing service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'NT Paper Printing', 'nt-paper-printing', NULL, 'NT Paper Printing by Shivrudra Graphics', 'NT Paper Printing service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Transparent Paper Printing', 'transparent-paper-printing', 'Transparent Paper Printing by Shivrudra Graphics', 'Transparent Paper Printing service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Transparent Paper Printing', 'transparent-paper-printing', NULL, 'Transparent Paper Printing by Shivrudra Graphics', 'Transparent Paper Printing service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Product Label Printing', 'product-label-printing', 'Product Label Printing by Shivrudra Graphics', 'Product Label Printing service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Product Label Printing', 'product-label-printing', NULL, 'Product Label Printing by Shivrudra Graphics', 'Product Label Printing service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Tag Printing', 'tag-printing', 'Tag Printing by Shivrudra Graphics', 'Tag Printing service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Tag Printing', 'tag-printing', NULL, 'Tag Printing by Shivrudra Graphics', 'Tag Printing service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Coupon Printing', 'coupon-printing', 'Coupon Printing by Shivrudra Graphics', 'Coupon Printing service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Coupon Printing', 'coupon-printing', NULL, 'Coupon Printing by Shivrudra Graphics', 'Coupon Printing service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wristband Printing', 'wristband-printing', 'Wristband Printing by Shivrudra Graphics', 'Wristband Printing service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wristband Printing', 'wristband-printing', NULL, 'Wristband Printing by Shivrudra Graphics', 'Wristband Printing service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Certificate Printing', 'certificate-printing', 'Certificate Printing by Shivrudra Graphics', 'Certificate Printing service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Certificate Printing', 'certificate-printing', NULL, 'Certificate Printing by Shivrudra Graphics', 'Certificate Printing service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Tent Cards Printing', 'tent-cards-printing', 'Tent Cards Printing by Shivrudra Graphics', 'Tent Cards Printing service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Tent Cards Printing', 'tent-cards-printing', NULL, 'Tent Cards Printing by Shivrudra Graphics', 'Tent Cards Printing service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Invitation Cards Printing', 'invitation-cards-printing', 'Invitation Cards Printing by Shivrudra Graphics', 'Invitation Cards Printing service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Invitation Cards Printing', 'invitation-cards-printing', NULL, 'Invitation Cards Printing by Shivrudra Graphics', 'Invitation Cards Printing service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Menu Card Printing', 'menu-card-printing', 'Menu Card Printing by Shivrudra Graphics', 'Menu Card Printing service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Menu Card Printing', 'menu-card-printing', NULL, 'Menu Card Printing by Shivrudra Graphics', 'Menu Card Printing service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Danglers Printing', 'danglers-printing', 'Danglers Printing by Shivrudra Graphics', 'Danglers Printing service by Shivrudra Graphics.', 12, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Danglers Printing', 'danglers-printing', NULL, 'Danglers Printing by Shivrudra Graphics', 'Danglers Printing service by Shivrudra Graphics.', 12, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Barcode Sticker Printing', 'barcode-sticker-printing', 'Barcode Sticker Printing by Shivrudra Graphics', 'Barcode Sticker Printing service by Shivrudra Graphics.', 13, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Barcode Sticker Printing', 'barcode-sticker-printing', NULL, 'Barcode Sticker Printing by Shivrudra Graphics', 'Barcode Sticker Printing service by Shivrudra Graphics.', 13, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Safety Signage Poster Printing', 'safety-signage-poster-printing', 'Safety Signage Poster Printing by Shivrudra Graphics', 'Safety Signage Poster Printing service by Shivrudra Graphics.', 14, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Safety Signage Poster Printing', 'safety-signage-poster-printing', NULL, 'Safety Signage Poster Printing by Shivrudra Graphics', 'Safety Signage Poster Printing service by Shivrudra Graphics.', 14, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Door Hangers Printing', 'door-hangers-printing', 'Door Hangers Printing by Shivrudra Graphics', 'Door Hangers Printing service by Shivrudra Graphics.', 15, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Door Hangers Printing', 'door-hangers-printing', NULL, 'Door Hangers Printing by Shivrudra Graphics', 'Door Hangers Printing service by Shivrudra Graphics.', 15, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Vehicle Parking Sticker Printing', 'vehicle-parking-sticker-printing', 'Vehicle Parking Sticker Printing by Shivrudra Graphics', 'Vehicle Parking Sticker Printing service by Shivrudra Graphics.', 16, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Vehicle Parking Sticker Printing', 'vehicle-parking-sticker-printing', NULL, 'Vehicle Parking Sticker Printing by Shivrudra Graphics', 'Vehicle Parking Sticker Printing service by Shivrudra Graphics.', 16, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Cable Tag Printing', 'cable-tag-printing', 'Cable Tag Printing by Shivrudra Graphics', 'Cable Tag Printing service by Shivrudra Graphics.', 17, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cable Tag Printing', 'cable-tag-printing', NULL, 'Cable Tag Printing by Shivrudra Graphics', 'Cable Tag Printing service by Shivrudra Graphics.', 17, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Roll Labels Printing', 'roll-labels-printing', 'Roll Labels Printing by Shivrudra Graphics', 'Roll Labels Printing service by Shivrudra Graphics.', 18, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Roll Labels Printing', 'roll-labels-printing', NULL, 'Roll Labels Printing by Shivrudra Graphics', 'Roll Labels Printing service by Shivrudra Graphics.', 18, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Packaging Sticker Printing', 'packaging-sticker-printing', 'Packaging Sticker Printing by Shivrudra Graphics', 'Packaging Sticker Printing service by Shivrudra Graphics.', 19, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Packaging Sticker Printing', 'packaging-sticker-printing', NULL, 'Packaging Sticker Printing by Shivrudra Graphics', 'Packaging Sticker Printing service by Shivrudra Graphics.', 19, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Custom Car Stickers', 'custom-car-stickers', 'Custom Car Stickers by Shivrudra Graphics', 'Custom Car Stickers service by Shivrudra Graphics.', 20, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Custom Car Stickers', 'custom-car-stickers', NULL, 'Custom Car Stickers by Shivrudra Graphics', 'Custom Car Stickers service by Shivrudra Graphics.', 20, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'PVC ID Card Printing', 'pvc-id-card-printing', 'PVC ID Card Printing by Shivrudra Graphics', 'PVC ID Card Printing service by Shivrudra Graphics.', 21, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'PVC ID Card Printing', 'pvc-id-card-printing', NULL, 'PVC ID Card Printing by Shivrudra Graphics', 'PVC ID Card Printing service by Shivrudra Graphics.', 21, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Lanyard Printing', 'lanyard-printing', 'Lanyard Printing by Shivrudra Graphics', 'Lanyard Printing service by Shivrudra Graphics.', 22, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Lanyard Printing', 'lanyard-printing', NULL, 'Lanyard Printing by Shivrudra Graphics', 'Lanyard Printing service by Shivrudra Graphics.', 22, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Industrial Packaging Label', 'industrial-packaging-label', 'Industrial Packaging Label by Shivrudra Graphics', 'Industrial Packaging Label service by Shivrudra Graphics.', 23, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Industrial Packaging Label', 'industrial-packaging-label', NULL, 'Industrial Packaging Label by Shivrudra Graphics', 'Industrial Packaging Label service by Shivrudra Graphics.', 23, 1
 FROM services WHERE slug = 'digital-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Offset Printing', 'offset-printing', 'Bulk offset printing for stationery, books and packaging.', 'Bulk offset printing for stationery, books and packaging.', '/images/services/offset-printing.png', 6, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Pawati Book Printing', 'pawati-book-printing', 'Pawati Book Printing by Shivrudra Graphics', 'Pawati Book Printing service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pawati Book Printing', 'pawati-book-printing', NULL, 'Pawati Book Printing by Shivrudra Graphics', 'Pawati Book Printing service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Gift Voucher Printing', 'gift-voucher-printing', 'Gift Voucher Printing by Shivrudra Graphics', 'Gift Voucher Printing service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Gift Voucher Printing', 'gift-voucher-printing', NULL, 'Gift Voucher Printing by Shivrudra Graphics', 'Gift Voucher Printing service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Packaging Sleeves', 'packaging-sleeves', 'Packaging Sleeves by Shivrudra Graphics', 'Packaging Sleeves service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Packaging Sleeves', 'packaging-sleeves', NULL, 'Packaging Sleeves by Shivrudra Graphics', 'Packaging Sleeves service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wrapping Paper', 'wrapping-paper', 'Wrapping Paper by Shivrudra Graphics', 'Wrapping Paper service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wrapping Paper', 'wrapping-paper', NULL, 'Wrapping Paper by Shivrudra Graphics', 'Wrapping Paper service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Seal Stickers', 'seal-stickers', 'Seal Stickers by Shivrudra Graphics', 'Seal Stickers service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Seal Stickers', 'seal-stickers', NULL, 'Seal Stickers by Shivrudra Graphics', 'Seal Stickers service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Ticket Printing', 'ticket-printing', 'Ticket Printing by Shivrudra Graphics', 'Ticket Printing service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Ticket Printing', 'ticket-printing', NULL, 'Ticket Printing by Shivrudra Graphics', 'Ticket Printing service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bookmark Printing', 'bookmark-printing', 'Bookmark Printing by Shivrudra Graphics', 'Bookmark Printing service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bookmark Printing', 'bookmark-printing', NULL, 'Bookmark Printing by Shivrudra Graphics', 'Bookmark Printing service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Rack Card Printing', 'rack-card-printing', 'Rack Card Printing by Shivrudra Graphics', 'Rack Card Printing service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Rack Card Printing', 'rack-card-printing', NULL, 'Rack Card Printing by Shivrudra Graphics', 'Rack Card Printing service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Header Card Printing', 'header-card-printing', 'Header Card Printing by Shivrudra Graphics', 'Header Card Printing service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Header Card Printing', 'header-card-printing', NULL, 'Header Card Printing by Shivrudra Graphics', 'Header Card Printing service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Shelf Wobblers Printing', 'shelf-wobblers-printing', 'Shelf Wobblers Printing by Shivrudra Graphics', 'Shelf Wobblers Printing service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Shelf Wobblers Printing', 'shelf-wobblers-printing', NULL, 'Shelf Wobblers Printing by Shivrudra Graphics', 'Shelf Wobblers Printing service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bottle Neck Tags Printing', 'bottle-neck-tags-printing', 'Bottle Neck Tags Printing by Shivrudra Graphics', 'Bottle Neck Tags Printing service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bottle Neck Tags Printing', 'bottle-neck-tags-printing', NULL, 'Bottle Neck Tags Printing by Shivrudra Graphics', 'Bottle Neck Tags Printing service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Swing Tags Printing', 'swing-tags-printing', 'Swing Tags Printing by Shivrudra Graphics', 'Swing Tags Printing service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Swing Tags Printing', 'swing-tags-printing', NULL, 'Swing Tags Printing by Shivrudra Graphics', 'Swing Tags Printing service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Tree Tag Printing', 'tree-tag-printing', 'Tree Tag Printing by Shivrudra Graphics', 'Tree Tag Printing service by Shivrudra Graphics.', 12, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Tree Tag Printing', 'tree-tag-printing', NULL, 'Tree Tag Printing by Shivrudra Graphics', 'Tree Tag Printing service by Shivrudra Graphics.', 12, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Cloth Tag Printing', 'cloth-tag-printing', 'Cloth Tag Printing by Shivrudra Graphics', 'Cloth Tag Printing service by Shivrudra Graphics.', 13, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cloth Tag Printing', 'cloth-tag-printing', NULL, 'Cloth Tag Printing by Shivrudra Graphics', 'Cloth Tag Printing service by Shivrudra Graphics.', 13, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Business Card Printing', 'business-card-printing', 'Business Card Printing by Shivrudra Graphics', 'Business Card Printing service by Shivrudra Graphics.', 14, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Business Card Printing', 'business-card-printing', NULL, 'Business Card Printing by Shivrudra Graphics', 'Business Card Printing service by Shivrudra Graphics.', 14, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Envelope Printing', 'envelope-printing', 'Envelope Printing by Shivrudra Graphics', 'Envelope Printing service by Shivrudra Graphics.', 15, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Envelope Printing', 'envelope-printing', NULL, 'Envelope Printing by Shivrudra Graphics', 'Envelope Printing service by Shivrudra Graphics.', 15, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Brochure Printing', 'brochure-printing', 'Brochure Printing by Shivrudra Graphics', 'Brochure Printing service by Shivrudra Graphics.', 16, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Brochure Printing', 'brochure-printing', NULL, 'Brochure Printing by Shivrudra Graphics', 'Brochure Printing service by Shivrudra Graphics.', 16, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Leaflet Printing', 'leaflet-printing', 'Leaflet Printing by Shivrudra Graphics', 'Leaflet Printing service by Shivrudra Graphics.', 17, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Leaflet Printing', 'leaflet-printing', NULL, 'Leaflet Printing by Shivrudra Graphics', 'Leaflet Printing service by Shivrudra Graphics.', 17, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Letterhead Printing', 'letterhead-printing', 'Letterhead Printing by Shivrudra Graphics', 'Letterhead Printing service by Shivrudra Graphics.', 18, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Letterhead Printing', 'letterhead-printing', NULL, 'Letterhead Printing by Shivrudra Graphics', 'Letterhead Printing service by Shivrudra Graphics.', 18, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Register Printing', 'register-printing', 'Register Printing by Shivrudra Graphics', 'Register Printing service by Shivrudra Graphics.', 19, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Register Printing', 'register-printing', NULL, 'Register Printing by Shivrudra Graphics', 'Register Printing service by Shivrudra Graphics.', 19, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bank Form Printing', 'bank-form-printing', 'Bank Form Printing by Shivrudra Graphics', 'Bank Form Printing service by Shivrudra Graphics.', 20, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bank Form Printing', 'bank-form-printing', NULL, 'Bank Form Printing by Shivrudra Graphics', 'Bank Form Printing service by Shivrudra Graphics.', 20, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Prospectus Printing', 'prospectus-printing', 'Prospectus Printing by Shivrudra Graphics', 'Prospectus Printing service by Shivrudra Graphics.', 21, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Prospectus Printing', 'prospectus-printing', NULL, 'Prospectus Printing by Shivrudra Graphics', 'Prospectus Printing service by Shivrudra Graphics.', 21, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Stationery Printing', 'stationery-printing', 'Stationery Printing by Shivrudra Graphics', 'Stationery Printing service by Shivrudra Graphics.', 22, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Stationery Printing', 'stationery-printing', NULL, 'Stationery Printing by Shivrudra Graphics', 'Stationery Printing service by Shivrudra Graphics.', 22, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Pharmacy Literature Printing', 'pharmacy-literature-printing', 'Pharmacy Literature Printing by Shivrudra Graphics', 'Pharmacy Literature Printing service by Shivrudra Graphics.', 23, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pharmacy Literature Printing', 'pharmacy-literature-printing', NULL, 'Pharmacy Literature Printing by Shivrudra Graphics', 'Pharmacy Literature Printing service by Shivrudra Graphics.', 23, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Scratch Card Printing', 'scratch-card-printing', 'Scratch Card Printing by Shivrudra Graphics', 'Scratch Card Printing service by Shivrudra Graphics.', 24, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Scratch Card Printing', 'scratch-card-printing', NULL, 'Scratch Card Printing by Shivrudra Graphics', 'Scratch Card Printing service by Shivrudra Graphics.', 24, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Box Printing', 'box-printing', 'Box Printing by Shivrudra Graphics', 'Box Printing service by Shivrudra Graphics.', 25, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Box Printing', 'box-printing', NULL, 'Box Printing by Shivrudra Graphics', 'Box Printing service by Shivrudra Graphics.', 25, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Synthetic Tags', 'synthetic-tags', 'Synthetic Tags by Shivrudra Graphics', 'Synthetic Tags service by Shivrudra Graphics.', 26, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Synthetic Tags', 'synthetic-tags', NULL, 'Synthetic Tags by Shivrudra Graphics', 'Synthetic Tags service by Shivrudra Graphics.', 26, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Report Card Printing', 'report-card-printing', 'Report Card Printing by Shivrudra Graphics', 'Report Card Printing service by Shivrudra Graphics.', 27, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Report Card Printing', 'report-card-printing', NULL, 'Report Card Printing by Shivrudra Graphics', 'Report Card Printing service by Shivrudra Graphics.', 27, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'File Printing', 'file-printing', 'File Printing by Shivrudra Graphics', 'File Printing service by Shivrudra Graphics.', 28, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'File Printing', 'file-printing', NULL, 'File Printing by Shivrudra Graphics', 'File Printing service by Shivrudra Graphics.', 28, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Hospital File Printing', 'hospital-file-printing', 'Hospital File Printing by Shivrudra Graphics', 'Hospital File Printing service by Shivrudra Graphics.', 29, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Hospital File Printing', 'hospital-file-printing', NULL, 'Hospital File Printing by Shivrudra Graphics', 'Hospital File Printing service by Shivrudra Graphics.', 29, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Pocket Folder Printing', 'pocket-folder-printing', 'Pocket Folder Printing by Shivrudra Graphics', 'Pocket Folder Printing service by Shivrudra Graphics.', 30, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pocket Folder Printing', 'pocket-folder-printing', NULL, 'Pocket Folder Printing by Shivrudra Graphics', 'Pocket Folder Printing service by Shivrudra Graphics.', 30, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Prescription Pad Printing', 'prescription-pad-printing', 'Prescription Pad Printing by Shivrudra Graphics', 'Prescription Pad Printing service by Shivrudra Graphics.', 31, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Prescription Pad Printing', 'prescription-pad-printing', NULL, 'Prescription Pad Printing by Shivrudra Graphics', 'Prescription Pad Printing service by Shivrudra Graphics.', 31, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Medical Pouch Printing', 'medical-pouch-printing', 'Medical Pouch Printing by Shivrudra Graphics', 'Medical Pouch Printing service by Shivrudra Graphics.', 32, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Medical Pouch Printing', 'medical-pouch-printing', NULL, 'Medical Pouch Printing by Shivrudra Graphics', 'Medical Pouch Printing service by Shivrudra Graphics.', 32, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Calendar Printing', 'calendar-printing', 'Calendar Printing by Shivrudra Graphics', 'Calendar Printing service by Shivrudra Graphics.', 33, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Calendar Printing', 'calendar-printing', NULL, 'Calendar Printing by Shivrudra Graphics', 'Calendar Printing service by Shivrudra Graphics.', 33, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Diary Printing', 'diary-printing', 'Diary Printing by Shivrudra Graphics', 'Diary Printing service by Shivrudra Graphics.', 34, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Diary Printing', 'diary-printing', NULL, 'Diary Printing by Shivrudra Graphics', 'Diary Printing service by Shivrudra Graphics.', 34, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bill Book Printing', 'bill-book-printing', 'Bill Book Printing by Shivrudra Graphics', 'Bill Book Printing service by Shivrudra Graphics.', 35, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bill Book Printing', 'bill-book-printing', NULL, 'Bill Book Printing by Shivrudra Graphics', 'Bill Book Printing service by Shivrudra Graphics.', 35, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Receipt Book Printing', 'receipt-book-printing', 'Receipt Book Printing by Shivrudra Graphics', 'Receipt Book Printing service by Shivrudra Graphics.', 36, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Receipt Book Printing', 'receipt-book-printing', NULL, 'Receipt Book Printing by Shivrudra Graphics', 'Receipt Book Printing service by Shivrudra Graphics.', 36, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Notebook Printing', 'notebook-printing', 'Notebook Printing by Shivrudra Graphics', 'Notebook Printing service by Shivrudra Graphics.', 37, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Notebook Printing', 'notebook-printing', NULL, 'Notebook Printing by Shivrudra Graphics', 'Notebook Printing service by Shivrudra Graphics.', 37, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Catalogue Printing', 'catalogue-printing', 'Catalogue Printing by Shivrudra Graphics', 'Catalogue Printing service by Shivrudra Graphics.', 38, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Catalogue Printing', 'catalogue-printing', NULL, 'Catalogue Printing by Shivrudra Graphics', 'Catalogue Printing service by Shivrudra Graphics.', 38, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Notepads Printing', 'notepads-printing', 'Notepads Printing by Shivrudra Graphics', 'Notepads Printing service by Shivrudra Graphics.', 39, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Notepads Printing', 'notepads-printing', NULL, 'Notepads Printing by Shivrudra Graphics', 'Notepads Printing service by Shivrudra Graphics.', 39, 1
 FROM services WHERE slug = 'offset-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Photo Frame', 'photo-frame', 'Custom photo frames in premium finishes.', 'Custom photo frames in premium finishes.', '/images/services/photo-frame.jpg', 7, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wooden Frames', 'wooden-frames', 'Wooden Frames by Shivrudra Graphics', 'Wooden Frames service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wooden Frames', 'wooden-frames', NULL, 'Wooden Frames by Shivrudra Graphics', 'Wooden Frames service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'photo-frame'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Frames', 'acrylic-frames', 'Acrylic Frames by Shivrudra Graphics', 'Acrylic Frames service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Frames', 'acrylic-frames', NULL, 'Acrylic Frames by Shivrudra Graphics', 'Acrylic Frames service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'photo-frame'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Collage Frames', 'collage-frames', 'Collage Frames by Shivrudra Graphics', 'Collage Frames service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Collage Frames', 'collage-frames', NULL, 'Collage Frames by Shivrudra Graphics', 'Collage Frames service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'photo-frame'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Award Frames', 'award-frames', 'Award Frames by Shivrudra Graphics', 'Award Frames service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Award Frames', 'award-frames', NULL, 'Award Frames by Shivrudra Graphics', 'Award Frames service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'photo-frame'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Badge & Dome Printing', 'badge-dome-printing', 'Glossy dome stickers and brand badges.', 'Glossy dome stickers and brand badges.', '/images/services/badge-and-dome-printing.png', 8, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Dome Stickers', 'dome-stickers', 'Dome Stickers by Shivrudra Graphics', 'Dome Stickers service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dome Stickers', 'dome-stickers', NULL, 'Dome Stickers by Shivrudra Graphics', 'Dome Stickers service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'badge-dome-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Badges', 'metal-badges', 'Metal Badges by Shivrudra Graphics', 'Metal Badges service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Badges', 'metal-badges', NULL, 'Metal Badges by Shivrudra Graphics', 'Metal Badges service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'badge-dome-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'ID Badges', 'id-badges', 'ID Badges by Shivrudra Graphics', 'ID Badges service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'ID Badges', 'id-badges', NULL, 'ID Badges by Shivrudra Graphics', 'ID Badges service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'badge-dome-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Logo Domes', 'logo-domes', 'Logo Domes by Shivrudra Graphics', 'Logo Domes service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Logo Domes', 'logo-domes', NULL, 'Logo Domes by Shivrudra Graphics', 'Logo Domes service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'badge-dome-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Bag Printing', 'bag-printing', 'Custom printed bags for promotion and retail.', 'Custom printed bags for promotion and retail.', '/images/services/bag-printing.png', 9, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Cloth Bags', 'cloth-bags', 'Cloth Bags by Shivrudra Graphics', 'Cloth Bags service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cloth Bags', 'cloth-bags', NULL, 'Cloth Bags by Shivrudra Graphics', 'Cloth Bags service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'bag-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Non Woven Bags', 'non-woven-bags', 'Non Woven Bags by Shivrudra Graphics', 'Non Woven Bags service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Non Woven Bags', 'non-woven-bags', NULL, 'Non Woven Bags by Shivrudra Graphics', 'Non Woven Bags service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'bag-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Jute Bags', 'jute-bags', 'Jute Bags by Shivrudra Graphics', 'Jute Bags service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Jute Bags', 'jute-bags', NULL, 'Jute Bags by Shivrudra Graphics', 'Jute Bags service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'bag-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Paper Bags', 'paper-bags', 'Paper Bags by Shivrudra Graphics', 'Paper Bags service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Paper Bags', 'paper-bags', NULL, 'Paper Bags by Shivrudra Graphics', 'Paper Bags service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'bag-printing'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Stamp', 'stamp', 'Custom stamps for office, billing, numbering and date marking needs.', 'Custom stamps for office, billing, numbering and date marking needs.', '/images/services/rubber-stamps.png', 10, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Stamp', 'stamp', 'Stamp by Shivrudra Graphics', 'Stamp service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Stamp', 'stamp', NULL, 'Stamp by Shivrudra Graphics', 'Stamp service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Pre Ink Stamp', 'pre-ink-stamp', 'Pre Ink Stamp by Shivrudra Graphics', 'Pre Ink Stamp service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pre Ink Stamp', 'pre-ink-stamp', NULL, 'Pre Ink Stamp by Shivrudra Graphics', 'Pre Ink Stamp service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Sun Stamp', 'sun-stamp', 'Sun Stamp by Shivrudra Graphics', 'Sun Stamp service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Sun Stamp', 'sun-stamp', NULL, 'Sun Stamp by Shivrudra Graphics', 'Sun Stamp service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Colop Stamp', 'colop-stamp', 'Colop Stamp by Shivrudra Graphics', 'Colop Stamp service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Colop Stamp', 'colop-stamp', NULL, 'Colop Stamp by Shivrudra Graphics', 'Colop Stamp service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Trodat Stamp', 'trodat-stamp', 'Trodat Stamp by Shivrudra Graphics', 'Trodat Stamp service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Trodat Stamp', 'trodat-stamp', NULL, 'Trodat Stamp by Shivrudra Graphics', 'Trodat Stamp service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Numbering Stamp', 'numbering-stamp', 'Numbering Stamp by Shivrudra Graphics', 'Numbering Stamp service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Numbering Stamp', 'numbering-stamp', NULL, 'Numbering Stamp by Shivrudra Graphics', 'Numbering Stamp service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Colop Numbering Stamp', 'colop-numbering-stamp', 'Colop Numbering Stamp by Shivrudra Graphics', 'Colop Numbering Stamp service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Colop Numbering Stamp', 'colop-numbering-stamp', NULL, 'Colop Numbering Stamp by Shivrudra Graphics', 'Colop Numbering Stamp service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Dolphin Numbering Stamp', 'dolphin-numbering-stamp', 'Dolphin Numbering Stamp by Shivrudra Graphics', 'Dolphin Numbering Stamp service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dolphin Numbering Stamp', 'dolphin-numbering-stamp', NULL, 'Dolphin Numbering Stamp by Shivrudra Graphics', 'Dolphin Numbering Stamp service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Dater Stamp', 'dater-stamp', 'Dater Stamp by Shivrudra Graphics', 'Dater Stamp service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dater Stamp', 'dater-stamp', NULL, 'Dater Stamp by Shivrudra Graphics', 'Dater Stamp service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Colop Dater Stamp', 'colop-dater-stamp', 'Colop Dater Stamp by Shivrudra Graphics', 'Colop Dater Stamp service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Colop Dater Stamp', 'colop-dater-stamp', NULL, 'Colop Dater Stamp by Shivrudra Graphics', 'Colop Dater Stamp service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Dolphin Dater Stamp', 'dolphin-dater-stamp', 'Dolphin Dater Stamp by Shivrudra Graphics', 'Dolphin Dater Stamp service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dolphin Dater Stamp', 'dolphin-dater-stamp', NULL, 'Dolphin Dater Stamp by Shivrudra Graphics', 'Dolphin Dater Stamp service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'stamp'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Engraving & Marking', 'engraving-marking', 'Laser engraving and industrial marking solutions.', 'Laser engraving and industrial marking solutions.', '/images/services/engraving-and-marking.png', 11, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Laser Engraving', 'laser-engraving', 'Laser Engraving by Shivrudra Graphics', 'Laser Engraving service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Laser Engraving', 'laser-engraving', NULL, 'Laser Engraving by Shivrudra Graphics', 'Laser Engraving service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'engraving-marking'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Marking', 'metal-marking', 'Metal Marking by Shivrudra Graphics', 'Metal Marking service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Marking', 'metal-marking', NULL, 'Metal Marking by Shivrudra Graphics', 'Metal Marking service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'engraving-marking'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Engraving', 'acrylic-engraving', 'Acrylic Engraving by Shivrudra Graphics', 'Acrylic Engraving service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Engraving', 'acrylic-engraving', NULL, 'Acrylic Engraving by Shivrudra Graphics', 'Acrylic Engraving service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'engraving-marking'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wood Engraving', 'wood-engraving', 'Wood Engraving by Shivrudra Graphics', 'Wood Engraving service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wood Engraving', 'wood-engraving', NULL, 'Wood Engraving by Shivrudra Graphics', 'Wood Engraving service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'engraving-marking'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Keychains', 'keychain', 'Custom keychains for promotions and gifting.', 'Custom keychains for promotions and gifting.', '/images/services/keychains.png', 12, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Keychains', 'metal-keychains', 'Metal Keychains by Shivrudra Graphics', 'Metal Keychains service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Keychains', 'metal-keychains', NULL, 'Metal Keychains by Shivrudra Graphics', 'Metal Keychains service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'keychain'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Keychains', 'acrylic-keychains', 'Acrylic Keychains by Shivrudra Graphics', 'Acrylic Keychains service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Keychains', 'acrylic-keychains', NULL, 'Acrylic Keychains by Shivrudra Graphics', 'Acrylic Keychains service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'keychain'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wooden Keychains', 'wooden-keychains', 'Wooden Keychains by Shivrudra Graphics', 'Wooden Keychains service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wooden Keychains', 'wooden-keychains', NULL, 'Wooden Keychains by Shivrudra Graphics', 'Wooden Keychains service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'keychain'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'LED Keychains', 'led-keychains', 'LED Keychains by Shivrudra Graphics', 'LED Keychains service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'LED Keychains', 'led-keychains', NULL, 'LED Keychains by Shivrudra Graphics', 'LED Keychains service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'keychain'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Corporate Gifts', 'corporate-gift', 'Premium curated gifts for clients & employees.', 'Premium curated gifts for clients & employees.', '/images/services/corporate-gift.jpg', 13, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Diaries', 'diaries', 'Diaries by Shivrudra Graphics', 'Diaries service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Keychain', 'pen-keychain', 15, '15 Items', 'Pen + Keychain service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'corporate-gift'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Pens', 'pens', 'Pens by Shivrudra Graphics', 'Pens service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cardholder + Pen + Keychain', 'cardholder-pen-keychain', 6, '6 Items', 'Cardholder + Pen + Keychain service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'corporate-gift'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Bottles', 'bottles', 'Bottles by Shivrudra Graphics', 'Bottles service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dairy + Pen', 'dairy-pen', 36, '36 Items', 'Dairy + Pen service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'corporate-gift'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Hampers', 'hampers', 'Hampers by Shivrudra Graphics', 'Hampers service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Dairy + Keychain', 'pen-dairy-keychain', 14, '14 Items', 'Pen + Dairy + Keychain service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'corporate-gift'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Dairy + Keychain + Cardholder', 'pen-dairy-keychain-cardholder', 13, '13 Items', 'Pen + Dairy + Keychain + Cardholder service by Shivrudra Graphics.', 4, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Dairy + Mug', 'pen-dairy-mug', 5, '5 Items', 'Pen + Dairy + Mug service by Shivrudra Graphics.', 5, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Bottle + Keychain', 'pen-bottle-keychain', 10, '10 Items', 'Pen + Bottle + Keychain service by Shivrudra Graphics.', 6, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Keychain + Dairy + Temperature Bottle', 'pen-keychain-dairy-temperature-bottle', 4, '4 Items', 'Pen + Keychain + Dairy + Temperature Bottle service by Shivrudra Graphics.', 7, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Dairy + Keychain + Cardholder + Temperature Bottle', 'pen-dairy-keychain-cardholder-temperature-bottle', 6, '6 Items', 'Pen + Dairy + Keychain + Cardholder + Temperature Bottle service by Shivrudra Graphics.', 8, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen + Dairy + Mug + Keychain + Mobile Stand + Temperature Bottle', 'pen-dairy-mug-keychain-mobile-stand-temperature-bottle', 5, '5 Items', 'Pen + Dairy + Mug + Keychain + Mobile Stand + Temperature Bottle service by Shivrudra Graphics.', 9, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dairy + Pen + Temperature Bottle + Laptop Stand', 'dairy-pen-temperature-bottle-laptop-stand', 2, '2 Items', 'Dairy + Pen + Temperature Bottle + Laptop Stand service by Shivrudra Graphics.', 10, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bamboo Dairy + Cardholder + Keychain + Pen', 'bamboo-dairy-cardholder-keychain-pen', 9, '9 Items', 'Bamboo Dairy + Cardholder + Keychain + Pen service by Shivrudra Graphics.', 11, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Pen', 'pen', 50, '50 Items', 'Pen service by Shivrudra Graphics.', 12, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Keychain', 'keychain', 7, '7 Items', 'Keychain service by Shivrudra Graphics.', 13, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Mobile Stand', 'mobile-stand', 5, '5 Items', 'Mobile Stand service by Shivrudra Graphics.', 14, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Bottle', 'bottle', 27, '27 Items', 'Bottle service by Shivrudra Graphics.', 15, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Mug', 'mug', 22, '22 Items', 'Mug service by Shivrudra Graphics.', 16, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Mug Printing', 'mug-printing', 1, '1 Item', 'Mug Printing service by Shivrudra Graphics.', 17, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cardholder', 'cardholder', 20, '20 Items', 'Cardholder service by Shivrudra Graphics.', 18, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Dairy', 'dairy', 16, '16 Items', 'Dairy service by Shivrudra Graphics.', 19, 1
+FROM services WHERE slug = 'corporate-gift'
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Industrial Name Plates', 'industrial-name-plates', 'Durable name plates for industrial use.', 'Durable name plates for industrial use.', '/images/services/industrial-name-plates.png', 14, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'SS Name Plates', 'ss-name-plates', 'SS Name Plates by Shivrudra Graphics', 'SS Name Plates service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'SS Name Plates', 'ss-name-plates', NULL, 'SS Name Plates by Shivrudra Graphics', 'SS Name Plates service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'industrial-name-plates'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'MS Name Plates', 'ms-name-plates', 'MS Name Plates by Shivrudra Graphics', 'MS Name Plates service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'MS Name Plates', 'ms-name-plates', NULL, 'MS Name Plates by Shivrudra Graphics', 'MS Name Plates service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'industrial-name-plates'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Aluminum Plates', 'aluminum-plates', 'Aluminum Plates by Shivrudra Graphics', 'Aluminum Plates service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Aluminum Plates', 'aluminum-plates', NULL, 'Aluminum Plates by Shivrudra Graphics', 'Aluminum Plates service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'industrial-name-plates'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Anodized Plates', 'anodized-plates', 'Anodized Plates by Shivrudra Graphics', 'Anodized Plates service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Anodized Plates', 'anodized-plates', NULL, 'Anodized Plates by Shivrudra Graphics', 'Anodized Plates service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'industrial-name-plates'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Premium Signages', 'signage', 'Premium wayfinding, name plate, award and acrylic signage solutions.', 'Premium wayfinding, name plate, award and acrylic signage solutions.', '/images/services/signage.png', 15, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Way Finding Signage', 'way-finding-signage', 'Way Finding Signage by Shivrudra Graphics', 'Way Finding Signage service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Way Finding Signage', 'way-finding-signage', NULL, 'Way Finding Signage by Shivrudra Graphics', 'Way Finding Signage service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Free Hand Signage', 'free-hand-signage', 'Free Hand Signage by Shivrudra Graphics', 'Free Hand Signage service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Free Hand Signage', 'free-hand-signage', NULL, 'Free Hand Signage by Shivrudra Graphics', 'Free Hand Signage service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Directory Signage', 'directory-signage', 'Directory Signage by Shivrudra Graphics', 'Directory Signage service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Directory Signage', 'directory-signage', NULL, 'Directory Signage by Shivrudra Graphics', 'Directory Signage service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Table Top Signage', 'table-top-signage', 'Table Top Signage by Shivrudra Graphics', 'Table Top Signage service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Table Top Signage', 'table-top-signage', NULL, 'Table Top Signage by Shivrudra Graphics', 'Table Top Signage service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Home Name Plates', 'home-name-plates', 'Home Name Plates by Shivrudra Graphics', 'Home Name Plates service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Home Name Plates', 'home-name-plates', NULL, 'Home Name Plates by Shivrudra Graphics', 'Home Name Plates service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Plaque', 'plaque', 'Plaque by Shivrudra Graphics', 'Plaque service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Plaque', 'plaque', NULL, 'Plaque by Shivrudra Graphics', 'Plaque service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Awards', 'awards', 'Awards by Shivrudra Graphics', 'Awards service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Awards', 'awards', NULL, 'Awards by Shivrudra Graphics', 'Awards service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Hangers', 'hangers', 'Hangers by Shivrudra Graphics', 'Hangers service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Hangers', 'hangers', NULL, 'Hangers by Shivrudra Graphics', 'Hangers service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, '3D Sign', '3d-sign', '3D Sign by Shivrudra Graphics', '3D Sign service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, '3D Sign', '3d-sign', NULL, '3D Sign by Shivrudra Graphics', '3D Sign service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, '2D Sign', '2d-sign', '2D Sign by Shivrudra Graphics', '2D Sign service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, '2D Sign', '2d-sign', NULL, '2D Sign by Shivrudra Graphics', '2D Sign service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Sign', 'acrylic-sign', 'Acrylic Sign by Shivrudra Graphics', 'Acrylic Sign service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Sign', 'acrylic-sign', NULL, 'Acrylic Sign by Shivrudra Graphics', 'Acrylic Sign service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'signage'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Trophies & Medals', 'trophies-medals', 'Custom trophies, medals and certificates for events and recognition.', 'Custom trophies, medals and certificates for events and recognition.', '/images/services/trophies-and-medals.png', 16, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Trophies', 'acrylic-trophies', 'Acrylic Trophies by Shivrudra Graphics', 'Acrylic Trophies service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Trophies', 'acrylic-trophies', NULL, 'Acrylic Trophies by Shivrudra Graphics', 'Acrylic Trophies service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wooden Trophies', 'wooden-trophies', 'Wooden Trophies by Shivrudra Graphics', 'Wooden Trophies service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wooden Trophies', 'wooden-trophies', NULL, 'Wooden Trophies by Shivrudra Graphics', 'Wooden Trophies service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Plastic Frame Trophies', 'plastic-frame-trophies', 'Plastic Frame Trophies by Shivrudra Graphics', 'Plastic Frame Trophies service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Plastic Frame Trophies', 'plastic-frame-trophies', NULL, 'Plastic Frame Trophies by Shivrudra Graphics', 'Plastic Frame Trophies service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Frame Trophies', 'metal-frame-trophies', 'Metal Frame Trophies by Shivrudra Graphics', 'Metal Frame Trophies service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Frame Trophies', 'metal-frame-trophies', NULL, 'Metal Frame Trophies by Shivrudra Graphics', 'Metal Frame Trophies service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Foil Trophies', 'foil-trophies', 'Foil Trophies by Shivrudra Graphics', 'Foil Trophies service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Foil Trophies', 'foil-trophies', NULL, 'Foil Trophies by Shivrudra Graphics', 'Foil Trophies service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Trophies', 'metal-trophies', 'Metal Trophies by Shivrudra Graphics', 'Metal Trophies service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Trophies', 'metal-trophies', NULL, 'Metal Trophies by Shivrudra Graphics', 'Metal Trophies service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'ABS Trophies', 'abs-trophies', 'ABS Trophies by Shivrudra Graphics', 'ABS Trophies service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'ABS Trophies', 'abs-trophies', NULL, 'ABS Trophies by Shivrudra Graphics', 'ABS Trophies service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Flag Trophies', 'flag-trophies', 'Flag Trophies by Shivrudra Graphics', 'Flag Trophies service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Flag Trophies', 'flag-trophies', NULL, 'Flag Trophies by Shivrudra Graphics', 'Flag Trophies service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Cups Trophies', 'cups-trophies', 'Cups Trophies by Shivrudra Graphics', 'Cups Trophies service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Cups Trophies', 'cups-trophies', NULL, 'Cups Trophies by Shivrudra Graphics', 'Cups Trophies service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Medals', 'medals', 'Medals by Shivrudra Graphics', 'Medals service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Medals', 'medals', NULL, 'Medals by Shivrudra Graphics', 'Medals service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Silver Certificate', 'silver-certificate', 'Silver Certificate by Shivrudra Graphics', 'Silver Certificate service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Silver Certificate', 'silver-certificate', NULL, 'Silver Certificate by Shivrudra Graphics', 'Silver Certificate service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Golden Certificate', 'golden-certificate', 'Golden Certificate by Shivrudra Graphics', 'Golden Certificate service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Golden Certificate', 'golden-certificate', NULL, 'Golden Certificate by Shivrudra Graphics', 'Golden Certificate service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'trophies-medals'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Safety Signages', 'safety-signages', 'Compliant safety signage for every workplace.', 'Compliant safety signage for every workplace.', '/images/services/safety-signages.png', 17, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Vinyl Safety Signage', 'vinyl-safety-signage', 'Vinyl Safety Signage by Shivrudra Graphics', 'Vinyl Safety Signage service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Vinyl Safety Signage', 'vinyl-safety-signage', NULL, 'Vinyl Safety Signage by Shivrudra Graphics', 'Vinyl Safety Signage service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Emergency Safety Signage', 'emergency-safety-signage', 'Emergency Safety Signage by Shivrudra Graphics', 'Emergency Safety Signage service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Emergency Safety Signage', 'emergency-safety-signage', NULL, 'Emergency Safety Signage by Shivrudra Graphics', 'Emergency Safety Signage service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Warning Safety Signage', 'warning-safety-signage', 'Warning Safety Signage by Shivrudra Graphics', 'Warning Safety Signage service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Warning Safety Signage', 'warning-safety-signage', NULL, 'Warning Safety Signage by Shivrudra Graphics', 'Warning Safety Signage service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Fire Safety Signage', 'fire-safety-signage', 'Fire Safety Signage by Shivrudra Graphics', 'Fire Safety Signage service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Fire Safety Signage', 'fire-safety-signage', NULL, 'Fire Safety Signage by Shivrudra Graphics', 'Fire Safety Signage service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Prohibition Signage', 'prohibition-signage', 'Prohibition Signage by Shivrudra Graphics', 'Prohibition Signage service by Shivrudra Graphics.', 4, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Prohibition Signage', 'prohibition-signage', NULL, 'Prohibition Signage by Shivrudra Graphics', 'Prohibition Signage service by Shivrudra Graphics.', 4, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Recycle Signage', 'recycle-signage', 'Recycle Signage by Shivrudra Graphics', 'Recycle Signage service by Shivrudra Graphics.', 5, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Recycle Signage', 'recycle-signage', NULL, 'Recycle Signage by Shivrudra Graphics', 'Recycle Signage service by Shivrudra Graphics.', 5, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Safety Floor Signage', 'safety-floor-signage', 'Safety Floor Signage by Shivrudra Graphics', 'Safety Floor Signage service by Shivrudra Graphics.', 6, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Safety Floor Signage', 'safety-floor-signage', NULL, 'Safety Floor Signage by Shivrudra Graphics', 'Safety Floor Signage service by Shivrudra Graphics.', 6, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Road Signage', 'road-signage', 'Road Signage by Shivrudra Graphics', 'Road Signage service by Shivrudra Graphics.', 7, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Road Signage', 'road-signage', NULL, 'Road Signage by Shivrudra Graphics', 'Road Signage service by Shivrudra Graphics.', 7, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'No Parking Signage', 'no-parking-signage', 'No Parking Signage by Shivrudra Graphics', 'No Parking Signage service by Shivrudra Graphics.', 8, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'No Parking Signage', 'no-parking-signage', NULL, 'No Parking Signage by Shivrudra Graphics', 'No Parking Signage service by Shivrudra Graphics.', 8, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Emergency Exit Signage', 'emergency-exit-signage', 'Emergency Exit Signage by Shivrudra Graphics', 'Emergency Exit Signage service by Shivrudra Graphics.', 9, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Emergency Exit Signage', 'emergency-exit-signage', NULL, 'Emergency Exit Signage by Shivrudra Graphics', 'Emergency Exit Signage service by Shivrudra Graphics.', 9, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wear Safety Helmet Signage', 'wear-safety-helmet-signage', 'Wear Safety Helmet Signage by Shivrudra Graphics', 'Wear Safety Helmet Signage service by Shivrudra Graphics.', 10, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wear Safety Helmet Signage', 'wear-safety-helmet-signage', NULL, 'Wear Safety Helmet Signage by Shivrudra Graphics', 'Wear Safety Helmet Signage service by Shivrudra Graphics.', 10, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Main Switch Signage', 'main-switch-signage', 'Main Switch Signage by Shivrudra Graphics', 'Main Switch Signage service by Shivrudra Graphics.', 11, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Main Switch Signage', 'main-switch-signage', NULL, 'Main Switch Signage by Shivrudra Graphics', 'Main Switch Signage service by Shivrudra Graphics.', 11, 1
 FROM services WHERE slug = 'safety-signages'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO services (name, slug, short_description, description, image_url, sort_order, is_active)
 VALUES ('Laser & CNC Cutting', 'laser-cnc-cutting', 'Precision laser and CNC cutting services.', 'Precision laser and CNC cutting services.', '/images/services/laser-and-cnc-cutting.png', 18, 1)
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Acrylic Cutting', 'acrylic-cutting', 'Acrylic Cutting by Shivrudra Graphics', 'Acrylic Cutting service by Shivrudra Graphics.', 0, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Acrylic Cutting', 'acrylic-cutting', NULL, 'Acrylic Cutting by Shivrudra Graphics', 'Acrylic Cutting service by Shivrudra Graphics.', 0, 1
 FROM services WHERE slug = 'laser-cnc-cutting'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Metal Cutting', 'metal-cutting', 'Metal Cutting by Shivrudra Graphics', 'Metal Cutting service by Shivrudra Graphics.', 1, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Metal Cutting', 'metal-cutting', NULL, 'Metal Cutting by Shivrudra Graphics', 'Metal Cutting service by Shivrudra Graphics.', 1, 1
 FROM services WHERE slug = 'laser-cnc-cutting'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'Wood Cutting', 'wood-cutting', 'Wood Cutting by Shivrudra Graphics', 'Wood Cutting service by Shivrudra Graphics.', 2, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'Wood Cutting', 'wood-cutting', NULL, 'Wood Cutting by Shivrudra Graphics', 'Wood Cutting service by Shivrudra Graphics.', 2, 1
 FROM services WHERE slug = 'laser-cnc-cutting'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
-INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, 'ACP Cutting', 'acp-cutting', 'ACP Cutting by Shivrudra Graphics', 'ACP Cutting service by Shivrudra Graphics.', 3, 1
+INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, 'ACP Cutting', 'acp-cutting', NULL, 'ACP Cutting by Shivrudra Graphics', 'ACP Cutting service by Shivrudra Graphics.', 3, 1
 FROM services WHERE slug = 'laser-cnc-cutting'
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;
 
 INSERT INTO product_categories (name, slug, icon, sort_order, is_active)
 VALUES ('Commercial Printing', 'commercial-printing', 'Printer', 0, 1)

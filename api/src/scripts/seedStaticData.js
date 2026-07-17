@@ -135,13 +135,17 @@ async function upsertService(service, index) {
   const [rows] = await pool.execute("SELECT id FROM services WHERE slug = ?", [service.slug]);
   const serviceId = rows[0].id;
 
-  for (const [productIndex, productName] of service.subs.entries()) {
+  for (const [productIndex, subProduct] of service.subs.entries()) {
+    const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
+    const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;
+
     await pool.execute(
-      `INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-       VALUES (?, ?, ?, ?, ?, ?, 1)
+      `INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 1)
        ON DUPLICATE KEY UPDATE
          service_id = VALUES(service_id),
          name = VALUES(name),
+         item_count = VALUES(item_count),
          short_description = VALUES(short_description),
          description = VALUES(description),
          sort_order = VALUES(sort_order),
@@ -150,7 +154,8 @@ async function upsertService(service, index) {
         serviceId,
         productName,
         toSlug(productName.replace(/&/g, "and")),
-        `${productName} by Shivrudra Graphics`,
+        itemCount,
+        itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : `${productName} by Shivrudra Graphics`,
         `${productName} service by Shivrudra Graphics.`,
         productIndex,
       ],

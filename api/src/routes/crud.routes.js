@@ -30,6 +30,7 @@ const resources = {
       "short_description",
       "description",
       "main_image_url",
+      "item_count",
       "meta_title",
       "meta_description",
       "sort_order",

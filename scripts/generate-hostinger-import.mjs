@@ -246,13 +246,15 @@ VALUES (${sql(service.name)}, ${sql(service.slug)}, ${sql(service.blurb)}, ${sql
 ON DUPLICATE KEY UPDATE name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), image_url = VALUES(image_url), sort_order = VALUES(sort_order), is_active = 1;`,
     );
 
-    for (const [productIndex, productName] of service.subs.entries()) {
+    for (const [productIndex, subProduct] of service.subs.entries()) {
+      const productName = typeof subProduct === "string" ? subProduct : subProduct.name;
+      const itemCount = typeof subProduct === "string" ? null : subProduct.itemCount ?? null;
       const productSlug = slugify(productName);
       lines.push(
-        `INSERT INTO products (service_id, name, slug, short_description, description, sort_order, is_active)
-SELECT id, ${sql(productName)}, ${sql(productSlug)}, ${sql(`${productName} by Shivrudra Graphics`)}, ${sql(`${productName} service by Shivrudra Graphics.`)}, ${productIndex}, 1
+        `INSERT INTO products (service_id, name, slug, item_count, short_description, description, sort_order, is_active)
+SELECT id, ${sql(productName)}, ${sql(productSlug)}, ${sql(itemCount)}, ${sql(itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : `${productName} by Shivrudra Graphics`)}, ${sql(`${productName} service by Shivrudra Graphics.`)}, ${productIndex}, 1
 FROM services WHERE slug = ${sql(service.slug)}
-ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;`,
+ON DUPLICATE KEY UPDATE service_id = VALUES(service_id), name = VALUES(name), item_count = VALUES(item_count), short_description = VALUES(short_description), description = VALUES(description), sort_order = VALUES(sort_order), is_active = 1;`,
       );
     }
   }

@@ -25,6 +25,11 @@ try {
 } catch (error) {
   if (error.code !== "ER_DUP_FIELDNAME") throw error;
 }
+try {
+  await connection.query("ALTER TABLE products ADD COLUMN item_count INT UNSIGNED NULL AFTER main_image_url");
+} catch (error) {
+  if (error.code !== "ER_DUP_FIELDNAME") throw error;
+}
 await connection.end();
 
 console.log(`Database schema applied from ${schemaPath}`);

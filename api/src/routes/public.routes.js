@@ -53,7 +53,7 @@ publicRoutes.get(
   asyncHandler(async (_req, res) => {
     const [rows] = await pool.query("SELECT * FROM services WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
     const [products] = await pool.query(
-      "SELECT id, service_id, name, slug, short_description, main_image_url FROM products WHERE is_active = 1 ORDER BY sort_order ASC, id DESC",
+      "SELECT id, service_id, name, slug, item_count, short_description, main_image_url FROM products WHERE is_active = 1 ORDER BY sort_order ASC, id DESC",
     );
 
     res.json(

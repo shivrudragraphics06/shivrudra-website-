@@ -89,7 +89,7 @@ const resources: ResourceConfig[] = [
     label: "Products",
     singular: "Product",
     icon: Star,
-    columns: ["name", "service_name", "category_name", "main_image_url", "is_active"],
+    columns: ["name", "service_name", "category_name", "item_count", "main_image_url", "is_active"],
     fields: [
       { name: "category_id", label: "Category", type: "select", optionsKey: "categories" },
       { name: "service_id", label: "Service / Subcategory", type: "select", optionsKey: "services" },
@@ -98,6 +98,7 @@ const resources: ResourceConfig[] = [
       { name: "short_description", label: "Short Description", type: "textarea" },
       { name: "description", label: "Detailed Page Content", type: "textarea" },
       { name: "main_image_url", label: "Main Image", type: "image" },
+      { name: "item_count", label: "Item Count", type: "number" },
       { name: "meta_title", label: "Meta Title" },
       { name: "meta_description", label: "Meta Description", type: "textarea" },
       { name: "sort_order", label: "Sort Order", type: "number" },
@@ -897,9 +898,10 @@ function cleanPayload(form: AdminRecord, resource: ResourceConfig) {
 }
 
 function renderCell(value: AdminRecord[string], column?: string) {
+  const isBooleanColumn = column?.startsWith("is_") || column === "status";
   if (typeof value === "boolean") return value ? "Yes" : "No";
-  if (value === 1) return "Yes";
-  if (value === 0) return "No";
+  if (isBooleanColumn && value === 1) return "Yes";
+  if (isBooleanColumn && value === 0) return "No";
   if (!value) return "-";
 
   if (column?.includes("image") || column?.includes("logo")) {

@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS products (
   short_description VARCHAR(255),
   description LONGTEXT,
   main_image_url VARCHAR(500),
+  item_count INT UNSIGNED NULL,
   meta_title VARCHAR(255),
   meta_description VARCHAR(500),
   sort_order INT DEFAULT 0,

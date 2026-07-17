@@ -11,12 +11,13 @@ export type PublicService = {
   short_description?: string;
   description?: string;
   blurb?: string;
-  subs?: string[];
+  subs?: (string | { name: string; itemCount?: number })[];
   products?: {
     id: number;
     name: string;
     slug: string;
     service_id: number;
+    item_count?: number | null;
     short_description?: string;
     main_image_url?: string;
   }[];

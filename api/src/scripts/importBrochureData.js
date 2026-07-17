@@ -230,19 +230,26 @@ const brochureServices = [
   {
     name: "Corporate Gifts",
     products: [
-      "Mug Printing",
-      "Cap Printing",
-      "T Shirt Printing",
-      "Mouse Pad Printing",
-      "Flasks Bottle Printing",
-      "Pen Printing",
-      "Diaries Printing",
-      "Shirt Embroidery",
-      "Tumblers Printing",
-      "Card Holder Printing",
-      "Reflective Safety Printing",
-      "Mobile Laptop Stand",
-      "Employee Gift Stand",
+      { name: "Pen + Keychain", itemCount: 15 },
+      { name: "Cardholder + Pen + Keychain", itemCount: 6 },
+      { name: "Dairy + Pen", itemCount: 36 },
+      { name: "Pen + Dairy + Keychain", itemCount: 14 },
+      { name: "Pen + Dairy + Keychain + Cardholder", itemCount: 13 },
+      { name: "Pen + Dairy + Mug", itemCount: 5 },
+      { name: "Pen + Bottle + Keychain", itemCount: 10 },
+      { name: "Pen + Keychain + Dairy + Temperature Bottle", itemCount: 4 },
+      { name: "Pen + Dairy + Keychain + Cardholder + Temperature Bottle", itemCount: 6 },
+      { name: "Pen + Dairy + Mug + Keychain + Mobile Stand + Temperature Bottle", itemCount: 5 },
+      { name: "Dairy + Pen + Temperature Bottle + Laptop Stand", itemCount: 2 },
+      { name: "Bamboo Dairy + Cardholder + Keychain + Pen", itemCount: 9 },
+      { name: "Pen", itemCount: 50 },
+      { name: "Keychain", itemCount: 7 },
+      { name: "Mobile Stand", itemCount: 5 },
+      { name: "Bottle", itemCount: 27 },
+      { name: "Mug", itemCount: 22 },
+      { name: "Mug Printing", itemCount: 1 },
+      { name: "Cardholder", itemCount: 20 },
+      { name: "Dairy", itemCount: 16 },
     ],
   },
   {
@@ -424,14 +431,17 @@ async function upsertService(service, sortOrder) {
   return rows[0].id;
 }
 
-async function upsertProduct(serviceId, productName, sortOrder, imageUrl) {
+async function upsertProduct(serviceId, product, sortOrder, imageUrl) {
+  const productName = typeof product === "string" ? product : product.name;
+  const itemCount = typeof product === "string" ? null : product.itemCount ?? null;
   const slug = toSlug(productName);
   await pool.execute(
-    `INSERT INTO products (service_id, name, slug, short_description, description, main_image_url, sort_order, is_active)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+    `INSERT INTO products (service_id, name, slug, item_count, short_description, description, main_image_url, sort_order, is_active)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
      ON DUPLICATE KEY UPDATE
        service_id = VALUES(service_id),
        name = VALUES(name),
+       item_count = VALUES(item_count),
        short_description = VALUES(short_description),
        description = VALUES(description),
        main_image_url = COALESCE(NULLIF(products.main_image_url, ''), VALUES(main_image_url)),
@@ -441,7 +451,8 @@ async function upsertProduct(serviceId, productName, sortOrder, imageUrl) {
       serviceId,
       productName,
       slug,
-      descriptionFor(productName),
+      itemCount,
+      itemCount ? `${itemCount} ${itemCount === 1 ? "Item" : "Items"}` : descriptionFor(productName),
       descriptionFor(productName),
       imageUrl || null,
       sortOrder,

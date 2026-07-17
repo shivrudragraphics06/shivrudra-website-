@@ -1,10 +1,19 @@
 export type SubService = { slug: string; name: string };
+export type ServiceSubProduct = string | { name: string; itemCount?: number };
 export type Service = {
   slug: string;
   name: string;
   blurb: string;
-  subs: string[];
+  subs: ServiceSubProduct[];
 };
+
+export function serviceSubName(sub: ServiceSubProduct) {
+  return typeof sub === "string" ? sub : sub.name;
+}
+
+export function serviceSubItemCount(sub: ServiceSubProduct) {
+  return typeof sub === "string" ? undefined : sub.itemCount;
+}
 
 export const SITE_TAGLINE =
   "Commercial, Industrial, Corporate Printing and LED Sign Board Manufacturers";
@@ -238,7 +247,28 @@ export const SERVICES: Service[] = [
     slug: "corporate-gift",
     name: "Corporate Gifts",
     blurb: "Premium curated gifts for clients & employees.",
-    subs: ["Diaries", "Pens", "Bottles", "Hampers"],
+    subs: [
+      { name: "Pen + Keychain", itemCount: 15 },
+      { name: "Cardholder + Pen + Keychain", itemCount: 6 },
+      { name: "Dairy + Pen", itemCount: 36 },
+      { name: "Pen + Dairy + Keychain", itemCount: 14 },
+      { name: "Pen + Dairy + Keychain + Cardholder", itemCount: 13 },
+      { name: "Pen + Dairy + Mug", itemCount: 5 },
+      { name: "Pen + Bottle + Keychain", itemCount: 10 },
+      { name: "Pen + Keychain + Dairy + Temperature Bottle", itemCount: 4 },
+      { name: "Pen + Dairy + Keychain + Cardholder + Temperature Bottle", itemCount: 6 },
+      { name: "Pen + Dairy + Mug + Keychain + Mobile Stand + Temperature Bottle", itemCount: 5 },
+      { name: "Dairy + Pen + Temperature Bottle + Laptop Stand", itemCount: 2 },
+      { name: "Bamboo Dairy + Cardholder + Keychain + Pen", itemCount: 9 },
+      { name: "Pen", itemCount: 50 },
+      { name: "Keychain", itemCount: 7 },
+      { name: "Mobile Stand", itemCount: 5 },
+      { name: "Bottle", itemCount: 27 },
+      { name: "Mug", itemCount: 22 },
+      { name: "Mug Printing", itemCount: 1 },
+      { name: "Cardholder", itemCount: 20 },
+      { name: "Dairy", itemCount: 16 },
+    ],
   },
   {
     slug: "industrial-name-plates",
