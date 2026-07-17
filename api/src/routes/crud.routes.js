@@ -48,6 +48,21 @@ const resources = {
     orderBy: "sort_order ASC, id DESC",
     fields: ["product_id", "image_url", "alt_text", "sort_order"],
   },
+  "sub-products": {
+    table: "product_subproducts",
+    orderBy: "sort_order ASC, id DESC",
+    fields: [
+      "product_id",
+      "name",
+      "slug",
+      "short_description",
+      "description",
+      "image_url",
+      "item_count",
+      "sort_order",
+      "is_active",
+    ],
+  },
   gallery: {
     table: "gallery_images",
     orderBy: "sort_order ASC, id DESC",
@@ -131,6 +146,20 @@ crudRoutes.get(
          LEFT JOIN services ON services.id = products.service_id
          LEFT JOIN product_categories ON product_categories.id = products.category_id
          WHERE NOT (services.slug = 'corporate-gift' AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers'))
+         ORDER BY ${config.orderBy}`,
+      );
+      res.json(rows);
+      return;
+    }
+
+    if (req.params.resource === "sub-products") {
+      const [rows] = await pool.query(
+        `SELECT product_subproducts.*,
+          products.name AS product_name,
+          services.name AS service_name
+         FROM product_subproducts
+         LEFT JOIN products ON products.id = product_subproducts.product_id
+         LEFT JOIN services ON services.id = products.service_id
          ORDER BY ${config.orderBy}`,
       );
       res.json(rows);

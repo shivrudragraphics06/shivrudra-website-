@@ -60,13 +60,26 @@ publicRoutes.get(
          AND NOT (services.slug = 'corporate-gift' AND products.slug IN ('diaries', 'pens', 'bottles', 'hampers'))
        ORDER BY products.sort_order ASC, products.id DESC`,
     );
+    const [subproducts] = await pool.query(
+      `SELECT product_subproducts.id, product_subproducts.product_id, product_subproducts.name, product_subproducts.slug,
+        product_subproducts.item_count, product_subproducts.short_description, product_subproducts.image_url
+       FROM product_subproducts
+       INNER JOIN products ON products.id = product_subproducts.product_id
+       INNER JOIN services ON services.id = products.service_id
+       WHERE product_subproducts.is_active = 1
+       ORDER BY product_subproducts.sort_order ASC, product_subproducts.id DESC`,
+    );
+    const productsWithSubproducts = products.map((product) => ({
+      ...product,
+      sub_products: subproducts.filter((subproduct) => subproduct.product_id === product.id),
+    }));
 
     res.json(
       rows.map((service) => ({
         ...service,
         blurb: service.short_description,
-        subs: products.filter((product) => product.service_id === service.id).map((product) => product.name),
-        products: products.filter((product) => product.service_id === service.id),
+        subs: productsWithSubproducts.filter((product) => product.service_id === service.id).map((product) => product.name),
+        products: productsWithSubproducts.filter((product) => product.service_id === service.id),
       })),
     );
   }),

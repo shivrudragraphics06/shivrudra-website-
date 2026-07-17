@@ -54,6 +54,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         item_count: serviceSubItemCount(sub) ?? null,
         short_description: "",
         main_image_url: "",
+        sub_products: [],
       }));
   const defaultCorporateGiftCards = isCorporateGift
     ? (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
@@ -64,6 +65,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
         item_count: serviceSubItemCount(sub) ?? null,
         short_description: "",
         main_image_url: "",
+        sub_products: [],
       }))
     : [];
   const productCards = isCorporateGift
@@ -130,7 +132,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
               <div className="mt-16 space-y-14">
                 {productCards.map((product) => {
                   const imageSrc = product.main_image_url || svc.image_url || svc.main_image_url || "";
-                  const bullets = corporateGiftBullets(product.name, product.item_count);
+                  const sectionItems = product.sub_products?.length ? product.sub_products : [product];
 
                   return (
                     <section
@@ -147,12 +149,20 @@ export function ServiceDetail({ slug }: { slug: string }) {
                       </div>
 
                       <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                        <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl">
+                        {sectionItems.map((item) => {
+                          const itemImage = ("image_url" in item ? item.image_url : "") || imageSrc;
+                          const bullets = corporateGiftBullets(item.name, item.item_count);
+
+                          return (
+                        <article
+                          key={`${product.id}-${item.id}-${item.name}`}
+                          className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                        >
                           <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                            {imageSrc ? (
+                            {itemImage ? (
                               <img
-                                src={assetUrl(imageSrc)}
-                                alt={product.name}
+                                src={assetUrl(itemImage)}
+                                alt={item.name}
                                 className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                                 loading="lazy"
                               />
@@ -164,7 +174,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
                           </div>
                           <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
                             <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                              {product.name}
+                              {item.name}
                             </h4>
                             <ul className="mt-3 space-y-1 text-sm font-semibold leading-6 text-muted-foreground">
                               {bullets.map((bullet) => (
@@ -175,7 +185,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
                             </ul>
                             <a
                               href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
-                                `Hi, I want to enquire about ${product.name} in ${svc.name}.`,
+                                `Hi, I want to enquire about ${item.name} in ${svc.name}.`,
                               )}`}
                               target="_blank"
                               rel="noreferrer"
@@ -188,6 +198,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
                             </a>
                           </div>
                         </article>
+                          );
+                        })}
                       </div>
                     </section>
                   );
@@ -250,6 +262,74 @@ export function ServiceDetail({ slug }: { slug: string }) {
               })}
             </div>
           )}
+
+          {!isCorporateGift && productCards.some((product) => product.sub_products?.length) ? (
+            <div className="mt-16 space-y-14">
+              {productCards
+                .filter((product) => product.sub_products?.length)
+                .map((product) => (
+                  <section key={`sub-products-${product.id}`} className="scroll-mt-28">
+                    <div className="flex items-center gap-4">
+                      <div className="h-px flex-1 bg-border" />
+                      <h3 className="shrink-0 text-center font-display text-2xl font-black text-brand-dark md:text-3xl">
+                        {product.name}
+                      </h3>
+                      <div className="h-px flex-1 bg-border" />
+                    </div>
+
+                    <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                      {product.sub_products?.map((subProduct) => {
+                        const message = `Hi, I want to enquire about ${subProduct.name} in ${svc.name}.`;
+                        const imageSrc = subProduct.image_url || product.main_image_url || "";
+
+                        return (
+                          <article
+                            key={`${product.id}-${subProduct.id}-${subProduct.name}`}
+                            className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                          >
+                            <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
+                              {imageSrc ? (
+                                <img
+                                  src={assetUrl(imageSrc)}
+                                  alt={subProduct.name}
+                                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
+                                  <PackageCheck className="h-12 w-12" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
+                              <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
+                                {subProduct.name}
+                              </h4>
+                              {subProduct.short_description ? (
+                                <p className="mt-3 line-clamp-2 text-sm font-semibold leading-6 text-muted-foreground">
+                                  {subProduct.short_description}
+                                </p>
+                              ) : null}
+                              <a
+                                href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
+                              >
+                                Enquire Now
+                                <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
+                                  <WhatsAppIcon className="h-3.5 w-3.5" />
+                                </span>
+                              </a>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+            </div>
+          ) : null}
         </div>
 
         <aside className="mt-12 grid items-start gap-4 lg:grid-cols-[0.9fr_1.1fr]">

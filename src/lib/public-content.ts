@@ -20,7 +20,18 @@ export type PublicService = {
     item_count?: number | null;
     short_description?: string;
     main_image_url?: string;
+    sub_products?: PublicSubProduct[];
   }[];
+};
+
+export type PublicSubProduct = {
+  id: number | string;
+  product_id?: number | string;
+  name: string;
+  slug?: string;
+  item_count?: number | null;
+  short_description?: string;
+  image_url?: string;
 };
 
 export type PublicCategory = {
