@@ -194,9 +194,11 @@ export function ServiceDetail({ slug }: { slug: string }) {
                             )}
                           </div>
                           <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
-                            <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                              {item.name}
-                            </h4>
+                            <div className="min-h-[3.5rem]">
+                              <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
+                                {item.name}
+                              </h4>
+                            </div>
                             <ul className="mt-3 space-y-1 text-sm font-semibold leading-6 text-muted-foreground">
                               {bullets.map((bullet) => (
                                 <li key={bullet} className="before:mr-2 before:content-['•']">
@@ -210,7 +212,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
                               )}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
+                              className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
                             >
                               Enquire Now
                               <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
@@ -266,20 +268,11 @@ export function ServiceDetail({ slug }: { slug: string }) {
                           {product.name}
                         </h3>
                       </div>
-                      {product.item_count ? (
-                        <p className="mt-3 text-sm font-black text-brand-red">
-                          {product.item_count} {product.item_count === 1 ? "Item" : "Items"}
-                        </p>
-                      ) : product.short_description ? (
-                        <p className="mt-3 line-clamp-2 text-sm font-semibold leading-6 text-muted-foreground">
-                          {product.short_description}
-                        </p>
-                      ) : null}
                       <a
                         href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
+                        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
                       >
                         Enquire Now
                         <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
@@ -332,19 +325,16 @@ export function ServiceDetail({ slug }: { slug: string }) {
                               )}
                             </div>
                             <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
-                              <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                                {subProduct.name}
-                              </h4>
-                              {subProduct.short_description ? (
-                                <p className="mt-3 line-clamp-2 text-sm font-semibold leading-6 text-muted-foreground">
-                                  {subProduct.short_description}
-                                </p>
-                              ) : null}
+                              <div className="min-h-[3.5rem]">
+                                <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
+                                  {subProduct.name}
+                                </h4>
+                              </div>
                               <a
                                 href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
+                                className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
                               >
                                 Enquire Now
                                 <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">

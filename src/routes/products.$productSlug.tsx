@@ -127,7 +127,7 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
             return (
               <article
                 key={variant.label}
-                className="group overflow-hidden rounded-xl border border-border bg-white p-3 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-3 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
               >
                 <div
                   className={`relative aspect-[1.08] overflow-hidden rounded-lg border border-border bg-gradient-to-br ${variant.colors}`}
@@ -161,18 +161,15 @@ export function ProductDetailPage({ productSlug }: { productSlug: string }) {
                   )}
                 </div>
 
-                <div className="space-y-3 px-1 pb-1 pt-4">
-                  <div className="min-w-0">
+                <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
+                  <div className="min-h-[3.25rem] min-w-0">
                     <h3 className="break-words font-display text-lg font-extrabold leading-snug text-brand-dark sm:text-xl">
                       {variant.label}
                     </h3>
-                    <p className="mt-1 text-sm font-semibold leading-snug text-muted-foreground">
-                      {product.name}
-                    </p>
                   </div>
                   <a
                     href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg gradient-brand px-4 py-2.5 text-sm font-bold text-white shadow-brand transition hover:scale-[1.02]"
+                    className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg gradient-brand px-4 py-2.5 text-sm font-bold text-white shadow-brand transition hover:scale-[1.02]"
                   >
                     Enquire <WhatsAppIcon className="h-4 w-4" />
                   </a>
