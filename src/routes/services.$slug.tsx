@@ -36,6 +36,18 @@ function corporateGiftSectionId(productName: string) {
     .replace(/^-+|-+$/g, "")}`;
 }
 
+function productGallerySlug(product: { name: string; slug?: string }) {
+  const slug =
+    product.slug ||
+    product.name
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  return slug === "logo-design" ? "logo" : slug;
+}
+
 export function ServiceDetail({ slug }: { slug: string }) {
   const services = usePublicServices();
   const contact = usePublicContact();
@@ -242,31 +254,48 @@ export function ServiceDetail({ slug }: { slug: string }) {
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {productCards.map((product) => {
                 const message = `Hi, I want to enquire about ${product.name} in ${svc.name}.`;
+                const galleryPath = `/services/${svc.slug}/${productGallerySlug(product)}`;
+                const imageCard = (
+                  <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
+                    {product.main_image_url ? (
+                      <img
+                        src={assetUrl(product.main_image_url)}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
+                        <PackageCheck className="h-12 w-12" />
+                      </div>
+                    )}
+                  </div>
+                );
 
                 return (
                   <article
                     key={`${product.id}-${product.name}`}
                     className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
                   >
-                    <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                      {product.main_image_url ? (
-                        <img
-                          src={assetUrl(product.main_image_url)}
-                          alt={product.name}
-                          className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                          <PackageCheck className="h-12 w-12" />
-                        </div>
-                      )}
-                    </div>
+                    <Link to={galleryPath}>{imageCard}</Link>
                     <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
                       <div className="min-h-[3.25rem]">
-                        <h3 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                          {product.name}
-                        </h3>
+                        <div className="flex items-start justify-between gap-3">
+                          <Link
+                            to={galleryPath}
+                            className="block min-w-0 font-display text-xl font-extrabold leading-tight text-brand-dark transition hover:text-brand-red sm:text-2xl lg:text-xl xl:text-[1.35rem]"
+                          >
+                            {product.name}
+                          </Link>
+                          <Link
+                            to={galleryPath}
+                            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-light text-brand-red transition hover:bg-brand-red hover:text-white"
+                            aria-label={`Open ${product.name} gallery`}
+                            title={`Open ${product.name} gallery`}
+                          >
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </div>
                       </div>
                       <a
                         href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}

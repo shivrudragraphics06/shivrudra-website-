@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { pool } from "../db.js";
+import { ensureLogoDesignsTable } from "../logoDesignsTable.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const publicRoutes = Router();
@@ -99,6 +100,44 @@ publicRoutes.get(
   asyncHandler(async (_req, res) => {
     const [rows] = await pool.query("SELECT * FROM gallery_images WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
     res.json(rows);
+  }),
+);
+
+publicRoutes.get(
+  "/logo-designs",
+  asyncHandler(async (_req, res) => {
+    await ensureLogoDesignsTable();
+    const [rows] = await pool.query("SELECT * FROM logo_designs WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
+    res.json(rows);
+  }),
+);
+
+publicRoutes.get(
+  "/product-gallery/:serviceSlug/:productSlug",
+  asyncHandler(async (req, res) => {
+    await ensureLogoDesignsTable();
+
+    const productSlug = req.params.productSlug === "logo" ? "logo-design" : req.params.productSlug;
+    const [products] = await pool.execute(
+      `SELECT products.id, products.name, products.slug, services.id AS service_id, services.name AS service_name, services.slug AS service_slug
+       FROM products
+       INNER JOIN services ON services.id = products.service_id
+       WHERE services.slug = ? AND (products.slug = ? OR products.slug = ? OR products.name = ?)
+       LIMIT 1`,
+      [req.params.serviceSlug, productSlug, req.params.productSlug, req.params.productSlug.replace(/-/g, " ")],
+    );
+    const product = products[0];
+
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    const [rows] = await pool.execute(
+      `SELECT * FROM logo_designs
+       WHERE is_active = 1 AND service_id = ? AND product_id = ?
+       ORDER BY sort_order ASC, id DESC`,
+      [product.service_id, product.id],
+    );
+
+    res.json({ product, items: rows });
   }),
 );
 

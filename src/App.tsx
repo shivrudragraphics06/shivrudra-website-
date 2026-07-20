@@ -27,6 +27,7 @@ const STATIC_TITLES: Record<string, string> = {
   "/clients": "Our Clients - Shivrudra Graphics",
   "/contact": "Contact Us - Shivrudra Graphics",
   "/logo-design": "Logo Design Types - Shivrudra Graphics",
+  "/services/designing/logo": "Logo Design Gallery - Shivrudra Graphics",
 };
 
 function usePathname() {
@@ -97,6 +98,8 @@ function CurrentPage({ pathname }: { pathname: string }) {
   if (pathname === "/clients") return <ClientsPage />;
   if (pathname === "/contact") return <ContactPage />;
   if (pathname === "/logo-design") return <LogoDesignPage />;
+  if (segments[0] === "services" && segments[1] && segments[2])
+    return <LogoDesignPage serviceSlug={segments[1]} productSlug={segments[2]} />;
   if (segments[0] === "services" && segments[1]) return <ServiceDetail slug={segments[1]} />;
   if (segments[0] === "products" && segments[1])
     return <ProductDetailPage productSlug={segments[1]} />;

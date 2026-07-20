@@ -53,6 +53,16 @@ export type PublicGalleryItem = {
   alt_text?: string;
 };
 
+export type PublicLogoDesign = {
+  id?: number;
+  service_id?: number | null;
+  product_id?: number | null;
+  title?: string;
+  image_url: string;
+  alt_text?: string;
+  sort_order?: number;
+};
+
 export type PublicProductVariant = {
   id?: number;
   product_id?: number | null;
@@ -111,6 +121,19 @@ export type PublicInquiry = {
 export const fetchPublicServices = () => publicApi<PublicService[]>("/services");
 export const fetchPublicCategories = () => publicApi<PublicCategory[]>("/categories");
 export const fetchPublicGallery = () => publicApi<PublicGalleryItem[]>("/gallery");
+export const fetchPublicLogoDesigns = () => publicApi<PublicLogoDesign[]>("/logo-designs");
+export const fetchPublicProductGallery = (serviceSlug: string, productSlug: string) =>
+  publicApi<{
+    product: {
+      id: number;
+      name: string;
+      slug: string;
+      service_id: number;
+      service_name: string;
+      service_slug: string;
+    };
+    items: PublicLogoDesign[];
+  }>(`/product-gallery/${encodeURIComponent(serviceSlug)}/${encodeURIComponent(productSlug)}`);
 export const fetchPublicIndustries = () => publicApi<PublicIndustry[]>("/industries");
 export const fetchPublicClients = () => publicApi<PublicClient[]>("/clients");
 export const fetchPublicTestimonials = () => publicApi<PublicTestimonial[]>("/testimonials");

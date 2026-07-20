@@ -126,6 +126,22 @@ const resources: ResourceConfig[] = [
     ],
   },
   {
+    key: "product-gallery",
+    label: "Product Gallery",
+    singular: "Product Gallery Item",
+    icon: Image,
+    columns: ["title", "service_name", "product_name", "image_url", "is_active"],
+    fields: [
+      { name: "service_id", label: "Service", type: "select", optionsKey: "services", required: true },
+      { name: "product_id", label: "Product", type: "select", optionsKey: "products", required: true },
+      { name: "title", label: "Name" },
+      { name: "image_url", label: "Product Image", type: "image", required: true },
+      { name: "alt_text", label: "Alt Text" },
+      { name: "sort_order", label: "Sort Order", type: "number" },
+      { name: "is_active", label: "Active", type: "checkbox" },
+    ],
+  },
+  {
     key: "gallery",
     label: "Gallery",
     singular: "Gallery Image",
@@ -596,6 +612,10 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
         if (serviceFilter && String(row.service_id ?? "") !== serviceFilter) return false;
         if (categoryFilter && String(row.category_id ?? "") !== categoryFilter) return false;
       }
+      if (resource.key === "product-gallery") {
+        if (serviceFilter && String(row.service_id ?? "") !== serviceFilter) return false;
+        if (productFilter && String(row.product_id ?? "") !== productFilter) return false;
+      }
       if (resource.key === "sub-products" && productFilter && String(row.product_id ?? "") !== productFilter) {
         return false;
       }
@@ -628,7 +648,11 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
 
   function updateField(field: Field, value: string | boolean) {
     if (field.type === "number" || field.type === "select") {
-      setForm((current) => ({ ...current, [field.name]: value === "" ? null : Number(value) }));
+      setForm((current) => ({
+        ...current,
+        [field.name]: value === "" ? null : Number(value),
+        ...(resource.key === "product-gallery" && field.name === "service_id" ? { product_id: null } : {}),
+      }));
       return;
     }
 
@@ -756,6 +780,59 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
           </div>
         ) : null}
 
+        {resource.key === "product-gallery" ? (
+          <div className="mt-3 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+            <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
+              Service
+              <select
+                className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
+                value={serviceFilter}
+                onChange={(event) => {
+                  setServiceFilter(event.target.value);
+                  setProductFilter("");
+                }}
+              >
+                <option value="">All services</option>
+                {(relationOptions.services ?? []).map((service) => (
+                  <option key={service.id} value={String(service.id)}>
+                    {optionLabel(service)}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
+              Product
+              <select
+                className="h-10 rounded-md border bg-white px-3 text-sm font-semibold normal-case tracking-normal text-brand-dark outline-none focus:ring-2 focus:ring-brand-red"
+                value={productFilter}
+                onChange={(event) => setProductFilter(event.target.value)}
+              >
+                <option value="">All products</option>
+                {(relationOptions.products ?? [])
+                  .filter((product) => !serviceFilter || String(product.service_id ?? "") === serviceFilter)
+                  .map((product) => (
+                    <option key={product.id} value={String(product.id)}>
+                      {optionLabel(product)}
+                    </option>
+                  ))}
+              </select>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setServiceFilter("");
+                setProductFilter("");
+              }}
+              className="h-10 self-end rounded-md border px-4 text-sm font-black transition hover:bg-muted"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : null}
+
         {resource.key === "sub-products" ? (
           <div className="mt-3 grid gap-3 md:grid-cols-[1fr_auto]">
             <label className="grid gap-1 text-xs font-black uppercase tracking-wide text-muted-foreground">
@@ -863,7 +940,15 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
                 <AdminField
                   key={field.name}
                   field={field}
-                  options={field.optionsKey ? relationOptions[field.optionsKey] ?? [] : []}
+                  options={
+                    field.optionsKey
+                      ? resource.key === "product-gallery" && field.name === "product_id" && form.service_id
+                        ? (relationOptions[field.optionsKey] ?? []).filter(
+                            (option) => String(option.service_id ?? "") === String(form.service_id),
+                          )
+                        : relationOptions[field.optionsKey] ?? []
+                      : []
+                  }
                   value={form[field.name]}
                   onChange={(value) => updateField(field, value)}
                   onUpload={(file) => uploadImage(field, file)}
