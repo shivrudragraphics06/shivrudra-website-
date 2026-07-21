@@ -30,6 +30,17 @@ try {
 } catch (error) {
   if (error.code !== "ER_DUP_FIELDNAME") throw error;
 }
+await connection.query(`
+  DELETE c1 FROM clients c1
+  INNER JOIN clients c2
+    ON c1.name = c2.name
+    AND c1.id > c2.id
+`);
+try {
+  await connection.query("ALTER TABLE clients ADD UNIQUE KEY uq_clients_name (name)");
+} catch (error) {
+  if (error.code !== "ER_DUP_KEYNAME") throw error;
+}
 await connection.end();
 
 console.log(`Database schema applied from ${schemaPath}`);

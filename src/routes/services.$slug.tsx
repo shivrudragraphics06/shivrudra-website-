@@ -333,31 +333,48 @@ export function ServiceDetail({ slug }: { slug: string }) {
                       {product.sub_products?.map((subProduct) => {
                         const message = `Hi, I want to enquire about ${subProduct.name} in ${svc.name}.`;
                         const imageSrc = subProduct.image_url || product.main_image_url || "";
+                        const subProductGalleryPath = `/services/${svc.slug}/${productGallerySlug(subProduct)}`;
+                        const imageCard = (
+                          <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
+                            {imageSrc ? (
+                              <img
+                                src={assetUrl(imageSrc)}
+                                alt={subProduct.name}
+                                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
+                                <PackageCheck className="h-12 w-12" />
+                              </div>
+                            )}
+                          </div>
+                        );
 
                         return (
                           <article
                             key={`${product.id}-${subProduct.id}-${subProduct.name}`}
                             className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
                           >
-                            <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                              {imageSrc ? (
-                                <img
-                                  src={assetUrl(imageSrc)}
-                                  alt={subProduct.name}
-                                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                  loading="lazy"
-                                />
-                              ) : (
-                                <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                                  <PackageCheck className="h-12 w-12" />
-                                </div>
-                              )}
-                            </div>
+                            <Link to={subProductGalleryPath}>{imageCard}</Link>
                             <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
                               <div className="min-h-[3.5rem]">
-                                <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                                  {subProduct.name}
-                                </h4>
+                                <div className="flex items-start justify-between gap-3">
+                                  <Link
+                                    to={subProductGalleryPath}
+                                    className="block min-w-0 font-display text-xl font-extrabold leading-tight text-brand-dark transition hover:text-brand-red sm:text-2xl lg:text-xl xl:text-[1.35rem]"
+                                  >
+                                    {subProduct.name}
+                                  </Link>
+                                  <Link
+                                    to={subProductGalleryPath}
+                                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-light text-brand-red transition hover:bg-brand-red hover:text-white"
+                                    aria-label={`Open ${subProduct.name} gallery`}
+                                    title={`Open ${subProduct.name} gallery`}
+                                  >
+                                    <ArrowRight className="h-4 w-4" />
+                                  </Link>
+                                </div>
                               </div>
                               <a
                                 href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}

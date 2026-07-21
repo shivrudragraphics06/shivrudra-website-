@@ -128,16 +128,60 @@ publicRoutes.get(
     );
     const product = products[0];
 
-    if (!product) return res.status(404).json({ message: "Product not found" });
+    if (product) {
+      const [rows] = await pool.execute(
+        `SELECT * FROM logo_designs
+         WHERE is_active = 1 AND gallery_type = 'product' AND service_id = ? AND product_id = ?
+         ORDER BY sort_order ASC, id DESC`,
+        [product.service_id, product.id],
+      );
+
+      res.json({ product, items: rows });
+      return;
+    }
+
+    const [subProducts] = await pool.execute(
+      `SELECT product_subproducts.id,
+        product_subproducts.name,
+        product_subproducts.slug,
+        products.id AS product_id,
+        products.name AS product_name,
+        products.slug AS product_slug,
+        services.id AS service_id,
+        services.name AS service_name,
+        services.slug AS service_slug
+       FROM product_subproducts
+       INNER JOIN products ON products.id = product_subproducts.product_id
+       INNER JOIN services ON services.id = products.service_id
+       WHERE services.slug = ? AND (product_subproducts.slug = ? OR product_subproducts.name = ?)
+       LIMIT 1`,
+      [req.params.serviceSlug, req.params.productSlug, req.params.productSlug.replace(/-/g, " ")],
+    );
+    const subProduct = subProducts[0];
+
+    if (!subProduct) return res.status(404).json({ message: "Product not found" });
 
     const [rows] = await pool.execute(
       `SELECT * FROM logo_designs
-       WHERE is_active = 1 AND service_id = ? AND product_id = ?
+       WHERE is_active = 1 AND gallery_type = 'sub-product' AND service_id = ? AND sub_product_id = ?
        ORDER BY sort_order ASC, id DESC`,
-      [product.service_id, product.id],
+      [subProduct.service_id, subProduct.id],
     );
 
-    res.json({ product, items: rows });
+    res.json({
+      product: {
+        id: subProduct.id,
+        name: subProduct.name,
+        slug: subProduct.slug,
+        service_id: subProduct.service_id,
+        service_name: subProduct.service_name,
+        service_slug: subProduct.service_slug,
+        parent_product_id: subProduct.product_id,
+        parent_product_name: subProduct.product_name,
+        parent_product_slug: subProduct.product_slug,
+      },
+      items: rows,
+    });
   }),
 );
 

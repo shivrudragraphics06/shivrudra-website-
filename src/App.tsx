@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import logoUrl from "@/assets/logo.png";
+import { BackToTopButton } from "@/components/BackToTopButton";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Link } from "@/components/AppLink";
@@ -127,6 +128,7 @@ export function App() {
         <CurrentPage pathname={pathname} />
       </main>
       <Footer />
+      <BackToTopButton />
       <WhatsAppButton />
     </>
   );

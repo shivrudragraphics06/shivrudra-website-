@@ -52,12 +52,12 @@ const resources = {
   "logo-designs": {
     table: "logo_designs",
     orderBy: "logo_designs.sort_order ASC, logo_designs.id DESC",
-    fields: ["service_id", "product_id", "title", "image_url", "alt_text", "sort_order", "is_active"],
+    fields: ["service_id", "gallery_type", "product_id", "sub_product_id", "title", "image_url", "alt_text", "sort_order", "is_active"],
   },
   "product-gallery": {
     table: "logo_designs",
     orderBy: "logo_designs.sort_order ASC, logo_designs.id DESC",
-    fields: ["service_id", "product_id", "title", "image_url", "alt_text", "sort_order", "is_active"],
+    fields: ["service_id", "gallery_type", "product_id", "sub_product_id", "title", "image_url", "alt_text", "sort_order", "is_active"],
   },
   "sub-products": {
     table: "product_subproducts",
@@ -166,6 +166,7 @@ crudRoutes.get(
     if (req.params.resource === "sub-products") {
       const [rows] = await pool.query(
         `SELECT product_subproducts.*,
+          products.service_id AS service_id,
           products.name AS product_name,
           services.name AS service_name
          FROM product_subproducts
@@ -181,10 +182,12 @@ crudRoutes.get(
       const [rows] = await pool.query(
         `SELECT logo_designs.*,
           services.name AS service_name,
-          products.name AS product_name
+          products.name AS product_name,
+          product_subproducts.name AS sub_product_name
          FROM logo_designs
          LEFT JOIN services ON services.id = logo_designs.service_id
          LEFT JOIN products ON products.id = logo_designs.product_id
+         LEFT JOIN product_subproducts ON product_subproducts.id = logo_designs.sub_product_id
          ORDER BY ${config.orderBy}`,
       );
       res.json(rows);

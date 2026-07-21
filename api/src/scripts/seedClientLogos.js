@@ -76,15 +76,21 @@ async function main() {
     const logoUrl = `/images/clients/${destinationName}`;
 
     await fs.copyFile(sourcePath, destinationPath);
-    await pool.execute(
-      `INSERT INTO clients (name, logo_url, sort_order, is_active)
-       VALUES (?, ?, ?, 1)
-       ON DUPLICATE KEY UPDATE
-         logo_url = VALUES(logo_url),
-         sort_order = VALUES(sort_order),
-         is_active = 1`,
-      [client.name, logoUrl, index],
-    );
+    const [existing] = await pool.execute("SELECT id FROM clients WHERE name = ? ORDER BY id ASC LIMIT 1", [client.name]);
+
+    if (existing[0]) {
+      await pool.execute("UPDATE clients SET logo_url = ?, sort_order = ?, is_active = 1 WHERE id = ?", [
+        logoUrl,
+        index,
+        existing[0].id,
+      ]);
+    } else {
+      await pool.execute("INSERT INTO clients (name, logo_url, sort_order, is_active) VALUES (?, ?, ?, 1)", [
+        client.name,
+        logoUrl,
+        index,
+      ]);
+    }
   }
 
   await pool.end();

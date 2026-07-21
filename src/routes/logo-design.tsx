@@ -1,10 +1,9 @@
-import { ArrowRight, Maximize2, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { PageHero } from "@/components/PageHero";
 import { Link } from "@/components/AppLink";
-import { WhatsAppIcon } from "@/components/WhatsAppIcon";
-import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
+import { usePublicServices } from "@/hooks/use-public-data";
 import { assetUrl } from "@/lib/api";
 import { fetchPublicLogoDesigns, fetchPublicProductGallery, type PublicLogoDesign } from "@/lib/public-content";
 
@@ -90,7 +89,6 @@ export function LogoDesignPage({
   serviceSlug?: string;
   productSlug?: string;
 }) {
-  const contact = usePublicContact();
   const services = usePublicServices();
   const normalizedProductSlug = normalizeProductSlug(serviceSlug, productSlug);
   const isLogoGallery = serviceSlug === "designing" && normalizedProductSlug === "logo-design";
@@ -103,7 +101,6 @@ export function LogoDesignPage({
   const [logoDesigns, setLogoDesigns] = useState<PublicLogoDesign[]>(fallbackItems);
   const [productName, setProductName] = useState(productFromData?.name || (isLogoGallery ? "Logo Design" : titleFromSlug(normalizedProductSlug)));
   const [serviceName, setServiceName] = useState(serviceFromData?.name || titleFromSlug(serviceSlug));
-  const [selectedLogo, setSelectedLogo] = useState<PublicLogoDesign | null>(null);
 
   useEffect(() => {
     setLogoDesigns(fallbackItems);
@@ -162,51 +159,30 @@ export function LogoDesignPage({
           </Link>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {logoDesigns.map((item, index) => {
             const title = item.title?.trim() || "";
-            const message = `Hi, I want to enquire about ${title || productName}.`;
 
             return (
-              <article
+              <figure
                 key={item.id ?? `${item.image_url}-${index}`}
-                className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-white p-3 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+                className="group"
               >
-                <button
-                  type="button"
-                  onClick={() => setSelectedLogo(item)}
-                  className="relative aspect-square overflow-hidden rounded-md border border-border bg-white"
-                  aria-label={title ? `Preview ${title}` : "Preview logo"}
-                >
+                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
                   <img
                     src={assetUrl(item.image_url)}
                     alt={item.alt_text || title || "Logo design"}
-                    className="h-full w-full object-contain p-4 transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-contain transition duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
-                  <span className="absolute right-2 top-2 grid h-8 w-8 scale-90 place-items-center rounded-full bg-white text-brand-red opacity-0 shadow-soft transition group-hover:scale-100 group-hover:opacity-100">
-                    <Maximize2 className="h-4 w-4" />
-                  </span>
-                </button>
-
-                <div className="flex flex-1 flex-col pt-3">
-                  {title ? (
-                    <h3 className="min-h-[2.5rem] text-center font-display text-sm font-black leading-snug text-brand-dark">
-                      {title}
-                    </h3>
-                  ) : (
-                    <div className="min-h-[2.5rem]" />
-                  )}
-                  <a
-                    href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-auto inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand-red px-3 text-sm font-black text-white shadow-brand transition hover:bg-brand-maroon"
-                  >
-                    Enquire <WhatsAppIcon className="h-4 w-4" />
-                  </a>
                 </div>
-              </article>
+
+                {title ? (
+                  <figcaption className="mt-4 text-center font-display text-lg font-black leading-tight text-brand-dark sm:text-xl">
+                    {title}
+                  </figcaption>
+                ) : null}
+              </figure>
             );
           })}
         </div>
@@ -219,41 +195,6 @@ export function LogoDesignPage({
           </div>
         ) : null}
       </section>
-
-      {selectedLogo ? (
-        <div
-          className="fixed inset-0 z-[80] grid place-items-center bg-black/80 p-4"
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setSelectedLogo(null)}
-        >
-          <div
-            className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl bg-white"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setSelectedLogo(null)}
-              className="absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-white text-brand-dark shadow-soft transition hover:text-brand-red"
-              aria-label="Close logo preview"
-            >
-              <X className="h-5 w-5" />
-            </button>
-            <div className="grid min-h-0 flex-1 place-items-center bg-neutral-100 p-4 sm:p-8">
-              <img
-                src={assetUrl(selectedLogo.image_url)}
-                alt={selectedLogo.alt_text || selectedLogo.title || "Logo design"}
-                className="mx-auto max-h-[72vh] max-w-full rounded-lg bg-white object-contain p-6"
-              />
-            </div>
-            {selectedLogo.title ? (
-              <div className="border-t border-border p-4 text-center font-display text-xl font-black text-brand-dark">
-                {selectedLogo.title}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

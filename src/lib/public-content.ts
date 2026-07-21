@@ -131,6 +131,9 @@ export const fetchPublicProductGallery = (serviceSlug: string, productSlug: stri
       service_id: number;
       service_name: string;
       service_slug: string;
+      parent_product_id?: number;
+      parent_product_name?: string;
+      parent_product_slug?: string;
     };
     items: PublicLogoDesign[];
   }>(`/product-gallery/${encodeURIComponent(serviceSlug)}/${encodeURIComponent(productSlug)}`);

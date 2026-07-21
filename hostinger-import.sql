@@ -156,8 +156,16 @@ CREATE TABLE IF NOT EXISTS clients (
   sort_order INT DEFAULT 0,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_clients_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DELETE c1 FROM clients c1
+INNER JOIN clients c2
+  ON c1.name = c2.name
+  AND c1.id > c2.id;
+
+ALTER TABLE clients ADD UNIQUE KEY IF NOT EXISTS uq_clients_name (name);
 
 CREATE TABLE IF NOT EXISTS testimonials (
   id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -1897,4 +1905,3 @@ ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
 
 
 SET foreign_key_checks = 1;
-
