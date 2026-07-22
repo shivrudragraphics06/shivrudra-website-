@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { authRoutes } from "./routes/auth.routes.js";
 import { crudRoutes } from "./routes/crud.routes.js";
 import { publicRoutes } from "./routes/public.routes.js";
+import { uploadDir, uploadPublicPath } from "./uploadConfig.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ const legacyUploadsDir = path.resolve(__dirname, "../../uploads");
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json({ limit: "2mb" }));
+app.use(uploadPublicPath, express.static(uploadDir));
 app.use("/uploads", express.static(apiUploadsDir));
 app.use("/uploads", express.static(nestedUploadsDir));
 app.use("/uploads", express.static(legacyUploadsDir));
