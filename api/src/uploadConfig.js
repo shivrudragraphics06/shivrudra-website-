@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const apiRootDir = path.resolve(__dirname, "..");
 const projectRootDir = path.resolve(__dirname, "../..");
+const homePublicHtmlDir = process.env.HOME ? path.join(process.env.HOME, "public_html") : "";
 
 for (const envPath of [
   path.resolve(process.cwd(), ".env"),
@@ -16,9 +17,11 @@ for (const envPath of [
   dotenv.config({ path: envPath, quiet: true });
 }
 
-const publicRootDir = fs.existsSync(path.join(projectRootDir, "public"))
-  ? path.join(projectRootDir, "public")
-  : projectRootDir;
+const publicRootDir = [
+  path.join(projectRootDir, "public"),
+  path.join(projectRootDir, "public_html"),
+  homePublicHtmlDir,
+].find((dir) => dir && fs.existsSync(dir)) || projectRootDir;
 const defaultUploadDir = path.join(publicRootDir, "assets", "admin-uploads");
 
 function resolveUploadDir(value) {
