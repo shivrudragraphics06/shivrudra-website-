@@ -1,17 +1,34 @@
 import dotenv from "dotenv";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const apiRootDir = path.resolve(__dirname, "..");
+const projectRootDir = path.resolve(__dirname, "../..");
 
-export const uploadDir = process.env.UPLOAD_DIR
-  ? path.resolve(process.env.UPLOAD_DIR)
-  : path.resolve(__dirname, "../uploads");
+for (const envPath of [
+  path.resolve(process.cwd(), ".env"),
+  path.join(apiRootDir, ".env"),
+  path.join(projectRootDir, ".env"),
+]) {
+  dotenv.config({ path: envPath, quiet: true });
+}
 
-export const uploadPublicPath = `/${(process.env.UPLOAD_PUBLIC_PATH || "/uploads")
+const publicRootDir = fs.existsSync(path.join(projectRootDir, "public"))
+  ? path.join(projectRootDir, "public")
+  : projectRootDir;
+const defaultUploadDir = path.join(publicRootDir, "assets", "admin-uploads");
+
+function resolveUploadDir(value) {
+  if (!value) return defaultUploadDir;
+  return path.isAbsolute(value) ? path.resolve(value) : path.resolve(projectRootDir, value);
+}
+
+export const uploadDir = resolveUploadDir(process.env.UPLOAD_DIR);
+
+export const uploadPublicPath = `/${(process.env.UPLOAD_PUBLIC_PATH || "/assets/admin-uploads")
   .replace(/\\/g, "/")
   .replace(/^\/+|\/+$/g, "")}`;
 
