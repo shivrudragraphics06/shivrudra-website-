@@ -18,9 +18,9 @@ for (const envPath of [
 }
 
 const publicRootDir = [
-  path.join(projectRootDir, "public"),
-  path.join(projectRootDir, "public_html"),
   homePublicHtmlDir,
+  path.join(projectRootDir, "public_html"),
+  path.join(projectRootDir, "public"),
 ].find((dir) => dir && fs.existsSync(dir)) || projectRootDir;
 const defaultUploadDir = path.join(publicRootDir, "assets", "admin-uploads");
 
