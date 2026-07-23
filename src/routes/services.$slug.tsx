@@ -48,6 +48,47 @@ function productGallerySlug(product: { name: string; slug?: string }) {
   return slug === "logo-design" ? "logo" : slug;
 }
 
+function ServiceImage({
+  src,
+  fallbackSrc,
+  alt,
+  className,
+}: {
+  src?: string;
+  fallbackSrc?: string;
+  alt: string;
+  className: string;
+}) {
+  const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc || "");
+  const [failed, setFailed] = useState(!currentSrc);
+  const fallbackUrl = fallbackSrc && fallbackSrc !== currentSrc ? fallbackSrc : "";
+
+  if (failed) {
+    return (
+      <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
+        <PackageCheck className="h-12 w-12" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={assetUrl(currentSrc)}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={() => {
+        if (fallbackUrl) {
+          setCurrentSrc(fallbackUrl);
+          return;
+        }
+
+        setFailed(true);
+      }}
+    />
+  );
+}
+
 export function ServiceDetail({ slug }: { slug: string }) {
   const services = usePublicServices();
   const contact = usePublicContact();
@@ -133,18 +174,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
                       className="group text-center outline-none"
                     >
                       <div className="mx-auto aspect-square w-full max-w-[250px] overflow-hidden rounded-xl bg-brand-light shadow-soft">
-                        {imageSrc ? (
-                          <img
-                            src={assetUrl(imageSrc)}
-                            alt={product.name}
-                            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                            <PackageCheck className="h-12 w-12" />
-                          </div>
-                        )}
+                        <ServiceImage
+                          src={imageSrc}
+                          fallbackSrc={svc.image_url || svc.main_image_url || ""}
+                          alt={product.name}
+                          className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                        />
                       </div>
                       <h3
                         className={`mx-auto mt-4 max-w-[220px] font-display text-base font-black leading-snug sm:text-lg ${
@@ -192,18 +227,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
                           className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
                         >
                           <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                            {itemImage ? (
-                              <img
-                                src={assetUrl(itemImage)}
-                                alt={item.name}
-                                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                                <PackageCheck className="h-12 w-12" />
-                              </div>
-                            )}
+                            <ServiceImage
+                              src={itemImage}
+                              fallbackSrc={imageSrc || svc.image_url || svc.main_image_url || ""}
+                              alt={item.name}
+                              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                            />
                           </div>
                           <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
                             <div className="min-h-[3.5rem]">
@@ -257,18 +286,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
                 const galleryPath = `/services/${svc.slug}/${productGallerySlug(product)}`;
                 const imageCard = (
                   <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                    {product.main_image_url ? (
-                      <img
-                        src={assetUrl(product.main_image_url)}
-                        alt={product.name}
-                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                        <PackageCheck className="h-12 w-12" />
-                      </div>
-                    )}
+                    <ServiceImage
+                      src={product.main_image_url}
+                      fallbackSrc={svc.image_url || svc.main_image_url || ""}
+                      alt={product.name}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
                   </div>
                 );
 
@@ -336,18 +359,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
                         const subProductGalleryPath = `/services/${svc.slug}/${productGallerySlug(subProduct)}`;
                         const imageCard = (
                           <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                            {imageSrc ? (
-                              <img
-                                src={assetUrl(imageSrc)}
-                                alt={subProduct.name}
-                                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="grid h-full place-items-center bg-gradient-to-br from-white via-[#f7f7f7] to-[#ffe9e9] text-brand-red">
-                                <PackageCheck className="h-12 w-12" />
-                              </div>
-                            )}
+                            <ServiceImage
+                              src={imageSrc}
+                              fallbackSrc={product.main_image_url || svc.image_url || svc.main_image_url || ""}
+                              alt={subProduct.name}
+                              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                            />
                           </div>
                         );
 
