@@ -575,6 +575,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingField, setUploadingField] = useState("");
 
   async function loadRows() {
     setLoading(true);
@@ -656,17 +657,20 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
     setEditing({});
     setForm({ ...defaultForm(resource), ...(resource.key === "product-gallery" ? { gallery_type: "product" } : {}) });
     setError("");
+    setUploadingField("");
   }
 
   function openEdit(row: AdminRecord) {
     setEditing(row);
     setForm({ ...defaultForm(resource), ...row });
     setError("");
+    setUploadingField("");
   }
 
   function closeForm() {
     setEditing(null);
     setForm(defaultForm(resource));
+    setUploadingField("");
   }
 
   function updateField(field: Field, value: string | boolean) {
@@ -698,10 +702,20 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   async function uploadImage(field: Field, file?: File) {
     if (!file) return;
 
+    setError("");
+    setUploadingField(field.name);
+
     const data = new FormData();
     data.append("image", file);
-    const result = await adminApi<{ url: string }>("/upload", { method: "POST", body: data });
-    updateField(field, result.url);
+
+    try {
+      const result = await adminApi<{ url: string }>("/upload", { method: "POST", body: data });
+      updateField(field, result.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Image upload failed");
+    } finally {
+      setUploadingField("");
+    }
   }
 
   async function saveRecord(event: FormEvent) {
@@ -988,6 +1002,8 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
               </button>
             </div>
 
+            {error ? <p className="mx-5 mt-4 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
+
             <div className="grid gap-4 p-5 md:grid-cols-2">
               {resource.fields.map((field) => {
                 const galleryType = String(form.gallery_type || "product");
@@ -1016,6 +1032,7 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
                     value={form[field.name]}
                     onChange={(value) => updateField(field, value)}
                     onUpload={(file) => uploadImage(field, file)}
+                    uploading={uploadingField === field.name}
                   />
                 );
               })}
@@ -1047,12 +1064,14 @@ function AdminField({
   value,
   onChange,
   onUpload,
+  uploading = false,
 }: {
   field: Field;
   options?: AdminRecord[];
   value: AdminRecord[string];
   onChange: (value: string | boolean) => void;
   onUpload: (file?: File) => Promise<void>;
+  uploading?: boolean;
 }) {
   if (field.type === "checkbox") {
     return (
@@ -1105,24 +1124,43 @@ function AdminField({
   }
 
   if (field.type === "image") {
+    const inputId = `admin-upload-${field.name}`;
+
     return (
-      <label className="grid min-w-0 gap-2 text-sm font-bold">
-        {field.label}
+      <div className="grid min-w-0 gap-2 text-sm font-bold">
+        <label htmlFor={`${inputId}-url`}>{field.label}</label>
         <div className="grid min-w-0 gap-2">
           <input
+            id={`${inputId}-url`}
             className="h-10 w-full min-w-0 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
             value={toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
             required={field.required}
             placeholder="/uploads/image.jpg"
           />
-          <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border bg-muted px-3 text-sm font-bold">
+          <label
+            htmlFor={inputId}
+            className={`inline-flex h-10 items-center justify-center gap-2 rounded-md border bg-muted px-3 text-sm font-bold ${
+              uploading ? "cursor-wait opacity-70" : "cursor-pointer"
+            }`}
+          >
             <Upload className="size-4" />
-            Upload Image
-            <input className="hidden" type="file" accept="image/*" onChange={(event) => onUpload(event.target.files?.[0])} />
+            {uploading ? "Uploading..." : "Upload Image"}
+            <input
+              id={inputId}
+              className="hidden"
+              type="file"
+              accept="image/*"
+              disabled={uploading}
+              onChange={(event) => {
+                void onUpload(event.target.files?.[0]).finally(() => {
+                  event.target.value = "";
+                });
+              }}
+            />
           </label>
         </div>
-      </label>
+      </div>
     );
   }
 
