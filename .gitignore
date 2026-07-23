@@ -19,6 +19,8 @@ dist-ssr
 api/.env
 api/uploads/*
 !api/uploads/.gitkeep
+public/assets/admin-uploads/*
+!public/assets/admin-uploads/.gitkeep
 
 # Wrangler / Cloudflare
 .wrangler/
