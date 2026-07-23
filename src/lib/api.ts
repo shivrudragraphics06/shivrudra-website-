@@ -1,10 +1,15 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const UPLOADS_BASE_URL = import.meta.env.VITE_UPLOADS_BASE_URL || "";
 
 export function assetUrl(path?: string | null) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
 
   const normalizedPath = path.replace(/\\/g, "/");
+  if (UPLOADS_BASE_URL && normalizedPath.startsWith("/assets/admin-uploads/")) {
+    return `${UPLOADS_BASE_URL.replace(/\/+$/g, "")}${normalizedPath}`;
+  }
+
   if (normalizedPath.startsWith("/assets/") || normalizedPath.startsWith("/images/")) {
     return normalizedPath;
   }

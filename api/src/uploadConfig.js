@@ -7,7 +7,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const apiRootDir = path.resolve(__dirname, "..");
 const projectRootDir = path.resolve(__dirname, "../..");
-const homePublicHtmlDir = process.env.HOME ? path.join(process.env.HOME, "public_html") : "";
 
 for (const envPath of [
   path.resolve(process.cwd(), ".env"),
@@ -17,7 +16,39 @@ for (const envPath of [
   dotenv.config({ path: envPath, quiet: true });
 }
 
+function hostnameFromUrl(value) {
+  if (!value) return "";
+
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return value.replace(/^https?:\/\//, "").split("/")[0];
+  }
+}
+
+function hostingerDomainPublicHtmlDirs() {
+  if (!process.env.HOME) return [];
+
+  const domainsDir = path.join(process.env.HOME, "domains");
+  if (!fs.existsSync(domainsDir)) return [];
+
+  return fs
+    .readdirSync(domainsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(domainsDir, entry.name, "public_html"));
+}
+
+const uploadDomain = process.env.UPLOAD_DOMAIN || hostnameFromUrl(process.env.CLIENT_URL);
+const configuredUploadRoot = process.env.UPLOAD_PUBLIC_ROOT || "";
+const homePublicHtmlDir = process.env.HOME ? path.join(process.env.HOME, "public_html") : "";
+const domainPublicHtmlDir =
+  process.env.HOME && uploadDomain ? path.join(process.env.HOME, "domains", uploadDomain, "public_html") : "";
+const domainPublicHtmlDirs = hostingerDomainPublicHtmlDirs();
 const publicRootDir = [
+  configuredUploadRoot,
+  domainPublicHtmlDir,
+  ...domainPublicHtmlDirs.filter((dir) => fs.existsSync(path.join(dir, "assets", "admin-uploads"))),
+  ...domainPublicHtmlDirs,
   homePublicHtmlDir,
   path.join(projectRootDir, "public_html"),
   path.join(projectRootDir, "public"),
@@ -30,6 +61,7 @@ function resolveUploadDir(value) {
 }
 
 export const uploadDir = resolveUploadDir(process.env.UPLOAD_DIR);
+export const uploadRootDir = publicRootDir;
 
 export const uploadPublicPath = `/${(process.env.UPLOAD_PUBLIC_PATH || "/assets/admin-uploads")
   .replace(/\\/g, "/")

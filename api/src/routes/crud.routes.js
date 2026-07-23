@@ -5,7 +5,7 @@ import { pool } from "../db.js";
 import { ensureLogoDesignsTable } from "../logoDesignsTable.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { uploadedFileUrl } from "../uploadConfig.js";
+import { uploadedFileUrl, uploadDir, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const crudRoutes = Router();
@@ -134,6 +134,14 @@ function getResource(req, res) {
 }
 
 crudRoutes.use(requireAdmin);
+
+crudRoutes.get("/upload-info", (_req, res) => {
+  res.json({
+    uploadRootDir,
+    uploadDir,
+    uploadPublicPath,
+  });
+});
 
 crudRoutes.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
