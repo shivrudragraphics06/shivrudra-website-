@@ -18,16 +18,6 @@ export function ServiceNotFound() {
   );
 }
 
-function corporateGiftBullets(productName: string, itemCount?: number | null) {
-  const countText = itemCount ? `${itemCount} ${itemCount === 1 ? "item" : "items"} available` : "Multiple options available";
-
-  return [
-    countText,
-    `Custom branding for ${productName.toLowerCase()}`,
-    "Bulk order and gifting support",
-  ];
-}
-
 function corporateGiftSectionId(productName: string) {
   return `corporate-gift-${productName
     .toLowerCase()
@@ -219,7 +209,6 @@ export function ServiceDetail({ slug }: { slug: string }) {
                         <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                           {sectionItems.map((item) => {
                             const itemImage = ("image_url" in item ? item.image_url : "") || imageSrc;
-                            const bullets = corporateGiftBullets(item.name, item.item_count);
 
                             return (
                         <article
@@ -234,19 +223,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
                               className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                             />
                           </div>
-                          <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
-                            <div className="min-h-[3.5rem]">
-                              <h4 className="font-display text-xl font-extrabold leading-tight text-brand-dark sm:text-2xl lg:text-xl xl:text-[1.35rem]">
-                                {item.name}
-                              </h4>
-                            </div>
-                            <ul className="mt-3 space-y-1 text-sm font-semibold leading-6 text-muted-foreground">
-                              {bullets.map((bullet) => (
-                                <li key={bullet} className="before:mr-2 before:content-['•']">
-                                  {bullet}
-                                </li>
-                              ))}
-                            </ul>
+                          <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
                             <a
                               href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
                                 `Hi, I want to enquire about ${item.name} in ${svc.name}.`,
