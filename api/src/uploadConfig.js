@@ -44,6 +44,10 @@ const homePublicHtmlDir = process.env.HOME ? path.join(process.env.HOME, "public
 const domainPublicHtmlDir =
   process.env.HOME && uploadDomain ? path.join(process.env.HOME, "domains", uploadDomain, "public_html") : "";
 const domainPublicHtmlDirs = hostingerDomainPublicHtmlDirs();
+const preferredDomainPublicHtmlDir =
+  domainPublicHtmlDir && fs.existsSync(domainPublicHtmlDir)
+    ? domainPublicHtmlDir
+    : domainPublicHtmlDirs.find((dir) => fs.existsSync(path.join(dir, "assets", "admin-uploads"))) || "";
 const publicRootDir = [
   configuredUploadRoot,
   domainPublicHtmlDir,
@@ -57,7 +61,17 @@ const defaultUploadDir = path.join(publicRootDir, "assets", "admin-uploads");
 
 function resolveUploadDir(value) {
   if (!value) return defaultUploadDir;
-  return path.isAbsolute(value) ? path.resolve(value) : path.resolve(projectRootDir, value);
+
+  const resolvedDir = path.isAbsolute(value) ? path.resolve(value) : path.resolve(projectRootDir, value);
+  if (!homePublicHtmlDir || !preferredDomainPublicHtmlDir) return resolvedDir;
+
+  const resolvedHomePublicHtmlDir = path.resolve(homePublicHtmlDir);
+  const relativeToHomePublicHtml = path.relative(resolvedHomePublicHtmlDir, resolvedDir);
+  if (relativeToHomePublicHtml && !relativeToHomePublicHtml.startsWith("..") && !path.isAbsolute(relativeToHomePublicHtml)) {
+    return path.resolve(preferredDomainPublicHtmlDir, relativeToHomePublicHtml);
+  }
+
+  return resolvedDir;
 }
 
 export const uploadDir = resolveUploadDir(process.env.UPLOAD_DIR);
