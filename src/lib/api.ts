@@ -5,11 +5,11 @@ export function assetUrl(path?: string | null) {
   if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
 
   const normalizedPath = path.replace(/\\/g, "/");
-  const uploadsIndex = normalizedPath.indexOf("uploads/");
-  if (uploadsIndex < 0 && (normalizedPath.startsWith("/assets/") || normalizedPath.startsWith("/images/"))) {
+  if (normalizedPath.startsWith("/assets/") || normalizedPath.startsWith("/images/")) {
     return normalizedPath;
   }
 
+  const uploadsIndex = normalizedPath.indexOf("uploads/");
   const publicPath =
     uploadsIndex >= 0 ? `/${normalizedPath.slice(uploadsIndex)}` : normalizedPath.startsWith("/") ? normalizedPath : `/${normalizedPath}`;
 
