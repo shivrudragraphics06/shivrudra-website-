@@ -58,6 +58,15 @@ const publicRootDir = [
   path.join(projectRootDir, "public"),
 ].find((dir) => dir && fs.existsSync(dir)) || projectRootDir;
 const defaultUploadDir = path.join(publicRootDir, "assets", "admin-uploads");
+const uploadCandidateRoots = [
+  configuredUploadRoot,
+  domainPublicHtmlDir,
+  preferredDomainPublicHtmlDir,
+  ...domainPublicHtmlDirs,
+  homePublicHtmlDir,
+  path.join(projectRootDir, "public_html"),
+  path.join(projectRootDir, "public"),
+].filter(Boolean);
 
 function resolveUploadDir(value) {
   if (!value) return defaultUploadDir;
@@ -76,6 +85,10 @@ function resolveUploadDir(value) {
 
 export const uploadDir = resolveUploadDir(process.env.UPLOAD_DIR);
 export const uploadRootDir = publicRootDir;
+export const uploadMirrorDirs = [
+  uploadDir,
+  ...uploadCandidateRoots.map((dir) => path.join(dir, "assets", "admin-uploads")),
+].filter((dir, index, dirs) => dirs.indexOf(dir) === index);
 
 export const uploadPublicPath = `/${(process.env.UPLOAD_PUBLIC_PATH || "/assets/admin-uploads")
   .replace(/\\/g, "/")

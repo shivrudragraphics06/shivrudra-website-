@@ -1,11 +1,13 @@
 import { Router } from "express";
+import fs from "fs";
+import path from "path";
 import slugify from "slugify";
 
 import { pool } from "../db.js";
 import { ensureLogoDesignsTable } from "../logoDesignsTable.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { uploadedFileUrl, uploadDir, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
+import { uploadedFileUrl, uploadDir, uploadMirrorDirs, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const crudRoutes = Router();
@@ -139,6 +141,7 @@ crudRoutes.get("/upload-info", (_req, res) => {
   res.json({
     uploadRootDir,
     uploadDir,
+    uploadMirrorDirs,
     uploadPublicPath,
   });
 });
@@ -146,6 +149,13 @@ crudRoutes.get("/upload-info", (_req, res) => {
 crudRoutes.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "Image is required" });
+  }
+
+  for (const mirrorDir of uploadMirrorDirs) {
+    if (path.resolve(mirrorDir) === path.resolve(uploadDir)) continue;
+
+    fs.mkdirSync(mirrorDir, { recursive: true });
+    fs.copyFileSync(req.file.path, path.join(mirrorDir, req.file.filename));
   }
 
   res.json({ url: uploadedFileUrl(req.file.filename) });
