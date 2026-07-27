@@ -38,6 +38,46 @@ function productGallerySlug(product: { name: string; slug?: string }) {
   return slug === "logo-design" ? "logo" : slug;
 }
 
+const CORPORATE_GIFT_MAIN_CATEGORIES = [
+  "Pen",
+  "Keychain",
+  "Mobile Stand",
+  "Bottle",
+  "Mug",
+  "Mug Printing",
+  "Cardholder",
+  "Dairy",
+];
+
+const CORPORATE_GIFT_RELATED_SUB_CATEGORIES = [
+  "Pen + Keychain",
+  "Cardholder + Pen + Keychain",
+  "Dairy + Pen",
+  "Pen + Dairy + Keychain",
+  "Pen + Dairy + Keychain + Cardholder",
+  "Pen + Dairy + Mug",
+  "Pen + Bottle + Keychain",
+  "Pen + Keychain + Dairy + Temperature Bottle",
+  "Pen + Dairy + Keychain + Cardholder + Temperature Bottle",
+  "Pen + Dairy + Mug + Keychain + Mobile Stand + Temperature Bottle",
+  "Dairy + Pen + Temperature Bottle + Laptop Stand",
+  "Bamboo Dairy + Cardholder + Keychain + Pen",
+];
+
+function normalizeName(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function isRelatedCorporateGiftSubCategory(parentName: string, subCategoryName: string) {
+  const parent = normalizeName(parentName);
+  const subCategory = normalizeName(subCategoryName);
+
+  if (parent === "mug printing") return subCategory.includes("mug");
+  if (parent === "mobile stand") return subCategory.includes("mobile stand");
+
+  return subCategory.includes(parent);
+}
+
 function ServiceImage({
   src,
   fallbackSrc,
@@ -122,10 +162,15 @@ export function ServiceDetail({ slug }: { slug: string }) {
           return loadedProduct ? { ...defaultProduct, ...loadedProduct } : defaultProduct;
         })
     : loadedProductCards;
+  const corporateGiftMainCards = isCorporateGift
+    ? CORPORATE_GIFT_MAIN_CATEGORIES.map((name) =>
+        productCards.find((product) => product.name.trim().toLowerCase() === name.toLowerCase()),
+      ).filter((product): product is (typeof productCards)[number] => Boolean(product))
+    : [];
 
   const selectedCorporateGiftProduct =
     isCorporateGift
-      ? productCards.find((product) => product.name === selectedCorporateGift) || productCards[0]
+      ? corporateGiftMainCards.find((product) => product.name === selectedCorporateGift) || corporateGiftMainCards[0]
       : productCards[0];
 
   return (
@@ -148,7 +193,7 @@ export function ServiceDetail({ slug }: { slug: string }) {
           {isCorporateGift ? (
             <>
               <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {productCards.map((product) => {
+                {corporateGiftMainCards.map((product) => {
                   const imageSrc =
                     ("main_image_url" in product ? product.main_image_url : "") ||
                     ("image_url" in product ? product.image_url : "") ||
@@ -193,7 +238,26 @@ export function ServiceDetail({ slug }: { slug: string }) {
                       svc.image_url ||
                       svc.main_image_url ||
                       "";
-                    const sectionItems = product.sub_products ?? [];
+                    const relatedFallbackItems =
+                      isCorporateGift && !product.sub_products?.length
+                        ? CORPORATE_GIFT_RELATED_SUB_CATEGORIES.filter((name) =>
+                            isRelatedCorporateGiftSubCategory(product.name, name),
+                          ).map((name, index) => {
+                            const relatedProduct = productCards.find(
+                              (item) => normalizeName(item.name) === normalizeName(name),
+                            );
+
+                            return {
+                              id: `related-${index}`,
+                              name,
+                              image_url:
+                                ("main_image_url" in (relatedProduct ?? {}) ? relatedProduct?.main_image_url : "") ||
+                                ("image_url" in (relatedProduct ?? {}) ? relatedProduct?.image_url : "") ||
+                                imageSrc,
+                            };
+                          })
+                        : [];
+                    const sectionItems = product.sub_products?.length ? product.sub_products : relatedFallbackItems;
 
                     return (
                       <section id={corporateGiftSectionId(product.name)} key={`section-${product.id}-${product.name}`}>
@@ -224,6 +288,9 @@ export function ServiceDetail({ slug }: { slug: string }) {
                             />
                           </div>
                           <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
+                            <h4 className="mb-4 text-center font-display text-base font-black leading-snug text-brand-dark">
+                              {item.name}
+                            </h4>
                             <a
                               href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
                                 `Hi, I want to enquire about ${item.name} in ${svc.name}.`,

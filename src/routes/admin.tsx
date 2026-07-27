@@ -1058,6 +1058,113 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
   );
 }
 
+function SearchableSelect({
+  options,
+  value,
+  onChange,
+  placeholder,
+  required,
+}: {
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  required?: boolean;
+}) {
+  const selectedOption = options.find((option) => option.value === value);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const filteredOptions = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return options;
+
+    return options.filter((option) => option.label.toLowerCase().includes(normalizedQuery));
+  }, [options, query]);
+
+  function closeAfterBlur() {
+    window.setTimeout(() => {
+      setOpen(false);
+      setQuery("");
+    }, 120);
+  }
+
+  return (
+    <div className="relative min-w-0">
+      <input
+        className="h-10 w-full min-w-0 rounded-md border bg-white px-3 pr-9 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
+        value={open ? query : selectedOption?.label ?? ""}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => {
+          setOpen(true);
+          setQuery("");
+        }}
+        onBlur={closeAfterBlur}
+        placeholder={placeholder}
+        required={required && !value}
+      />
+      <input tabIndex={-1} className="sr-only" value={value} onChange={() => {}} required={required} />
+      {value ? (
+        <button
+          type="button"
+          className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded text-muted-foreground transition hover:bg-muted hover:text-brand-dark"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => {
+            onChange("");
+            setQuery("");
+            setOpen(true);
+          }}
+          aria-label={`Clear ${placeholder}`}
+        >
+          <X className="size-3.5" />
+        </button>
+      ) : (
+        <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+      )}
+
+      {open ? (
+        <div className="absolute z-[60] mt-1 max-h-64 w-full overflow-y-auto rounded-md border bg-white py-1 text-sm font-normal shadow-xl">
+          <button
+            type="button"
+            className="block w-full px-3 py-2 text-left text-muted-foreground transition hover:bg-muted"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onChange("");
+              setOpen(false);
+              setQuery("");
+            }}
+          >
+            {placeholder}
+          </button>
+          {filteredOptions.length ? (
+            filteredOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={`block w-full px-3 py-2 text-left transition hover:bg-brand-light ${
+                  option.value === value ? "bg-brand-red text-white hover:bg-brand-red" : "text-brand-dark"
+                }`}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
+                  setQuery("");
+                }}
+              >
+                {option.label}
+              </button>
+            ))
+          ) : (
+            <div className="px-3 py-3 text-muted-foreground">No matches found.</div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function AdminField({
   field,
   options,
@@ -1106,19 +1213,13 @@ function AdminField({
     return (
       <label className="grid min-w-0 gap-2 text-sm font-bold">
         {field.label}
-        <select
-          className="h-10 w-full min-w-0 rounded-md border bg-white px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
+        <SearchableSelect
+          options={selectOptions.map((option) => ({ ...option, value: String(option.value) }))}
           value={toInputValue(value)}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={onChange}
+          placeholder={`Select ${field.label}`}
           required={field.required}
-        >
-          <option value="">Select {field.label}</option>
-          {selectOptions.map((option) => (
-            <option key={option.value} value={String(option.value)}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        />
       </label>
     );
   }
