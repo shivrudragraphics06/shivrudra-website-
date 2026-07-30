@@ -5,6 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { Link } from "@/components/AppLink";
 import { usePublicServices } from "@/hooks/use-public-data";
 import { assetUrl } from "@/lib/api";
+import { toProductSlug } from "@/lib/products";
 import { fetchPublicLogoDesigns, fetchPublicProductGallery, type PublicLogoDesign } from "@/lib/public-content";
 
 export const LOGO_TYPES = [
@@ -69,8 +70,16 @@ const FALLBACK_LOGOS: PublicLogoDesign[] = [
   { title: "Apollo", image_url: "/images/clients/30-apollo.png" },
 ];
 
+function decodePathValue(value: string) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
 function titleFromSlug(slug: string) {
-  return slug
+  return decodePathValue(slug)
     .replace(/-/g, " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase())
     .replace(/\bCnc\b/g, "CNC")
@@ -78,8 +87,9 @@ function titleFromSlug(slug: string) {
 }
 
 function normalizeProductSlug(serviceSlug: string, productSlug: string) {
-  if (serviceSlug === "designing" && productSlug === "logo") return "logo-design";
-  return productSlug;
+  const normalized = toProductSlug(decodePathValue(productSlug));
+  if (serviceSlug === "designing" && normalized === "logo") return "logo-design";
+  return normalized;
 }
 
 export function LogoDesignPage({
@@ -90,9 +100,11 @@ export function LogoDesignPage({
   productSlug?: string;
 }) {
   const services = usePublicServices();
-  const normalizedProductSlug = normalizeProductSlug(serviceSlug, productSlug);
-  const isLogoGallery = serviceSlug === "designing" && normalizedProductSlug === "logo-design";
-  const serviceFromData = useMemo(() => services.find((service) => service.slug === serviceSlug), [serviceSlug, services]);
+  const serviceSlugValue = toProductSlug(decodePathValue(serviceSlug));
+  const normalizedServiceSlug = serviceSlugValue === "desiging" ? "designing" : serviceSlugValue;
+  const normalizedProductSlug = normalizeProductSlug(normalizedServiceSlug, productSlug);
+  const isLogoGallery = normalizedServiceSlug === "designing" && normalizedProductSlug === "logo-design";
+  const serviceFromData = useMemo(() => services.find((service) => service.slug === normalizedServiceSlug), [normalizedServiceSlug, services]);
   const productFromData = useMemo(
     () => serviceFromData?.products?.find((product) => product.slug === normalizedProductSlug),
     [normalizedProductSlug, serviceFromData],
@@ -105,12 +117,12 @@ export function LogoDesignPage({
   useEffect(() => {
     setLogoDesigns(fallbackItems);
     setProductName(productFromData?.name || (isLogoGallery ? "Logo Design" : titleFromSlug(normalizedProductSlug)));
-    setServiceName(serviceFromData?.name || titleFromSlug(serviceSlug));
+    setServiceName(serviceFromData?.name || titleFromSlug(normalizedServiceSlug));
 
-    fetchPublicProductGallery(serviceSlug, productSlug)
+    fetchPublicProductGallery(normalizedServiceSlug, normalizedProductSlug)
       .then((data) => {
         setProductName(data.product.name || titleFromSlug(normalizedProductSlug));
-        setServiceName(data.product.service_name || titleFromSlug(serviceSlug));
+        setServiceName(data.product.service_name || titleFromSlug(normalizedServiceSlug));
         const activeItems = data.items.filter((item) => item.image_url);
         setLogoDesigns(activeItems.length ? activeItems : fallbackItems);
       })
@@ -124,7 +136,7 @@ export function LogoDesignPage({
             .catch(() => {});
         }
       });
-  }, [fallbackItems, isLogoGallery, normalizedProductSlug, productFromData, productSlug, serviceFromData, serviceSlug]);
+  }, [fallbackItems, isLogoGallery, normalizedProductSlug, normalizedServiceSlug, productFromData, serviceFromData]);
 
   const logoCount = useMemo(() => logoDesigns.filter((item) => item.image_url).length, [logoDesigns]);
   const itemLabel = logoCount === 1 ? "Gallery Image" : "Gallery Images";
@@ -136,7 +148,7 @@ export function LogoDesignPage({
         subtitle={`Product gallery for ${productName}.`}
         breadcrumb={[
           { label: "Services", to: "/services" },
-          { label: serviceName, to: `/services/${serviceSlug}` },
+          { label: serviceName, to: `/services/${normalizedServiceSlug}` },
           { label: productName },
         ]}
       />

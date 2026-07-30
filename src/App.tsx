@@ -18,6 +18,7 @@ import { LogoDesignPage } from "@/routes/logo-design";
 import { ProductDetailPage } from "@/routes/products.$productSlug";
 import { ServiceDetail } from "@/routes/services.$slug";
 import { ServicesPage } from "@/routes/services.index";
+import { toProductSlug } from "@/lib/products";
 
 const STATIC_TITLES: Record<string, string> = {
   "/": "Shivrudra Graphics Pvt Ltd - Printing, Branding & LED Signage in Pune",
@@ -51,6 +52,19 @@ function setMeta(nameOrProperty: "name" | "property", key: string, content: stri
     document.head.appendChild(element);
   }
   element.content = content;
+}
+
+function decodePathSegment(segment: string) {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+function normalizeServiceSlug(slug: string) {
+  const normalized = toProductSlug(decodePathSegment(slug));
+  return normalized === "desiging" ? "designing" : normalized;
 }
 
 function usePageMeta(pathname: string) {
@@ -100,8 +114,13 @@ function CurrentPage({ pathname }: { pathname: string }) {
   if (pathname === "/contact") return <ContactPage />;
   if (pathname === "/logo-design") return <LogoDesignPage />;
   if (segments[0] === "services" && segments[1] && segments[2])
-    return <LogoDesignPage serviceSlug={segments[1]} productSlug={segments[2]} />;
-  if (segments[0] === "services" && segments[1]) return <ServiceDetail slug={segments[1]} />;
+    return (
+      <LogoDesignPage
+        serviceSlug={normalizeServiceSlug(segments[1])}
+        productSlug={toProductSlug(decodePathSegment(segments[2]))}
+      />
+    );
+  if (segments[0] === "services" && segments[1]) return <ServiceDetail slug={normalizeServiceSlug(segments[1])} />;
   if (segments[0] === "products" && segments[1])
     return <ProductDetailPage productSlug={segments[1]} />;
 
