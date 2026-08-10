@@ -16,7 +16,7 @@ import { HomePage } from "@/routes/index";
 import { IndustriesPage } from "@/routes/industries";
 import { LogoDesignPage } from "@/routes/logo-design";
 import { ProductDetailPage } from "@/routes/products.$productSlug";
-import { ServiceDetail } from "@/routes/services.$slug";
+import { CorporateGiftCategoryPage, CorporateGiftComboSetsPage, ServiceDetail } from "@/routes/services.$slug";
 import { ServicesPage } from "@/routes/services.index";
 import { toProductSlug } from "@/lib/products";
 
@@ -113,6 +113,10 @@ function CurrentPage({ pathname }: { pathname: string }) {
   if (pathname === "/clients") return <ClientsPage />;
   if (pathname === "/contact") return <ContactPage />;
   if (pathname === "/logo-design") return <LogoDesignPage />;
+  if (segments[0] === "services" && segments[1] === "corporate-gift" && segments[2] === "combo-sets")
+    return <CorporateGiftComboSetsPage />;
+  if (segments[0] === "services" && segments[1] === "corporate-gift" && segments[2])
+    return <CorporateGiftCategoryPage categorySlug={toProductSlug(decodePathSegment(segments[2]))} />;
   if (segments[0] === "services" && segments[1] && segments[2])
     return (
       <LogoDesignPage

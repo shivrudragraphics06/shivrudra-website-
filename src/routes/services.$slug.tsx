@@ -6,6 +6,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { assetUrl } from "@/lib/api";
 import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 import { SERVICES, serviceSubItemCount, serviceSubName } from "@/data/site";
+import type { PublicService } from "@/lib/public-content";
 
 export function ServiceNotFound() {
   return (
@@ -16,14 +17,6 @@ export function ServiceNotFound() {
       </Link>
     </div>
   );
-}
-
-function corporateGiftSectionId(productName: string) {
-  return `corporate-gift-${productName
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")}`;
 }
 
 function productGallerySlug(product: { name: string; slug?: string }) {
@@ -38,12 +31,15 @@ function productGallerySlug(product: { name: string; slug?: string }) {
   return slug === "logo-design" ? "logo" : slug;
 }
 
+const CORPORATE_GIFT_COMBO_SETS_SLUG = "combo-sets";
+const CORPORATE_GIFT_COMBO_SETS_NAME = "Combo Sets";
+
 const CORPORATE_GIFT_MAIN_CATEGORIES = [
   "Pen",
   "Keychain",
   "Mobile Stand",
   "Bottle",
-  "Mug",
+  CORPORATE_GIFT_COMBO_SETS_NAME,
   "Mug Printing",
   "Cardholder",
   "Dairy",
@@ -72,10 +68,104 @@ function isRelatedCorporateGiftSubCategory(parentName: string, subCategoryName: 
   const parent = normalizeName(parentName);
   const subCategory = normalizeName(subCategoryName);
 
+  if (parent === normalizeName(CORPORATE_GIFT_COMBO_SETS_NAME)) {
+    return CORPORATE_GIFT_RELATED_SUB_CATEGORIES.some((name) => normalizeName(name) === subCategory);
+  }
   if (parent === "mug printing") return subCategory.includes("mug");
   if (parent === "mobile stand") return subCategory.includes("mobile stand");
 
   return subCategory.includes(parent);
+}
+
+function getCorporateGiftImage(
+  product: { main_image_url?: string; image_url?: string } | undefined,
+  service: { image_url?: string; main_image_url?: string },
+) {
+  return product?.main_image_url || product?.image_url || service.image_url || service.main_image_url || "";
+}
+
+function getCorporateGiftProductCards(svc: PublicService) {
+  const loadedProductCards = svc.products?.length
+    ? svc.products
+    : (svc.subs ?? []).map((sub, index) => ({
+        id: index,
+        name: serviceSubName(sub),
+        slug: "",
+        service_id: svc.id ?? 0,
+        item_count: serviceSubItemCount(sub) ?? null,
+        short_description: "",
+        main_image_url: "",
+        sub_products: [],
+      }));
+  const defaultCorporateGiftCards = (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map(
+    (sub, index) => ({
+      id: `corporate-gift-${index}`,
+      name: serviceSubName(sub),
+      slug: "",
+      service_id: svc.id ?? 0,
+      item_count: serviceSubItemCount(sub) ?? null,
+      short_description: "",
+      main_image_url: "",
+      sub_products: [],
+    }),
+  );
+
+  return defaultCorporateGiftCards.map((defaultProduct) => {
+    const loadedProduct = loadedProductCards.find(
+      (product) => product.name.trim().toLowerCase() === defaultProduct.name.trim().toLowerCase(),
+    );
+
+    return loadedProduct ? { ...defaultProduct, ...loadedProduct } : defaultProduct;
+  });
+}
+
+function getCorporateGiftMainCards(svc: PublicService, productCards: ReturnType<typeof getCorporateGiftProductCards>) {
+  return CORPORATE_GIFT_MAIN_CATEGORIES.map((name) => {
+    if (name === CORPORATE_GIFT_COMBO_SETS_NAME) {
+      const mugProduct = productCards.find((product) => normalizeName(product.name) === "mug");
+
+      return {
+        id: CORPORATE_GIFT_COMBO_SETS_SLUG,
+        name: CORPORATE_GIFT_COMBO_SETS_NAME,
+        slug: CORPORATE_GIFT_COMBO_SETS_SLUG,
+        service_id: svc.id ?? 0,
+        item_count: CORPORATE_GIFT_RELATED_SUB_CATEGORIES.length,
+        short_description: "",
+        main_image_url: getCorporateGiftImage(mugProduct, svc),
+        sub_products: [],
+      };
+    }
+
+    return productCards.find((product) => product.name.trim().toLowerCase() === name.toLowerCase());
+  }).filter((product): product is NonNullable<typeof product> => Boolean(product));
+}
+
+function getCorporateGiftCategoryPath(product: { name: string; slug?: string }) {
+  return `/services/corporate-gift/${productGallerySlug(product)}`;
+}
+
+function getCorporateGiftCategoryItems(
+  product: { name: string; main_image_url?: string; image_url?: string; sub_products?: { id: number | string; name: string; image_url?: string }[] },
+  svc: PublicService,
+  productCards: ReturnType<typeof getCorporateGiftProductCards>,
+) {
+  const imageSrc = getCorporateGiftImage(product, svc);
+
+  if (product.sub_products?.length) return product.sub_products;
+  if (product.slug !== CORPORATE_GIFT_COMBO_SETS_SLUG) return [];
+
+  return CORPORATE_GIFT_RELATED_SUB_CATEGORIES.filter((name) =>
+    isRelatedCorporateGiftSubCategory(product.name, name),
+  ).map((name, index) => {
+    const relatedProduct = productCards.find((item) => normalizeName(item.name) === normalizeName(name));
+
+    return {
+      id: `related-${index}`,
+      name,
+      image_url: getCorporateGiftImage(relatedProduct, { image_url: imageSrc }),
+      item_count: relatedProduct?.item_count ?? null,
+    };
+  });
 }
 
 function ServiceImage({
@@ -122,7 +212,6 @@ function ServiceImage({
 export function ServiceDetail({ slug }: { slug: string }) {
   const services = usePublicServices();
   const contact = usePublicContact();
-  const [selectedCorporateGift, setSelectedCorporateGift] = useState("");
 
   const svc = services.find((s) => s.slug === slug);
   if (!svc) return <ServiceNotFound />;
@@ -141,37 +230,8 @@ export function ServiceDetail({ slug }: { slug: string }) {
         main_image_url: "",
         sub_products: [],
       }));
-  const defaultCorporateGiftCards = isCorporateGift
-    ? (SERVICES.find((service) => service.slug === "corporate-gift")?.subs ?? []).map((sub, index) => ({
-          id: `corporate-gift-${index}`,
-          name: serviceSubName(sub),
-          slug: "",
-          service_id: svc.id ?? 0,
-          item_count: serviceSubItemCount(sub) ?? null,
-          short_description: "",
-          main_image_url: "",
-          sub_products: [],
-        }))
-    : [];
-  const productCards = isCorporateGift
-    ? defaultCorporateGiftCards.map((defaultProduct) => {
-          const loadedProduct = loadedProductCards.find(
-            (product) => product.name.trim().toLowerCase() === defaultProduct.name.trim().toLowerCase(),
-          );
-
-          return loadedProduct ? { ...defaultProduct, ...loadedProduct } : defaultProduct;
-        })
-    : loadedProductCards;
-  const corporateGiftMainCards = isCorporateGift
-    ? CORPORATE_GIFT_MAIN_CATEGORIES.map((name) =>
-        productCards.find((product) => product.name.trim().toLowerCase() === name.toLowerCase()),
-      ).filter((product): product is (typeof productCards)[number] => Boolean(product))
-    : [];
-
-  const selectedCorporateGiftProduct =
-    isCorporateGift
-      ? corporateGiftMainCards.find((product) => product.name === selectedCorporateGift) || corporateGiftMainCards[0]
-      : productCards[0];
+  const productCards = isCorporateGift ? getCorporateGiftProductCards(svc) : loadedProductCards;
+  const corporateGiftMainCards = isCorporateGift ? getCorporateGiftMainCards(svc, productCards) : [];
 
   return (
     <div>
@@ -194,18 +254,12 @@ export function ServiceDetail({ slug }: { slug: string }) {
             <>
               <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {corporateGiftMainCards.map((product) => {
-                  const imageSrc =
-                    ("main_image_url" in product ? product.main_image_url : "") ||
-                    ("image_url" in product ? product.image_url : "") ||
-                    svc.image_url ||
-                    svc.main_image_url ||
-                    "";
+                  const imageSrc = getCorporateGiftImage(product, svc);
 
                   return (
-                    <a
+                    <Link
                       key={`${product.id}-${product.name}`}
-                      href="#corporate-gift-sub-products"
-                      onClick={() => setSelectedCorporateGift(product.name)}
+                      to={getCorporateGiftCategoryPath(product)}
                       className="group text-center outline-none"
                     >
                       <div className="mx-auto aspect-square w-full max-w-[250px] overflow-hidden rounded-xl bg-brand-light shadow-soft">
@@ -217,111 +271,14 @@ export function ServiceDetail({ slug }: { slug: string }) {
                         />
                       </div>
                       <h3
-                        className={`mx-auto mt-4 max-w-[220px] font-display text-base font-black leading-snug sm:text-lg ${
-                          selectedCorporateGiftProduct?.name === product.name ? "text-brand-red" : "text-brand-dark"
-                        }`}
+                        className="mx-auto mt-4 max-w-[220px] font-display text-base font-black leading-snug text-brand-dark transition group-hover:text-brand-red sm:text-lg"
                       >
                         {product.name}
                       </h3>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
-
-              {selectedCorporateGiftProduct ? (
-                <div id="corporate-gift-sub-products" className="mt-16 scroll-mt-28">
-                  {(() => {
-                    const product = selectedCorporateGiftProduct;
-                    const imageSrc =
-                      ("main_image_url" in product ? product.main_image_url : "") ||
-                      ("image_url" in product ? product.image_url : "") ||
-                      svc.image_url ||
-                      svc.main_image_url ||
-                      "";
-                    const relatedFallbackItems =
-                      isCorporateGift && !product.sub_products?.length
-                        ? CORPORATE_GIFT_RELATED_SUB_CATEGORIES.filter((name) =>
-                            isRelatedCorporateGiftSubCategory(product.name, name),
-                          ).map((name, index) => {
-                            const relatedProduct = productCards.find(
-                              (item) => normalizeName(item.name) === normalizeName(name),
-                            );
-
-                            return {
-                              id: `related-${index}`,
-                              name,
-                              image_url:
-                                ("main_image_url" in (relatedProduct ?? {}) ? relatedProduct?.main_image_url : "") ||
-                                ("image_url" in (relatedProduct ?? {}) ? relatedProduct?.image_url : "") ||
-                                imageSrc,
-                            };
-                          })
-                        : [];
-                    const sectionItems = product.sub_products?.length ? product.sub_products : relatedFallbackItems;
-
-                    return (
-                      <section id={corporateGiftSectionId(product.name)} key={`section-${product.id}-${product.name}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="h-px flex-1 bg-border" />
-                        <h3 className="shrink-0 text-center font-display text-2xl font-black text-brand-dark md:text-3xl">
-                          {product.name}
-                        </h3>
-                        <div className="h-px flex-1 bg-border" />
-                      </div>
-
-                      {sectionItems.length ? (
-                        <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                          {sectionItems.map((item) => {
-                            const itemImage = ("image_url" in item ? item.image_url : "") || imageSrc;
-
-                            return (
-                        <article
-                          key={`${product.id}-${item.id}-${item.name}`}
-                          className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
-                        >
-                          <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
-                            <ServiceImage
-                              src={itemImage}
-                              fallbackSrc={imageSrc || svc.image_url || svc.main_image_url || ""}
-                              alt={item.name}
-                              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                            />
-                          </div>
-                          <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
-                            <h4 className="mb-4 text-center font-display text-base font-black leading-snug text-brand-dark">
-                              {item.name}
-                            </h4>
-                            <a
-                              href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
-                                `Hi, I want to enquire about ${item.name} in ${svc.name}.`,
-                              )}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
-                            >
-                              Enquire Now
-                              <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
-                                <WhatsAppIcon className="h-3.5 w-3.5" />
-                              </span>
-                            </a>
-                          </div>
-                        </article>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="mt-7 rounded-xl border border-dashed border-border bg-brand-light p-6 text-center">
-                          <p className="font-display text-xl font-black text-brand-dark">No sub products added yet</p>
-                          <p className="mt-2 text-sm font-semibold text-muted-foreground">
-                            Products for {product.name} will be updated soon.
-                          </p>
-                        </div>
-                      )}
-                    </section>
-                    );
-                  })()}
-                </div>
-              ) : null}
             </>
           ) : (
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -501,4 +458,112 @@ export function ServiceDetail({ slug }: { slug: string }) {
       </section>
     </div>
   );
+}
+
+export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: string }) {
+  const services = usePublicServices();
+  const contact = usePublicContact();
+  const svc = services.find((service) => service.slug === "corporate-gift");
+
+  if (!svc) return <ServiceNotFound />;
+
+  const productCards = getCorporateGiftProductCards(svc);
+  const category = getCorporateGiftMainCards(svc, productCards).find(
+    (product) => productGallerySlug(product) === categorySlug,
+  );
+
+  if (!category) return <ServiceNotFound />;
+
+  const categoryItems = getCorporateGiftCategoryItems(category, svc, productCards);
+  const itemLabel = categoryItems.length === 1 ? "Product" : "Products";
+
+  return (
+    <div>
+      <PageHero
+        title={category.name}
+        subtitle={`Explore ${category.name.toLowerCase()} options for corporate branding and client gifting.`}
+        breadcrumb={[
+          { label: "Services", to: "/services" },
+          { label: "Corporate Gifts", to: "/services/corporate-gift" },
+          { label: category.name },
+        ]}
+      />
+
+      <section className="container-page py-16">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-brand-red">
+              {categoryItems.length} {itemLabel}
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-black leading-tight text-brand-dark md:text-5xl">
+              Corporate Gift {category.name}
+            </h2>
+          </div>
+          <Link
+            to="/services/corporate-gift"
+            className="inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-white px-5 py-3 text-sm font-black text-brand-dark shadow-soft transition hover:border-brand-red hover:text-brand-red"
+          >
+            Back to Corporate Gifts <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {categoryItems.length ? (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {categoryItems.map((item) => {
+            const message = `Hi, I want to enquire about ${item.name} in Corporate Gifts.`;
+            const itemImage = ("image_url" in item ? item.image_url : "") || getCorporateGiftImage(category, svc);
+
+            return (
+              <article
+                key={`${item.id}-${item.name}`}
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
+              >
+                <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
+                  <ServiceImage
+                    src={itemImage}
+                    fallbackSrc={getCorporateGiftImage(category, svc)}
+                    alt={item.name}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
+                  <h3 className="mb-2 text-center font-display text-lg font-black leading-snug text-brand-dark sm:text-xl">
+                    {item.name}
+                  </h3>
+                  {"item_count" in item && item.item_count ? (
+                    <p className="mb-5 text-center text-sm font-semibold text-muted-foreground">
+                      {item.item_count} {item.item_count === 1 ? "Item" : "Items"}
+                    </p>
+                  ) : null}
+                  <a
+                    href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-red/15 bg-brand-red px-5 py-3 text-sm font-black text-white shadow-brand transition hover:scale-[1.02] hover:bg-brand-maroon"
+                  >
+                    Enquire Now
+                    <span className="grid h-5 w-5 place-items-center rounded-full bg-white/18">
+                      <WhatsAppIcon className="h-3.5 w-3.5" />
+                    </span>
+                  </a>
+                </div>
+              </article>
+            );
+            })}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-xl border border-dashed border-border bg-brand-light p-8 text-center">
+            <h3 className="font-display text-2xl font-black text-brand-dark">No products added yet</h3>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">
+              Products for {category.name} can be added from the admin panel.
+            </p>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+export function CorporateGiftComboSetsPage() {
+  return <CorporateGiftCategoryPage categorySlug={CORPORATE_GIFT_COMBO_SETS_SLUG} />;
 }
