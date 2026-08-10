@@ -128,6 +128,7 @@ export const fetchPublicProductGallery = (serviceSlug: string, productSlug: stri
       id: number;
       name: string;
       slug: string;
+      main_image_url?: string;
       service_id: number;
       service_name: string;
       service_slug: string;

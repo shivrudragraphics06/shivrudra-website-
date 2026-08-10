@@ -111,11 +111,13 @@ export function LogoDesignPage({
   );
   const fallbackItems = useMemo(() => (isLogoGallery ? FALLBACK_LOGOS : []), [isLogoGallery]);
   const [logoDesigns, setLogoDesigns] = useState<PublicLogoDesign[]>(fallbackItems);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const [productName, setProductName] = useState(productFromData?.name || (isLogoGallery ? "Logo Design" : titleFromSlug(normalizedProductSlug)));
   const [serviceName, setServiceName] = useState(serviceFromData?.name || titleFromSlug(serviceSlug));
 
   useEffect(() => {
     setLogoDesigns(fallbackItems);
+    setFailedImages(new Set());
     setProductName(productFromData?.name || (isLogoGallery ? "Logo Design" : titleFromSlug(normalizedProductSlug)));
     setServiceName(serviceFromData?.name || titleFromSlug(normalizedServiceSlug));
 
@@ -123,8 +125,19 @@ export function LogoDesignPage({
       .then((data) => {
         setProductName(data.product.name || titleFromSlug(normalizedProductSlug));
         setServiceName(data.product.service_name || titleFromSlug(normalizedServiceSlug));
+        const mainImageItem = data.product.main_image_url
+          ? [
+              {
+                id: `main-${data.product.id}`,
+                title: data.product.name,
+                image_url: data.product.main_image_url,
+                alt_text: data.product.name,
+                sort_order: -1,
+              },
+            ]
+          : [];
         const activeItems = data.items.filter((item) => item.image_url);
-        setLogoDesigns(activeItems.length ? activeItems : fallbackItems);
+        setLogoDesigns([...mainImageItem, ...activeItems].length ? [...mainImageItem, ...activeItems] : fallbackItems);
       })
       .catch(() => {
         if (isLogoGallery) {
@@ -138,7 +151,11 @@ export function LogoDesignPage({
       });
   }, [fallbackItems, isLogoGallery, normalizedProductSlug, normalizedServiceSlug, productFromData, serviceFromData]);
 
-  const logoCount = useMemo(() => logoDesigns.filter((item) => item.image_url).length, [logoDesigns]);
+  const visibleLogoDesigns = useMemo(
+    () => logoDesigns.filter((item) => item.image_url && !failedImages.has(item.image_url)),
+    [failedImages, logoDesigns],
+  );
+  const logoCount = visibleLogoDesigns.length;
   const itemLabel = logoCount === 1 ? "Gallery Image" : "Gallery Images";
 
   return (
@@ -172,7 +189,7 @@ export function LogoDesignPage({
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {logoDesigns.map((item, index) => {
+          {visibleLogoDesigns.map((item, index) => {
             const title = item.title?.trim() || "";
 
             return (
@@ -186,6 +203,9 @@ export function LogoDesignPage({
                     alt={item.alt_text || title || "Logo design"}
                     className="h-full w-full object-contain transition duration-700 group-hover:scale-105"
                     loading="lazy"
+                    onError={() => {
+                      setFailedImages((current) => new Set(current).add(item.image_url));
+                    }}
                   />
                 </div>
 
@@ -198,7 +218,7 @@ export function LogoDesignPage({
             );
           })}
         </div>
-        {!logoDesigns.length ? (
+        {!visibleLogoDesigns.length ? (
           <div className="mt-10 rounded-lg border border-dashed border-border bg-white p-8 text-center shadow-soft">
             <h3 className="font-display text-2xl font-black text-brand-dark">No gallery images added yet</h3>
             <p className="mt-2 text-sm font-semibold text-muted-foreground">

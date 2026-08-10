@@ -119,7 +119,7 @@ publicRoutes.get(
 
     const productSlug = req.params.productSlug === "logo" ? "logo-design" : req.params.productSlug;
     const [products] = await pool.execute(
-      `SELECT products.id, products.name, products.slug, services.id AS service_id, services.name AS service_name, services.slug AS service_slug
+      `SELECT products.id, products.name, products.slug, products.main_image_url, services.id AS service_id, services.name AS service_name, services.slug AS service_slug
        FROM products
        INNER JOIN services ON services.id = products.service_id
        WHERE services.slug = ? AND (products.slug = ? OR products.slug = ? OR products.name = ?)
@@ -144,6 +144,7 @@ publicRoutes.get(
       `SELECT product_subproducts.id,
         product_subproducts.name,
         product_subproducts.slug,
+        product_subproducts.image_url AS main_image_url,
         products.id AS product_id,
         products.name AS product_name,
         products.slug AS product_slug,
@@ -173,6 +174,7 @@ publicRoutes.get(
         id: subProduct.id,
         name: subProduct.name,
         slug: subProduct.slug,
+        main_image_url: subProduct.main_image_url,
         service_id: subProduct.service_id,
         service_name: subProduct.service_name,
         service_slug: subProduct.service_slug,
