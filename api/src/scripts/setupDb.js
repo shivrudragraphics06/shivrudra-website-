@@ -20,8 +20,33 @@ const connection = await mysql.createConnection({
 });
 
 await connection.query(schema);
+
+const imageColumnMigrations = [
+  ["services", "image_url", "LONGTEXT NULL"],
+  ["product_categories", "image_url", "LONGTEXT NULL"],
+  ["products", "main_image_url", "LONGTEXT NULL"],
+  ["product_images", "image_url", "LONGTEXT NOT NULL"],
+  ["product_subproducts", "image_url", "LONGTEXT NULL"],
+  ["product_variants", "image_url", "LONGTEXT NULL"],
+  ["logo_designs", "image_url", "LONGTEXT NOT NULL"],
+  ["gallery_images", "image_url", "LONGTEXT NOT NULL"],
+  ["blogs", "featured_image_url", "LONGTEXT NULL"],
+  ["industries", "icon_url", "LONGTEXT NULL"],
+  ["industries", "image_url", "LONGTEXT NULL"],
+  ["clients", "logo_url", "LONGTEXT NULL"],
+  ["testimonials", "image_url", "LONGTEXT NULL"],
+];
+
+for (const [table, column, definition] of imageColumnMigrations) {
+  try {
+    await connection.query(`ALTER TABLE ${table} MODIFY COLUMN ${column} ${definition}`);
+  } catch (error) {
+    if (error.code !== "ER_BAD_FIELD_ERROR") throw error;
+  }
+}
+
 try {
-  await connection.query("ALTER TABLE product_variants ADD COLUMN image_url VARCHAR(500) AFTER detail");
+  await connection.query("ALTER TABLE product_variants ADD COLUMN image_url LONGTEXT AFTER detail");
 } catch (error) {
   if (error.code !== "ER_DUP_FIELDNAME") throw error;
 }

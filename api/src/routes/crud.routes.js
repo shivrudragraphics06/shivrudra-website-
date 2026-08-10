@@ -5,7 +5,7 @@ import { pool } from "../db.js";
 import { ensureLogoDesignsTable } from "../logoDesignsTable.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { uploadedFileUrl, uploadDir, uploadPublicBaseUrl, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
+import { uploadDir, uploadPublicBaseUrl, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const crudRoutes = Router();
@@ -149,7 +149,7 @@ crudRoutes.post("/upload", upload.single("image"), (req, res) => {
     return res.status(400).json({ message: "Image is required" });
   }
 
-  res.json({ url: uploadedFileUrl(req.file.filename) });
+  res.json({ url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}` });
 });
 
 crudRoutes.get(

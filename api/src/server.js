@@ -19,7 +19,7 @@ const nestedUploadsDir = path.join(__dirname, "uploads");
 const legacyUploadsDir = path.resolve(__dirname, "../../uploads");
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "12mb" }));
 app.use(uploadPublicPath, express.static(uploadDir));
 app.use("/uploads", express.static(apiUploadsDir));
 app.use("/uploads", express.static(nestedUploadsDir));

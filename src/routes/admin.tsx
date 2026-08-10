@@ -1226,6 +1226,7 @@ function AdminField({
 
   if (field.type === "image") {
     const inputId = `admin-upload-${field.name}`;
+    const isDatabaseImage = typeof value === "string" && value.startsWith("data:image/");
 
     return (
       <div className="grid min-w-0 gap-2 text-sm font-bold">
@@ -1234,7 +1235,7 @@ function AdminField({
           <input
             id={`${inputId}-url`}
             className="h-10 w-full min-w-0 rounded-md border px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-brand-red"
-            value={toInputValue(value)}
+            value={isDatabaseImage ? "Image stored in database" : toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
             required={field.required}
             placeholder="/uploads/image.jpg"
