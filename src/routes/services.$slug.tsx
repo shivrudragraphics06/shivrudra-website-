@@ -1,6 +1,6 @@
 import { PageHero } from "@/components/PageHero";
 import { ArrowRight, PackageCheck, Phone } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { assetUrl } from "@/lib/api";
@@ -182,6 +182,12 @@ function ServiceImage({
   const [currentSrc, setCurrentSrc] = useState(src || fallbackSrc || "");
   const [failed, setFailed] = useState(!currentSrc);
   const fallbackUrl = fallbackSrc && fallbackSrc !== currentSrc ? fallbackSrc : "";
+
+  useEffect(() => {
+    const nextSrc = src || fallbackSrc || "";
+    setCurrentSrc(nextSrc);
+    setFailed(!nextSrc);
+  }, [fallbackSrc, src]);
 
   if (failed) {
     return (
