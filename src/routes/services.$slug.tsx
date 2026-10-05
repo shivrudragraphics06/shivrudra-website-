@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { ArrowRight, PackageCheck, Phone } from "lucide-react";
+import { ArrowRight, PackageCheck, Phone, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "@/components/AppLink";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
@@ -466,9 +466,71 @@ export function ServiceDetail({ slug }: { slug: string }) {
   );
 }
 
+function ProductImageLightbox({
+  image,
+  onClose,
+}: {
+  image: { src: string; fallbackSrc: string; alt: string } | null;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!image) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [image, onClose]);
+
+  if (!image) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] grid place-items-center bg-black/75 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${image.alt} image preview`}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-5xl rounded-xl bg-white p-3 shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-white text-brand-dark shadow-soft transition hover:bg-brand-red hover:text-white"
+          aria-label="Close image preview"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <div className="max-h-[82vh] overflow-hidden rounded-lg bg-brand-light">
+          <ServiceImage
+            src={image.src}
+            fallbackSrc={image.fallbackSrc}
+            alt={image.alt}
+            className="h-full max-h-[82vh] w-full object-contain"
+          />
+        </div>
+        <div className="px-2 pt-3 text-center font-display text-lg font-black text-brand-dark">
+          {image.alt}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: string }) {
   const services = usePublicServices();
   const contact = usePublicContact();
+  const [previewImage, setPreviewImage] = useState<{ src: string; fallbackSrc: string; alt: string } | null>(null);
   const svc = services.find((service) => service.slug === "corporate-gift");
 
   if (!svc) return <ServiceNotFound />;
@@ -518,20 +580,26 @@ export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: stri
             {categoryItems.map((item) => {
             const message = `Hi, I want to enquire about ${item.name} in Corporate Gifts.`;
             const itemImage = ("image_url" in item ? item.image_url : "") || getCorporateGiftImage(category, svc);
+            const fallbackImage = getCorporateGiftImage(category, svc);
 
             return (
               <article
                 key={`${item.id}-${item.name}`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
               >
-                <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light">
+                <button
+                  type="button"
+                  onClick={() => setPreviewImage({ src: itemImage, fallbackSrc: fallbackImage, alt: item.name })}
+                  className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light text-left outline-none transition focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
+                  aria-label={`View larger image of ${item.name}`}
+                >
                   <ServiceImage
                     src={itemImage}
-                    fallbackSrc={getCorporateGiftImage(category, svc)}
+                    fallbackSrc={fallbackImage}
                     alt={item.name}
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
-                </div>
+                </button>
                 <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
                   <h3 className="mb-2 text-center font-display text-lg font-black leading-snug text-brand-dark sm:text-xl">
                     {item.name}
@@ -566,6 +634,7 @@ export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: stri
           </div>
         )}
       </section>
+      <ProductImageLightbox image={previewImage} onClose={() => setPreviewImage(null)} />
     </div>
   );
 }
