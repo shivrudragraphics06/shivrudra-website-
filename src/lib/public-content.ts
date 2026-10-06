@@ -36,6 +36,12 @@ export type PublicSubProduct = {
   product_gallery?: PublicLogoDesign[];
 };
 
+export type PublicCorporateGiftCategory = {
+  service: PublicService;
+  category: NonNullable<PublicService["products"]>[number];
+  items: PublicSubProduct[];
+};
+
 export type PublicCategory = {
   id?: number;
   slug: string;
@@ -123,6 +129,8 @@ export type PublicInquiry = {
 };
 
 export const fetchPublicServices = () => publicApi<PublicService[]>("/services");
+export const fetchPublicCorporateGiftCategory = (categorySlug: string) =>
+  publicApi<PublicCorporateGiftCategory>(`/corporate-gift/${encodeURIComponent(categorySlug)}`);
 export const fetchPublicCategories = () => publicApi<PublicCategory[]>("/categories");
 export const fetchPublicGallery = () => publicApi<PublicGalleryItem[]>("/gallery");
 export const fetchPublicLogoDesigns = () => publicApi<PublicLogoDesign[]>("/logo-designs");

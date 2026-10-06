@@ -110,6 +110,67 @@ function subProductGalleryItemsFor(galleryItems, subproduct) {
 }
 
 publicRoutes.get(
+  "/corporate-gift/:categorySlug",
+  asyncHandler(async (req, res) => {
+    const categorySlug = normalizeMatchValue(req.params.categorySlug);
+    const [services] = await pool.execute(
+      "SELECT id, name, slug, image_url, main_image_url FROM services WHERE slug = ? AND is_active = 1 LIMIT 1",
+      ["corporate-gift"],
+    );
+    const service = services[0];
+
+    if (!service) return res.status(404).json({ message: "Corporate Gift service not found" });
+
+    const [products] = await pool.execute(
+      `SELECT id, service_id, name, slug, item_count, short_description, main_image_url
+       FROM products
+       WHERE service_id = ? AND is_active = 1
+       ORDER BY sort_order ASC, id DESC`,
+      [service.id],
+    );
+    const category = products.find(
+      (product) => normalizeMatchValue(product.slug) === categorySlug || normalizeMatchValue(product.name) === categorySlug,
+    );
+
+    if (!category) return res.status(404).json({ message: "Corporate Gift category not found" });
+
+    const [subproducts] = await pool.execute(
+      `SELECT product_subproducts.id,
+        product_subproducts.product_id,
+        product_subproducts.name,
+        product_subproducts.slug,
+        product_subproducts.item_count,
+        product_subproducts.short_description,
+        product_subproducts.image_url,
+        products.service_id AS service_id,
+        products.name AS product_name,
+        products.slug AS product_slug
+       FROM product_subproducts
+       LEFT JOIN products ON products.id = product_subproducts.product_id
+       WHERE product_subproducts.is_active = 1
+       ORDER BY product_subproducts.sort_order ASC, product_subproducts.id DESC`,
+    );
+    const productsById = new Map(products.map((product) => [product.id, product]));
+    const items = subproducts.filter((subproduct) => {
+      if (subproduct.product_id === category.id) return true;
+      if (!subproduct.product_id) return galleryItemMatchesName({ title: subproduct.name }, category.name, category.slug);
+
+      const parentProduct = productsById.get(subproduct.product_id);
+      return parentProduct?.service_id === service.id && productNameMatchesCategory(parentProduct.name, category.name);
+    });
+
+    res.json({
+      service,
+      category: {
+        ...category,
+        sub_products: items,
+      },
+      items,
+    });
+  }),
+);
+
+publicRoutes.get(
   "/services",
   asyncHandler(async (_req, res) => {
     await ensureLogoDesignsTable();

@@ -6,7 +6,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { assetUrl } from "@/lib/api";
 import { usePublicContact, usePublicServices } from "@/hooks/use-public-data";
 import { SERVICES, serviceSubItemCount, serviceSubName } from "@/data/site";
-import type { PublicService } from "@/lib/public-content";
+import { fetchPublicCorporateGiftCategory, type PublicCorporateGiftCategory, type PublicService } from "@/lib/public-content";
 
 export function ServiceNotFound() {
   return (
@@ -587,18 +587,29 @@ export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: stri
   const services = usePublicServices();
   const contact = usePublicContact();
   const [previewImage, setPreviewImage] = useState<{ src: string; fallbackSrc: string; alt: string } | null>(null);
+  const [liveCategory, setLiveCategory] = useState<PublicCorporateGiftCategory | null>(null);
   const svc = services.find((service) => service.slug === "corporate-gift");
+
+  useEffect(() => {
+    setLiveCategory(null);
+    fetchPublicCorporateGiftCategory(categorySlug)
+      .then((data) => setLiveCategory(data))
+      .catch(() => {});
+  }, [categorySlug]);
 
   if (!svc) return <ServiceNotFound />;
 
   const productCards = getCorporateGiftProductCards(svc);
-  const category = getCorporateGiftMainCards(svc, productCards).find(
+  const fallbackCategory = getCorporateGiftMainCards(svc, productCards).find(
     (product) => productGallerySlug(product) === categorySlug,
   );
+  const category = liveCategory?.category || fallbackCategory;
 
   if (!category) return <ServiceNotFound />;
 
-  const categoryItems = getCorporateGiftCategoryItems(category, svc, productCards);
+  const categoryItems = liveCategory?.items?.length
+    ? liveCategory.items
+    : getCorporateGiftCategoryItems(category, liveCategory?.service || svc, productCards);
   const itemLabel = categoryItems.length === 1 ? "Product" : "Products";
 
   return (
