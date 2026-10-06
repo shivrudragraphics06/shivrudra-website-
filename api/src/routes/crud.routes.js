@@ -137,14 +137,29 @@ function getResource(req, res) {
 
 crudRoutes.use(requireAdmin);
 
-crudRoutes.get("/upload-info", (_req, res) => {
+crudRoutes.get("/upload-info", asyncHandler(async (_req, res) => {
+  let canWrite = false;
+  let status = "not_checked";
+
+  try {
+    await fs.mkdir(uploadDir, { recursive: true });
+    await fs.access(uploadDir);
+    canWrite = true;
+    status = "ok";
+  } catch (error) {
+    status = error instanceof Error ? error.message : "Upload folder is not writable";
+  }
+
   res.json({
     uploadRootDir,
     uploadDir,
     uploadPublicPath,
     uploadPublicBaseUrl,
+    canWrite,
+    status,
+    sampleUrl: uploadedFileUrl("test-image.jpg"),
   });
-});
+}));
 
 crudRoutes.post("/upload", upload.single("image"), asyncHandler(async (req, res) => {
   if (!req.file) {
@@ -160,7 +175,7 @@ crudRoutes.post("/upload", upload.single("image"), asyncHandler(async (req, res)
 
   await fs.writeFile(path.join(uploadDir, filename), req.file.buffer);
 
-  res.json({ url: uploadedFileUrl(filename) });
+  res.json({ url: uploadedFileUrl(filename), filename, uploadDir });
 }));
 
 crudRoutes.get(

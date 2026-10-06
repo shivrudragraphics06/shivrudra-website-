@@ -732,8 +732,8 @@ function AdminResourcePage({ resource }: { resource: ResourceConfig }) {
         body: JSON.stringify(body),
       });
 
-      await loadRows();
       closeForm();
+      void loadRows();
     } catch (err) {
       setError(err instanceof Error ? err.message : `${resource.singular} could not be saved`);
     } finally {
@@ -1238,7 +1238,7 @@ function AdminField({
             value={isDatabaseImage ? "Image stored in database" : toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
             required={field.required}
-            placeholder="/uploads/image.jpg"
+            placeholder="/assets/admin-uploads/image.jpg"
           />
           <label
             htmlFor={inputId}

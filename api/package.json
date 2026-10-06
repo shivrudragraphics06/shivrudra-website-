@@ -11,7 +11,8 @@
     "seed-static": "node src/scripts/seedStaticData.js",
     "seed-clients": "node src/scripts/seedClientLogos.js",
     "seed-service-images": "node src/scripts/seedServiceImages.js",
-    "import-brochure": "node src/scripts/importBrochureData.js"
+    "import-brochure": "node src/scripts/importBrochureData.js",
+    "migrate-uploads": "node src/scripts/migrateUploadsToPublic.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -161,15 +161,26 @@ function getCorporateGiftCategoryPath(product: { name: string; slug?: string }) 
   return `/services/corporate-gift/${productGallerySlug(product)}`;
 }
 
+export function isCorporateGiftMainCategorySlug(categorySlug: string) {
+  return [...CORPORATE_GIFT_MAIN_CATEGORIES, CORPORATE_GIFT_COMBO_SETS_SLUG].some(
+    (name) => productGallerySlug({ name, slug: name === CORPORATE_GIFT_COMBO_SETS_NAME ? CORPORATE_GIFT_COMBO_SETS_SLUG : undefined }) === categorySlug,
+  );
+}
+
 function getCorporateGiftCategoryItems(
   product: {
+    id?: number | string;
     name: string;
+    slug?: string;
+    item_count?: number | null;
     main_image_url?: string;
     image_url?: string;
     product_gallery?: { id?: number; title?: string; image_url: string; alt_text?: string }[];
     sub_products?: {
       id: number | string;
+      product_id?: number | string;
       name: string;
+      slug?: string;
       image_url?: string;
       product_gallery?: { id?: number; title?: string; image_url: string; alt_text?: string }[];
     }[];
@@ -188,7 +199,16 @@ function getCorporateGiftCategoryItems(
       item_count: 1,
     }));
   }
-  if (product.slug !== CORPORATE_GIFT_COMBO_SETS_SLUG) return [];
+  if (product.slug !== CORPORATE_GIFT_COMBO_SETS_SLUG) {
+    return [
+      {
+        id: product.id ?? productGallerySlug(product),
+        name: product.name,
+        image_url: imageSrc,
+        item_count: product.item_count ?? null,
+      },
+    ];
+  }
 
   return CORPORATE_GIFT_RELATED_SUB_CATEGORIES.filter((name) =>
     isRelatedCorporateGiftSubCategory(product.name, name),
@@ -617,29 +637,51 @@ export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: stri
             const message = `Hi, I want to enquire about ${item.name} in Corporate Gifts.`;
             const itemImage = ("image_url" in item ? item.image_url : "") || getCorporateGiftImage(category, svc);
             const fallbackImage = getCorporateGiftImage(category, svc);
+            const galleryPath = `/services/corporate-gift/${productGallerySlug(item)}`;
+            const opensGallery = "product_id" in item && Boolean(item.product_id);
+            const imageCard = (
+              <div className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light text-left outline-none transition focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2">
+                <ServiceImage
+                  src={itemImage}
+                  fallbackSrc={fallbackImage}
+                  alt={item.name}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              </div>
+            );
 
             return (
               <article
                 key={`${item.id}-${item.name}`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-red hover:shadow-xl"
               >
-                <button
-                  type="button"
-                  onClick={() => setPreviewImage({ src: itemImage, fallbackSrc: fallbackImage, alt: item.name })}
-                  className="relative aspect-[6/5] overflow-hidden rounded-lg border border-border bg-brand-light text-left outline-none transition focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
-                  aria-label={`View larger image of ${item.name}`}
-                >
-                  <ServiceImage
-                    src={itemImage}
-                    fallbackSrc={fallbackImage}
-                    alt={item.name}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                </button>
+                {opensGallery ? (
+                  <Link to={galleryPath} aria-label={`Open ${item.name} gallery`}>
+                    {imageCard}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPreviewImage({ src: itemImage, fallbackSrc: fallbackImage, alt: item.name })}
+                    className="block w-full"
+                    aria-label={`View larger image of ${item.name}`}
+                  >
+                    {imageCard}
+                  </button>
+                )}
                 <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
-                  <h3 className="mb-2 text-center font-display text-lg font-black leading-snug text-brand-dark sm:text-xl">
-                    {item.name}
-                  </h3>
+                  {opensGallery ? (
+                    <Link
+                      to={galleryPath}
+                      className="mb-2 text-center font-display text-lg font-black leading-snug text-brand-dark transition hover:text-brand-red sm:text-xl"
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <h3 className="mb-2 text-center font-display text-lg font-black leading-snug text-brand-dark sm:text-xl">
+                      {item.name}
+                    </h3>
+                  )}
                   {"item_count" in item && item.item_count ? (
                     <p className="mb-5 text-center text-sm font-semibold text-muted-foreground">
                       {item.item_count} {item.item_count === 1 ? "Item" : "Items"}

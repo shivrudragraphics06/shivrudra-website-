@@ -33,6 +33,23 @@ function titleFromFile(value) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+async function copyFileOverwrite(source, target) {
+  try {
+    const [sourceStat, targetStat] = await Promise.all([fs.stat(source), fs.stat(target)]);
+    if (sourceStat.size === targetStat.size) return;
+  } catch {
+    // Source or destination may not exist yet; copy below will surface source errors.
+  }
+
+  try {
+    await fs.chmod(target, 0o666);
+  } catch {
+    // The destination may not exist yet.
+  }
+
+  await fs.copyFile(source, target);
+}
+
 function parseClients(source, assetFiles) {
   const imports = new Map();
   const importPattern = /import\s+(\w+)\s+from\s+"@\/assets\/client logos\/([^"]+)";/g;
@@ -67,7 +84,7 @@ async function copyServices() {
 
   const files = await fs.readdir(sourceDir);
   for (const fileName of files) {
-    await fs.copyFile(path.join(sourceDir, fileName), path.join(targetDir, serviceFileName(fileName)));
+    await copyFileOverwrite(path.join(sourceDir, fileName), path.join(targetDir, serviceFileName(fileName)));
   }
 
   return files.length;
@@ -86,7 +103,7 @@ async function copyClients() {
     const extension = path.extname(client.fileName);
     const name = client.name;
     const targetName = `${String(index + 1).padStart(2, "0")}-${safeFileName(name)}${extension}`;
-    await fs.copyFile(path.join(sourceDir, client.fileName), path.join(targetDir, targetName));
+    await copyFileOverwrite(path.join(sourceDir, client.fileName), path.join(targetDir, targetName));
   }
 
   return clients.length;
@@ -101,11 +118,44 @@ async function copyIndustries() {
   for (const fileName of files) {
     const extension = path.extname(fileName);
     const name = titleFromFile(fileName);
-    await fs.copyFile(path.join(sourceDir, fileName), path.join(targetDir, `${safeFileName(name)}${extension}`));
+    await copyFileOverwrite(path.join(sourceDir, fileName), path.join(targetDir, `${safeFileName(name)}${extension}`));
   }
 
   return files.length;
 }
 
-const [services, clients, industries] = await Promise.all([copyServices(), copyClients(), copyIndustries()]);
-console.log(`Copied ${services} service images, ${clients} client logos, and ${industries} industry images to public/images.`);
+async function copyAdminUploads() {
+  const sourceDir = path.join(rootDir, "api/uploads");
+  const targetDirs = [
+    path.join(rootDir, "public/assets/admin-uploads"),
+    path.join(rootDir, "shivrudra-public_html-upload/assets/admin-uploads"),
+  ];
+
+  let files = [];
+  try {
+    files = (await fs.readdir(sourceDir, { withFileTypes: true })).filter((entry) => entry.isFile());
+  } catch {
+    files = [];
+  }
+
+  for (const targetDir of targetDirs) {
+    await fs.mkdir(targetDir, { recursive: true });
+    for (const file of files) {
+      if (file.name === ".gitkeep") continue;
+      await copyFileOverwrite(path.join(sourceDir, file.name), path.join(targetDir, file.name));
+    }
+  }
+
+  return files.filter((file) => file.name !== ".gitkeep").length;
+}
+
+const [services, clients, industries, adminUploads] = await Promise.all([
+  copyServices(),
+  copyClients(),
+  copyIndustries(),
+  copyAdminUploads(),
+]);
+
+console.log(
+  `Copied ${services} service images, ${clients} client logos, ${industries} industry images, and ${adminUploads} admin uploads to public assets.`,
+);

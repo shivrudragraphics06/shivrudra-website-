@@ -70,7 +70,7 @@ export const uploadRootDir = publicRootDir;
 export const uploadPublicPath = `/${(process.env.UPLOAD_PUBLIC_PATH || "/assets/admin-uploads")
   .replace(/\\/g, "/")
   .replace(/^\/+|\/+$/g, "")}`;
-export const uploadPublicBaseUrl = (process.env.UPLOAD_PUBLIC_BASE_URL || "").replace(/\/+$/g, "");
+export const uploadPublicBaseUrl = (process.env.UPLOAD_PUBLIC_BASE_URL || process.env.CLIENT_URL || "").replace(/\/+$/g, "");
 
 export function uploadedFileUrl(filename) {
   if (uploadPublicBaseUrl) return `${uploadPublicBaseUrl}${uploadPublicPath}/${filename}`;
