@@ -78,10 +78,27 @@ function isRelatedCorporateGiftSubCategory(parentName: string, subCategoryName: 
 }
 
 function getCorporateGiftImage(
-  product: { main_image_url?: string; image_url?: string } | undefined,
+  product:
+    | {
+        main_image_url?: string;
+        image_url?: string;
+        product_gallery?: { image_url?: string }[];
+        sub_products?: { image_url?: string; product_gallery?: { image_url?: string }[] }[];
+      }
+    | undefined,
   service: { image_url?: string; main_image_url?: string },
 ) {
-  return product?.main_image_url || product?.image_url || service.image_url || service.main_image_url || "";
+  return (
+    product?.main_image_url ||
+    product?.image_url ||
+    product?.product_gallery?.find((item) => item.image_url)?.image_url ||
+    product?.sub_products
+      ?.flatMap((subProduct) => [subProduct.image_url, ...(subProduct.product_gallery ?? []).map((item) => item.image_url)])
+      .find(Boolean) ||
+    service.image_url ||
+    service.main_image_url ||
+    ""
+  );
 }
 
 function getCorporateGiftProductCards(svc: PublicService) {

@@ -6,8 +6,9 @@ export function assetUrl(path?: string | null) {
   if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
 
   const normalizedPath = path.replace(/\\/g, "/");
-  if (UPLOADS_BASE_URL && normalizedPath.startsWith("/assets/admin-uploads/")) {
-    return `${UPLOADS_BASE_URL.replace(/\/+$/g, "")}${normalizedPath}`;
+  if (normalizedPath.startsWith("/assets/admin-uploads/")) {
+    const uploadsBaseUrl = UPLOADS_BASE_URL || API_URL;
+    return `${uploadsBaseUrl.replace(/\/+$/g, "")}${normalizedPath}`;
   }
 
   if (normalizedPath.startsWith("/assets/") || normalizedPath.startsWith("/images/")) {
