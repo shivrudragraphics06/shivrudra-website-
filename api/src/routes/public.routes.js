@@ -49,6 +49,52 @@ function dedupeClients(rows) {
   return Array.from(clients.values()).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0) || (a.id ?? 0) - (b.id ?? 0));
 }
 
+function normalizeMatchValue(value = "") {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function galleryItemMatchesName(item, name, slug = "") {
+  const title = normalizeMatchValue(item.title || item.alt_text || "");
+  if (!title) return false;
+
+  const normalizedName = normalizeMatchValue(name);
+  const normalizedSlug = normalizeMatchValue(slug);
+
+  return title === normalizedName || title === normalizedSlug || title.includes(normalizedName);
+}
+
+function productGalleryItemsFor(galleryItems, product) {
+  return galleryItems.filter((item) => {
+    if (item.gallery_type !== "product") return false;
+    if (item.product_id === product.id) return true;
+
+    return (
+      item.service_id === product.service_id &&
+      !item.product_id &&
+      !item.sub_product_id &&
+      galleryItemMatchesName(item, product.name, product.slug)
+    );
+  });
+}
+
+function subProductGalleryItemsFor(galleryItems, subproduct) {
+  return galleryItems.filter((item) => {
+    if (item.gallery_type === "sub-product" && item.sub_product_id === subproduct.id) return true;
+
+    return (
+      item.service_id === subproduct.service_id &&
+      !item.product_id &&
+      !item.sub_product_id &&
+      galleryItemMatchesName(item, subproduct.name, subproduct.slug)
+    );
+  });
+}
+
 publicRoutes.get(
   "/services",
   asyncHandler(async (_req, res) => {
@@ -64,7 +110,8 @@ publicRoutes.get(
     );
     const [subproducts] = await pool.query(
       `SELECT product_subproducts.id, product_subproducts.product_id, product_subproducts.name, product_subproducts.slug,
-        product_subproducts.item_count, product_subproducts.short_description, product_subproducts.image_url
+        product_subproducts.item_count, product_subproducts.short_description, product_subproducts.image_url,
+        products.service_id AS service_id
        FROM product_subproducts
        INNER JOIN products ON products.id = product_subproducts.product_id
        INNER JOIN services ON services.id = products.service_id
@@ -79,16 +126,12 @@ publicRoutes.get(
     );
     const productsWithSubproducts = products.map((product) => ({
       ...product,
-      product_gallery: galleryItems.filter(
-        (item) => item.gallery_type === "product" && item.product_id === product.id,
-      ),
+      product_gallery: productGalleryItemsFor(galleryItems, product),
       sub_products: subproducts
         .filter((subproduct) => subproduct.product_id === product.id)
         .map((subproduct) => ({
           ...subproduct,
-          product_gallery: galleryItems.filter(
-            (item) => item.gallery_type === "sub-product" && item.sub_product_id === subproduct.id,
-          ),
+          product_gallery: subProductGalleryItemsFor(galleryItems, subproduct),
         })),
     }));
 
