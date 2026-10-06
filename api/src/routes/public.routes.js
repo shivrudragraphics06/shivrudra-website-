@@ -113,8 +113,8 @@ publicRoutes.get(
         product_subproducts.item_count, product_subproducts.short_description, product_subproducts.image_url,
         products.service_id AS service_id
        FROM product_subproducts
-       INNER JOIN products ON products.id = product_subproducts.product_id
-       INNER JOIN services ON services.id = products.service_id
+       LEFT JOIN products ON products.id = product_subproducts.product_id
+       LEFT JOIN services ON services.id = products.service_id
        WHERE product_subproducts.is_active = 1
        ORDER BY product_subproducts.sort_order ASC, product_subproducts.id DESC`,
     );
@@ -128,7 +128,13 @@ publicRoutes.get(
       ...product,
       product_gallery: productGalleryItemsFor(galleryItems, product),
       sub_products: subproducts
-        .filter((subproduct) => subproduct.product_id === product.id)
+        .filter(
+          (subproduct) =>
+            subproduct.product_id === product.id ||
+            (!subproduct.product_id &&
+              product.service_id === rows.find((service) => service.slug === "corporate-gift")?.id &&
+              galleryItemMatchesName({ title: subproduct.name }, product.name, product.slug)),
+        )
         .map((subproduct) => ({
           ...subproduct,
           product_gallery: subProductGalleryItemsFor(galleryItems, subproduct),
