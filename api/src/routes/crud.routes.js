@@ -1,11 +1,13 @@
 import { Router } from "express";
+import fs from "fs/promises";
+import path from "path";
 import slugify from "slugify";
 
 import { pool } from "../db.js";
 import { ensureLogoDesignsTable } from "../logoDesignsTable.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { uploadDir, uploadPublicBaseUrl, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
+import { uploadDir, uploadedFileUrl, uploadPublicBaseUrl, uploadPublicPath, uploadRootDir } from "../uploadConfig.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const crudRoutes = Router();
@@ -144,13 +146,22 @@ crudRoutes.get("/upload-info", (_req, res) => {
   });
 });
 
-crudRoutes.post("/upload", upload.single("image"), (req, res) => {
+crudRoutes.post("/upload", upload.single("image"), asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "Image is required" });
   }
 
-  res.json({ url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}` });
-});
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  const originalExt = path.extname(req.file.originalname || "").toLowerCase();
+  const mimeExt = req.file.mimetype.split("/")[1]?.replace("jpeg", "jpg") || "jpg";
+  const ext = originalExt && originalExt.length <= 6 ? originalExt : `.${mimeExt}`;
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}${ext}`;
+
+  await fs.writeFile(path.join(uploadDir, filename), req.file.buffer);
+
+  res.json({ url: uploadedFileUrl(filename) });
+}));
 
 crudRoutes.get(
   "/:resource",

@@ -52,6 +52,8 @@ function dedupeClients(rows) {
 publicRoutes.get(
   "/services",
   asyncHandler(async (_req, res) => {
+    await ensureLogoDesignsTable();
+
     const [rows] = await pool.query("SELECT * FROM services WHERE is_active = 1 ORDER BY sort_order ASC, id DESC");
     const [products] = await pool.query(
       `SELECT products.id, products.service_id, products.name, products.slug, products.item_count, products.short_description, products.main_image_url
@@ -69,9 +71,25 @@ publicRoutes.get(
        WHERE product_subproducts.is_active = 1
        ORDER BY product_subproducts.sort_order ASC, product_subproducts.id DESC`,
     );
+    const [galleryItems] = await pool.query(
+      `SELECT id, service_id, gallery_type, product_id, sub_product_id, title, image_url, alt_text, sort_order
+       FROM logo_designs
+       WHERE is_active = 1 AND gallery_type IN ('product', 'sub-product')
+       ORDER BY sort_order ASC, id DESC`,
+    );
     const productsWithSubproducts = products.map((product) => ({
       ...product,
-      sub_products: subproducts.filter((subproduct) => subproduct.product_id === product.id),
+      product_gallery: galleryItems.filter(
+        (item) => item.gallery_type === "product" && item.product_id === product.id,
+      ),
+      sub_products: subproducts
+        .filter((subproduct) => subproduct.product_id === product.id)
+        .map((subproduct) => ({
+          ...subproduct,
+          product_gallery: galleryItems.filter(
+            (item) => item.gallery_type === "sub-product" && item.sub_product_id === subproduct.id,
+          ),
+        })),
     }));
 
     res.json(

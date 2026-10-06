@@ -20,6 +20,7 @@ export type PublicService = {
     item_count?: number | null;
     short_description?: string;
     main_image_url?: string;
+    product_gallery?: PublicLogoDesign[];
     sub_products?: PublicSubProduct[];
   }[];
 };
@@ -32,6 +33,7 @@ export type PublicSubProduct = {
   item_count?: number | null;
   short_description?: string;
   image_url?: string;
+  product_gallery?: PublicLogoDesign[];
 };
 
 export type PublicCategory = {
@@ -57,6 +59,8 @@ export type PublicLogoDesign = {
   id?: number;
   service_id?: number | null;
   product_id?: number | null;
+  sub_product_id?: number | null;
+  gallery_type?: string;
   title?: string;
   image_url: string;
   alt_text?: string;

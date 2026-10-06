@@ -145,13 +145,32 @@ function getCorporateGiftCategoryPath(product: { name: string; slug?: string }) 
 }
 
 function getCorporateGiftCategoryItems(
-  product: { name: string; main_image_url?: string; image_url?: string; sub_products?: { id: number | string; name: string; image_url?: string }[] },
+  product: {
+    name: string;
+    main_image_url?: string;
+    image_url?: string;
+    product_gallery?: { id?: number; title?: string; image_url: string; alt_text?: string }[];
+    sub_products?: {
+      id: number | string;
+      name: string;
+      image_url?: string;
+      product_gallery?: { id?: number; title?: string; image_url: string; alt_text?: string }[];
+    }[];
+  },
   svc: PublicService,
   productCards: ReturnType<typeof getCorporateGiftProductCards>,
 ) {
   const imageSrc = getCorporateGiftImage(product, svc);
 
   if (product.sub_products?.length) return product.sub_products;
+  if (product.product_gallery?.length) {
+    return product.product_gallery.map((item, index) => ({
+      id: item.id ?? `gallery-${index}`,
+      name: item.title || item.alt_text || `${product.name} ${index + 1}`,
+      image_url: item.image_url,
+      item_count: 1,
+    }));
+  }
   if (product.slug !== CORPORATE_GIFT_COMBO_SETS_SLUG) return [];
 
   return CORPORATE_GIFT_RELATED_SUB_CATEGORIES.filter((name) =>
