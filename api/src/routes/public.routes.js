@@ -68,6 +68,20 @@ function galleryItemMatchesName(item, name, slug = "") {
   return title === normalizedName || title === normalizedSlug || title.includes(normalizedName);
 }
 
+function productNameMatchesCategory(productName = "", categoryName = "") {
+  const normalizedProductName = normalizeMatchValue(productName);
+  const normalizedCategoryName = normalizeMatchValue(categoryName);
+
+  if (!normalizedProductName || !normalizedCategoryName) return false;
+
+  return (
+    normalizedProductName === normalizedCategoryName ||
+    normalizedProductName.startsWith(`${normalizedCategoryName}-`) ||
+    normalizedProductName.includes(`-${normalizedCategoryName}-`) ||
+    normalizedProductName.endsWith(`-${normalizedCategoryName}`)
+  );
+}
+
 function productGalleryItemsFor(galleryItems, product) {
   return galleryItems.filter((item) => {
     if (item.gallery_type !== "product") return false;
@@ -124,16 +138,23 @@ publicRoutes.get(
        WHERE is_active = 1 AND gallery_type IN ('product', 'sub-product')
        ORDER BY sort_order ASC, id DESC`,
     );
+    const corporateGiftServiceId = rows.find((service) => service.slug === "corporate-gift")?.id;
+    const productsById = new Map(products.map((product) => [product.id, product]));
     const productsWithSubproducts = products.map((product) => ({
       ...product,
       product_gallery: productGalleryItemsFor(galleryItems, product),
       sub_products: subproducts
         .filter(
-          (subproduct) =>
-            subproduct.product_id === product.id ||
-            (!subproduct.product_id &&
-              product.service_id === rows.find((service) => service.slug === "corporate-gift")?.id &&
-              galleryItemMatchesName({ title: subproduct.name }, product.name, product.slug)),
+          (subproduct) => {
+            if (subproduct.product_id === product.id) return true;
+
+            if (product.service_id !== corporateGiftServiceId) return false;
+
+            if (!subproduct.product_id) return galleryItemMatchesName({ title: subproduct.name }, product.name, product.slug);
+
+            const parentProduct = productsById.get(subproduct.product_id);
+            return parentProduct?.service_id === corporateGiftServiceId && productNameMatchesCategory(parentProduct.name, product.name);
+          },
         )
         .map((subproduct) => ({
           ...subproduct,
