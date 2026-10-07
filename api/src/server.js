@@ -17,8 +17,28 @@ const __dirname = path.dirname(__filename);
 const apiUploadsDir = path.join(__dirname, "../uploads");
 const nestedUploadsDir = path.join(__dirname, "uploads");
 const legacyUploadsDir = path.resolve(__dirname, "../../uploads");
+const allowedOrigins = new Set(
+  [
+    process.env.CLIENT_URL,
+    "https://shivrudragraphics.com",
+    "https://www.shivrudragraphics.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+  ].filter(Boolean),
+);
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+  }),
+);
 app.use(express.json({ limit: "12mb" }));
 app.use(uploadPublicPath, express.static(uploadDir));
 app.use("/uploads", express.static(apiUploadsDir));

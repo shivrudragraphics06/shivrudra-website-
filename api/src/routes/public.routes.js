@@ -153,6 +153,7 @@ publicRoutes.get(
     const productsById = new Map(products.map((product) => [product.id, product]));
     const items = subproducts.filter((subproduct) => {
       if (subproduct.product_id === category.id) return true;
+      if (galleryItemMatchesName({ title: subproduct.name }, category.name, category.slug)) return true;
       if (!subproduct.product_id) return galleryItemMatchesName({ title: subproduct.name }, category.name, category.slug);
 
       const parentProduct = productsById.get(subproduct.product_id);

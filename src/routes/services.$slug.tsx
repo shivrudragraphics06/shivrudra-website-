@@ -224,6 +224,46 @@ function getCorporateGiftCategoryItems(
   });
 }
 
+function corporateGiftItemMatchesCategory(
+  item: { name: string; slug?: string },
+  category: { name: string; slug?: string },
+) {
+  const itemName = normalizeName(item.name);
+  const itemSlug = productGallerySlug(item);
+  const categoryName = normalizeName(category.name);
+  const categorySlug = productGallerySlug(category);
+
+  return (
+    itemName === categoryName ||
+    itemSlug === categorySlug ||
+    itemName.includes(categoryName) ||
+    itemSlug.includes(categorySlug)
+  );
+}
+
+function getCorporateGiftAdminItems(
+  category: NonNullable<PublicService["products"]>[number],
+  productCards: ReturnType<typeof getCorporateGiftProductCards>,
+) {
+  const productById = new Map(productCards.map((product) => [String(product.id), product]));
+  const items = productCards
+    .flatMap((product) =>
+      (product.sub_products ?? []).map((subProduct) => ({
+        ...subProduct,
+        product_gallery: subProduct.product_gallery ?? [],
+      })),
+    )
+    .filter((subProduct) => {
+      if (String(subProduct.product_id ?? "") === String(category.id ?? "")) return true;
+      if (corporateGiftItemMatchesCategory(subProduct, category)) return true;
+
+      const parentProduct = productById.get(String(subProduct.product_id ?? ""));
+      return parentProduct ? corporateGiftItemMatchesCategory(parentProduct, category) : false;
+    });
+
+  return Array.from(new Map(items.map((item) => [String(item.id), item])).values());
+}
+
 function ServiceImage({
   src,
   fallbackSrc,
@@ -607,9 +647,12 @@ export function CorporateGiftCategoryPage({ categorySlug }: { categorySlug: stri
 
   if (!category) return <ServiceNotFound />;
 
+  const adminCategoryItems = getCorporateGiftAdminItems(category, productCards);
   const categoryItems = liveCategory?.items?.length
     ? liveCategory.items
-    : getCorporateGiftCategoryItems(category, liveCategory?.service || svc, productCards);
+    : adminCategoryItems.length
+      ? adminCategoryItems
+      : getCorporateGiftCategoryItems(category, liveCategory?.service || svc, productCards);
   const itemLabel = categoryItems.length === 1 ? "Product" : "Products";
 
   return (
